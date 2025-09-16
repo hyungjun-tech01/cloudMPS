@@ -1,0 +1,8 @@
+{
+    "login": {
+      "id": "ID",
+      "password": "Password",
+      "login": "Login",
+      "register": "Register"
+    }
+  }
