@@ -1,6 +1,8 @@
 import * as React from "react";
 import type { Metadata } from "next";
+import { notFound } from 'next/navigation';
 import { Geist, Geist_Mono } from "next/font/google";
+import i18nConfig from '@/i18nConfig';
 import "@/app/components/globals.css";
 
 const geistSans = Geist({
@@ -29,6 +31,10 @@ export default async function RootLayout({
   params: Promise<{ locale: string }>;
 }>) {
   const { locale } = await params;
+
+  if (!i18nConfig.locales.includes(locale)) {
+    notFound();
+  };
 
   return (
     <html lang={locale} suppressHydrationWarning>
