@@ -1,8 +1,8 @@
 import NextAuth, { DefaultSession } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { z } from "zod";
-import bcrypt from "bcrypt";
-import MyDBAdapter from '@/app/lib/adapter';
+// import bcrypt from "bcrypt";
+// import MyDBAdapter from '@/app/lib/adapter';
 
 declare module "next-auth" {
   interface User {
@@ -33,23 +33,23 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         if (parsedCredentials.success) {
           const { user_name, user_password } = parsedCredentials.data;
 
-          // console.log(`Credential : (id) ${user_name} / (pwd) ${user_password}`);
+          console.log(`Credential : (id) ${user_name} / (pwd) ${user_password}`);
           // if(user_name !== 'admin') {
-          const adapter = MyDBAdapter();
-          const userAttr = await adapter.getAccount(user_name);
+          // const adapter = MyDBAdapter();
+          // const userAttr = await adapter.getAccount(user_name);
           // console.log('Account : ', userAttr);
-          if (!userAttr) return null;
+          // if (!userAttr) return null;
 
-          const userPassword = userAttr.password;
-          const passwordsMatch = await bcrypt.compare(user_password, userPassword);
+          // const userPassword = userAttr.password;
+          // const passwordsMatch = await bcrypt.compare(user_password, userPassword);
 
-          if (passwordsMatch)
+          // if (passwordsMatch)
             return {
-              id: userAttr.id,
-              name: userAttr.name,
-              full_name: userAttr.full_name,
-              email: userAttr.email,
-              role: userAttr.role ?? "user",
+              id: 'admin',   //userAttr.id,
+              name: 'admin', // userAttr.name,
+              full_name: 'admin', //userAttr.full_name,
+              email: '',  //userAttr.email,
+              role: 'admin',  //userAttr.role ?? "user",
               image: ""
             };
           // } else {

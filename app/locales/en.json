@@ -3,6 +3,8 @@
       "id": "ID",
       "password": "Password",
       "login": "Login",
-      "register": "Register"
+      "register": "Register",
+      "title": "Login",
+      "userId": "User ID"
     }
   }
