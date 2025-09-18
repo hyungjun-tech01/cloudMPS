@@ -5,9 +5,18 @@ import 'material-icons/iconfont/material-icons.css';
 
 export default function Page() {
   return (
-    <main className="flex min-h-screen flex-col p-6">
-      <div className="flex h-20 shrink-0 items-end rounded-lg bg-blue-500 p-4 md:h-52">
-        {' '}
+    <main className="flex min-h-screen flex-col">
+      <div id="header" className="static flex h-[5rem] shrink-0 bg-lime-900 text-lime-50 p-[1rem] flex-row justify-evenly items-center">
+        <div id="select_user_type">
+          <div>Company</div>
+          
+          <div>Personal</div>
+        </div>
+        <div id="title" className='text-2xl font-semibold'>Cloud MPS</div>
+        <div id="select_process" className='gap-2'>
+          <button className='border-2 border-lime-100 rounded-sm'>Login</button>
+          <button className='border-2 border-lime-100 rounded-sm'>Register</button>
+        </div>
       </div>
       <div className="mt-4 flex grow flex-col gap-4 md:flex-row">
         <div className="flex flex-col justify-center gap-6 rounded-lg bg-gray-50 px-6 py-10 md:w-2/5 md:px-20">
