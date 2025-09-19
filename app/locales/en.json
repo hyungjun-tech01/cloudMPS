@@ -1,8 +1,12 @@
 {
     "login": {
+      "company_user": "Company User",
+      "doc": "Documents",
+      "intro": "Introduction",
       "id": "ID",
-      "password": "Password",
       "login": "Login",
+      "password": "Password",
+      "personal_user": "Personal User",
       "register": "Register",
       "title": "Login",
       "userId": "User ID"

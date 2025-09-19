@@ -1,18 +1,25 @@
-import Link from 'next/link';
 import Image from 'next/image';
 import { Button,Switch } from 'antd';
 import mainImage from '@/app/images/mainImage.png';
 import 'material-icons/iconfont/material-icons.css';
 
-export default function Page() {
+import getDictionary from '@/app/libs/dictionaries';
+
+export default async function Page(
+  props: {
+    params: Promise<{ locale: "ko" | "en" }>;
+}) {
+  const params = await props.params;
+  const trans = await getDictionary(params.locale);
+  
   return (
     <main className="flex min-h-screen flex-col">
       <div id="header" className="static flex flex-col flex-0 bg-[#142131] text-lime-50 p-[1rem] justify-center items-center">
         <div id="logo" className='justify-center items-center mt-5 mb-3'>
           <Image 
             src="/cloudMpsLogo.png"
-            width={150}
-            height={105}
+            width={100}
+            height={70}
             alt='Cloud MPS Logo'
           />
         </div>
@@ -20,16 +27,16 @@ export default function Page() {
         <div id="subItems" className='w-full flex mx-10 my-5 flex-row justify-between items-center'>
           <div id="selectUserType">
             <div>
-              Company <Switch /> Personal
+              {trans.login.company_user} <Switch /> {trans.login.personal_user}
             </div>
           </div>
           <div id="selectInfo" className='flex text-xl flex-row justify-between items-center gap-4'>
-            <div id="intro">Introduction</div>
-            <div id="doc">Documentation</div>
+            <div id="intro">{trans.login.intro}</div>
+            <div id="doc">{trans.login.doc}</div>
           </div>
           <div id="select_process" className='flex gap-2'>
-            <Button className='border-2 border-lime-100 rounded-sm'>Login</Button>
-            <Button className='border-2 border-lime-100 rounded-sm'>Register</Button>
+            <Button className='border-2 border-lime-100 rounded-sm'>{trans.login.login}</Button>
+            <Button className='border-2 border-lime-100 rounded-sm'>{trans.login.register}</Button>
           </div>
         </div>
       </div>

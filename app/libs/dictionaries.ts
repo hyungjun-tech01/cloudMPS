@@ -5,5 +5,7 @@ const dictionaries = {
     ko: () => import('../locales/ko.json').then((module) => module.default),
 }
  
-export const getDictionary = async (locale: 'en' | 'ko') =>
-    dictionaries[locale]()
+const getDictionary = async (locale: 'en' | 'ko') =>
+    dictionaries[locale]();
+
+export default getDictionary;

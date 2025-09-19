@@ -1,8 +1,12 @@
 {
   "login": {
+    "company_user": "기업회원",
+    "doc": "문서",
     "id": "아이디",
-    "password": "비밀번호",
+    "intro": "소개",
     "login": "로그인",
+    "password": "비밀번호",
+    "personal_user": "개인회원",
     "register": "회원가입",
     "title": "로그인",
     "userId": "사용자 아이디"
