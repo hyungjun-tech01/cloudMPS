@@ -1,9 +1,8 @@
 import Image from 'next/image';
-import { Button,Switch } from 'antd';
 import mainImage from '@/app/images/mainImage.png';
-import 'material-icons/iconfont/material-icons.css';
-
 import getDictionary from '@/app/libs/dictionaries';
+import 'material-icons/iconfont/material-icons.css';
+import HomeForm from '@/app/components/home-form';
 
 export default async function Page(
   props: {
@@ -24,21 +23,7 @@ export default async function Page(
           />
         </div>
         <div id="title" className='text-4xl font-semibold'>Cloud MPS</div>
-        <div id="subItems" className='w-full flex mx-10 my-5 flex-row justify-between items-center'>
-          <div id="selectUserType">
-            <div>
-              {trans.login.company_user} <Switch /> {trans.login.personal_user}
-            </div>
-          </div>
-          <div id="selectInfo" className='flex text-xl flex-row justify-between items-center gap-4'>
-            <div id="intro">{trans.login.intro}</div>
-            <div id="doc">{trans.login.doc}</div>
-          </div>
-          <div id="select_process" className='flex gap-2'>
-            <Button className='border-2 border-lime-100 rounded-sm'>{trans.login.login}</Button>
-            <Button className='border-2 border-lime-100 rounded-sm'>{trans.login.register}</Button>
-          </div>
-        </div>
+        <HomeForm trans={trans.login}/>
       </div>
       <div className="flex grow flex-col md:flex-row justify-center items-center bg-[#142131]">
         <div id="mainImage" className='w-full'>

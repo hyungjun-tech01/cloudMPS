@@ -1,14 +1,41 @@
 {
-    "login": {
-      "company_user": "Company User",
-      "doc": "Documents",
-      "intro": "Introduction",
-      "id": "ID",
-      "login": "Login",
-      "password": "Password",
-      "personal_user": "Personal User",
-      "register": "Register",
-      "title": "Login",
-      "userId": "User ID"
-    }
+  "login": {
+    "company_user": "Company User",
+    "doc": "Documents",
+    "intro": "Introduction",
+    "id": "ID",
+    "login": "Login",
+    "password": "Password",
+    "personal_user": "Personal User",
+    "register": "Register",
+    "title": "Login",
+    "userId": "User ID"
+  },
+  "register": {
+    "title": "Register / Agreement",
+    "agreement": "Agreement",
+    "information": "Information",
+    "complete": "Complete",
+    "agree_all": "Agree All",
+    "term_of_use": "Term of Use",
+    "privacy_policy": "Privacy Policy",
+    "position_policy": "Position Policy",
+    "event_promotion_policy": "Event and Marketing Promotion Policy",
+    "company_information": "Company Information",
+    "company_name": "Company Name",
+    "company_address": "Company Address",
+    "company_phone": "Company Phone",
+    "company_email": "Company Email",
+    "company_website": "Company Website",
+    "company_ceo": "Company CEO",
+    "company_registration_number": "Company Registration Number",
+    "business_type": "Business Type",
+    "business_category": "Business Category",
+    "private_information": "Private Information",
+    "private_name": "Name",
+    "private_phone": "Phone",
+    "private_email": "Email",
+    "private_address": "Address",
+    "private_birth": "Birth"
   }
+}

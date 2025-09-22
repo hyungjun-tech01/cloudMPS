@@ -10,5 +10,32 @@
     "register": "회원가입",
     "title": "로그인",
     "userId": "사용자 아이디"
+  },
+  "register": {
+    "title": "회원가입 / 약관",
+    "agreement": "동의",
+    "information": "정보",
+    "complete": "완료",
+    "agree_all": "전체 동의",
+    "term_of_use": "이용약관",
+    "privacy_policy": "개인정보 수집 및 이용 동의",
+    "position_policy": "위치정보 수집 및 이용 동의",
+    "event_promotion_policy": "이벤트 및 마케팅 활용 동의",
+    "company_information": "회사 정보",
+    "company_name": "회사명",
+    "company_address": "회사 주소",
+    "company_phone": "회사 전화번호",
+    "company_email": "회사 이메일",
+    "company_website": "회사 웹사이트",
+    "company_ceo": "회사 대표",
+    "company_registration_number": "회사 등록번호",
+    "business_type": "업종",
+    "business_category": "업태",
+    "private_information": "개인 정보",
+    "private_name": "이름",
+    "private_phone": "전화번호",
+    "private_email": "이메일",
+    "private_address": "주소",
+    "private_birth": "생년월일"
   }
 }

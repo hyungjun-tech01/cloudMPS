@@ -1,18 +1,19 @@
 import { Suspense } from 'react';
-import LoginForm from '@/app/components/login-form';
+import RegisterForm from '@/app/components/register/register-form';
 import getDictionary from '@/app/libs/dictionaries';
 import type { Metadata } from "next";
+import { register } from '@/app/libs/actions';
 
 export const metadata: Metadata = {
-  title: 'Login',
+  title: 'Register',
 }
 
-interface ILogin {
+interface IRegister {
   userType?: "company" | "personal";
 }
 
-export default async function LoginPage(props: {
-  searchParams?: Promise<ILogin>;
+export default async function Page(props: {
+  searchParams?: Promise<IRegister>;
   params: Promise<{ locale: "ko" | "en" }>;
 }) {
   const searchParams = await props.searchParams;
@@ -21,20 +22,18 @@ export default async function LoginPage(props: {
   const trans = await getDictionary(locale);
   const languageData = {
     title : trans.login.title,
-    login : trans.login.login,
-    userId : trans.login.userId,
-    password : trans.login.password,
+    agreement : trans.register.agreement,
+    information : trans.register.information,
+    complete : trans.register.complete,
   }
   return (
     <main className="flex items-center justify-center md:h-screen">
-      <div className="relative mx-auto flex w-full max-w-[400px] flex-col p-4 md:-mt-32">
-        <div className="flex h-20 w-full items-end rounded-t-lg bg-lime-900 p-3 md:h-36" >
-          <div className="w-32 text-white text-2xl font-medium md:w-36">
-            {'Cloud MPS'}
-          </div>
+      <div className="relative mx-auto flex w-full max-w-[800px] flex-col p-4 md:-mt-8">
+        <div className="flex h-20 w-full items-end rounded-t-lg p-3 md:h-36 text-2xl font-medium" >
+          {trans.register.title}
         </div>
         <Suspense>
-          <LoginForm languageData={languageData}/>
+          <RegisterForm userType={userType} trans={languageData} action={register}/>
         </Suspense>
       </div>
     </main>
