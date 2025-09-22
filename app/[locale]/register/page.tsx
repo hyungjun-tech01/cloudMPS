@@ -27,8 +27,8 @@ export default async function Page(props: {
     complete : trans.register.complete,
   }
   return (
-    <main className="flex items-center justify-center md:h-screen">
-      <div className="relative mx-auto flex w-full max-w-[800px] flex-col p-4 md:-mt-8">
+    <main className="flex items-center justify-center">
+      <div className="relative mx-auto flex w-full max-w-[960px] flex-col p-4 md:-mt-8">
         <div className="flex h-20 w-full items-end rounded-t-lg p-3 md:h-36 text-2xl font-medium" >
           {trans.register.title}
         </div>

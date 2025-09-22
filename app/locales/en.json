@@ -1,6 +1,7 @@
 {
   "login": {
     "company_user": "Company User",
+    "company_code": "Company Code",
     "doc": "Documents",
     "intro": "Introduction",
     "id": "ID",

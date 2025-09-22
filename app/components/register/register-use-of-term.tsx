@@ -1,7 +1,8 @@
 import { useState } from 'react';
 
 enum Agreed {
-    useOfTerm = 1,
+    None = 0,
+    UseOfTerm = 1,
     PrivacyPolicy = 2,
     PositionPolicy = 4,
     EventPromotionPolicy = 8,
@@ -14,12 +15,29 @@ export default function RegisterUseOfTerm({
     trans: Record<string, string>
 }) {
     const [agreed, setAgreed] = useState<number>(0);
-    const handleAgreeAll = () => {
+    const handleAgreeAll = (event: React.ChangeEvent<HTMLInputElement>) => {
         console.log('agree_all');
-        setAgreed(Agreed.All)
+        const CBUseOfTerm = document.getElementById('agree_use_of_term');
+        const CBPrivacy = document.getElementById('agree_privacy_policy');
+        const CBPosition = document.getElementById('agree_position_policy');
+        const CBEventPromotion = document.getElementById('agree_event_promotion_policy');
+        if(event.target.checked) {
+            setAgreed(Agreed.All);
+            if(!!CBUseOfTerm) CBUseOfTerm.checked = true;
+            if(!!CBPrivacy) CBPrivacy.checked = true;
+            if(!!CBPosition) CBPosition.checked = true;
+            if(!!CBEventPromotion) CBEventPromotion.checked = true;
+        } else {
+            setAgreed(Agreed.None);
+            if(!!CBUseOfTerm) CBUseOfTerm.checked = false;
+            if(!!CBPrivacy) CBPrivacy.checked = false;
+            if(!!CBPosition) CBPosition.checked = false;
+            if(!!CBEventPromotion) CBEventPromotion.checked = false;
+        }
     }
     const handleUseOfTermAgreeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setAgreed(event.target.checked ? agreed | Agreed.useOfTerm : agreed & ~Agreed.useOfTerm)
+        console.log('use_of_terms : ', event.target.checked);
+        setAgreed(event.target.checked ? agreed | Agreed.UseOfTerm : agreed & ~Agreed.UseOfTerm)
     }
     const handlePrivacyPolicyAgreeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setAgreed(event.target.checked ? agreed | Agreed.PrivacyPolicy : agreed & ~Agreed.PrivacyPolicy)
@@ -32,39 +50,31 @@ export default function RegisterUseOfTerm({
     }
 
     return (
-        <>
-            <div>
-                <input type="checkbox" id="agree_all" onChange={handleAgreeAll}/>
-                <label htmlFor="agree_all">Agree All</label>
+        <div className='flex flex-col'>
+            <div className="mt-2 px-2 flex flex-row justify-start items-center">
+                <input type="checkbox" id="agree_all" className='h-4 w-4' onChange={handleAgreeAll}/>
+                <label htmlFor="agree_all" className='ml-2'>Agree All</label>
             </div>
-            <div>
-                <div className='flex flex-row justify-start items-center w-full h-5'>
-                    <input type="checkbox" id="agree_use_of_term" onChange={handleUseOfTermAgreeChange}/>
-                    <label htmlFor="agree_use_of_term">Use of Term</label>
-                </div>
-                <textarea className='w-full h-40' value={trans.term_of_use} />
+            <div className='mt-6 px-2 flex flex-row justify-start items-center w-full h-5'>
+                <input type="checkbox" id="agree_use_of_term" className='h-4 w-4' onChange={handleUseOfTermAgreeChange}/>
+                <label htmlFor="agree_use_of_term" className='ml-2'>Use of Term</label>
             </div>
-            <div>
-                <div className='flex flex-row justify-start items-center w-full h-5'>
-                    <input type="checkbox" id="agree_privacy_policy" onChange={handlePrivacyPolicyAgreeChange}/>
-                    <label htmlFor="agree_privacy_policy">Privacy Policy</label>
-                </div>
-                <textarea className='w-full h-40' value={trans.privacy_policy} />
+            <div className='mt-2 w-full h-40 bg-gray-100 overflow-auto border-[1px] border-gray-400 rounded-sm' >{trans.term_of_use}</div>
+            <div className='mt-6 px-2 flex flex-row justify-start items-center w-full h-5'>
+                <input type="checkbox" id="agree_privacy_policy" className='h-4 w-4' onChange={handlePrivacyPolicyAgreeChange}/>
+                <label htmlFor="agree_privacy_policy" className='ml-2'>Privacy Policy</label>
             </div>
-            <div>
-                <div className='flex flex-row justify-start items-center w-full h-5'>
-                    <input type="checkbox" id="agree_position_policy" onChange={handlePositionPolicyAgreeChange}/>
-                    <label htmlFor="agree_position_policy">Position Policy</label>
-                </div>
-                <textarea className='w-full h-40' value={trans.position_policy} />
+            <div className='mt-2 w-full h-40 bg-gray-100 overflow-auto border-[1px] border-gray-400 rounded-sm'>{trans.privacy_policy}</div>
+            <div className='mt-6 px-2 flex flex-row justify-start items-center w-full h-5'>
+                <input type="checkbox" id="agree_position_policy" className='h-4 w-4' onChange={handlePositionPolicyAgreeChange}/>
+                <label htmlFor="agree_position_policy" className='ml-2'>Position Policy</label>
             </div>
-            <div>
-                <div className='flex flex-row justify-start items-center w-full h-5'>
-                    <input type="checkbox" id="agree_event_promotion_policy" onChange={handleEventPromotionPolicyAgreeChange}/>
-                    <label htmlFor="agree_event_promotion_policy">Event Promotion Policy</label>
-                </div>
-                <textarea className='w-full h-40' value={trans.event_promotion_policy} />
+            <div className='mt-2 w-full h-40 bg-gray-100 overflow-auto border-[1px] border-gray-400 rounded-sm'>{trans.position_policy}</div>
+            <div className='mt-6 px-2 flex flex-row justify-start items-center w-full h-5'>
+                <input type="checkbox" id="agree_event_promotion_policy" className='h-4 w-4' onChange={handleEventPromotionPolicyAgreeChange}/>
+                <label htmlFor="agree_event_promotion_policy" className='ml-2'>Event & Promotion Policy</label>
             </div>
-        </>
+            <div className='mt-2 w-full h-40 bg-gray-100 overflow-auto border-[1px] border-gray-400 rounded-sm'>{trans.event_promotion_policy}</div>
+        </div>
     )
 }

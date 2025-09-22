@@ -1,7 +1,7 @@
 'use client';
 
 import { useActionState, useState } from 'react';
-import { Button, Steps, theme } from 'antd';
+import { Button, Steps } from 'antd';
 import { authenticate, RegisterState } from '@/app/libs/actions';
 import 'material-icons/iconfont/material-icons.css';
 
@@ -28,14 +28,13 @@ export default function RegisterForm({
     undefined,
   );
 
-  const { token } = theme.useToken();
   const [registerStep, setRegisterStep] = useState<RegisterStep>(RegisterStep.AGREEMENT);
   const [aggreed, setAggreed] = useState<number>(0);
 
   const registerSteps = [
     {
       title: trans.agreement,
-      content: <RegisterUseOfTerm userType={userType} trans={trans} />,
+      content: <RegisterUseOfTerm trans={trans} userType={userType} />,
     },
     {
       title: trans.information,
@@ -54,23 +53,14 @@ export default function RegisterForm({
     setRegisterStep(registerStep - 1);
   }
 
-  const contentStyle: React.CSSProperties = {
-    lineHeight: '260px',
-    textAlign: 'center',
-    color: token.colorTextTertiary,
-    backgroundColor: token.colorFillAlter,
-    borderRadius: token.borderRadiusLG,
-    border: `1px dashed ${token.colorBorder}`,
-    marginTop: 16,
-  };
 
   const items = registerSteps.map((step) => ({ key: step.title, title: step.title }));
 
   return (
     <form action={formAction} >
       <div className="flex-1 rounded-b-lg bg-gray-50 px-6 pb-4 pt-8">
-        <Steps current={registerStep} items={items} />
-        <div style={contentStyle}>{registerSteps[registerStep].content}</div>
+        <Steps current={registerStep} items={items} responsive />
+        <div className="mt-8">{registerSteps[registerStep].content}</div>
         <div className="flex mt-4">
           {registerStep < registerSteps.length - 1 && (
             <Button type="primary" onClick={() => handleNextStep()}>

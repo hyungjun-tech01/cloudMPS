@@ -1,6 +1,7 @@
 {
   "login": {
     "company_user": "기업회원",
+    "company_code" : "기업코드",
     "doc": "문서",
     "id": "아이디",
     "intro": "소개",

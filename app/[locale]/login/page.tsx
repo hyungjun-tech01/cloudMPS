@@ -28,13 +28,13 @@ export default async function LoginPage(props: {
   return (
     <main className="flex items-center justify-center md:h-screen">
       <div className="relative mx-auto flex w-full max-w-[400px] flex-col p-4 md:-mt-32">
-        <div className="flex h-20 w-full items-end rounded-t-lg bg-lime-900 p-3 md:h-36" >
+        <div className="flex h-20 w-full items-end rounded-t-lg bg-[#142131] p-3 md:h-36" >
           <div className="w-32 text-white text-2xl font-medium md:w-36">
             {'Cloud MPS'}
           </div>
         </div>
         <Suspense>
-          <LoginForm languageData={languageData}/>
+          <LoginForm userType={userType} trans={trans.login}/>
         </Suspense>
       </div>
     </main>
