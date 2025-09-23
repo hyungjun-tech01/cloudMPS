@@ -14,7 +14,7 @@ export default function LoginForm({
   trans: Record<string, string>;
 }) {
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || '/';
+  const callbackUrl = searchParams.get('callbackUrl') || '/home';
   const [errorMessage, formAction, isPending] = useActionState(
     authenticate,
     undefined,
@@ -87,8 +87,9 @@ export default function LoginForm({
           </div>
         </div>
         <input type="hidden" name="redirectTo" value={callbackUrl} />
-        <button type="submit" className="mt-8 w-full bg-slate-500  px-3 py-0.5 rounded-sm" aria-disabled={isPending}>
-          {trans.login} <span className="material-icons ml-auto h-5 w-5 text-gray-500">arrow_forward</span>
+        <button type="submit" className="mt-8 w-full bg-slate-500 text-white px-3 py-0.5 rounded-sm flex justify-center items-center" aria-disabled={isPending}>
+          {trans.login}
+          <span className="material-icons ml-auto h-5 w-5 text-white">arrow_forward</span>
         </button>
         <div className="flex h-8 items-end space-x-1">
           {errorMessage && (

@@ -1,11 +1,12 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSession } from "next-auth/react";
 import clsx from 'clsx';
 import { SideMenuList } from '@/app/libs/constans';
-import { useState } from 'react';
+import MaterialIcon from '@/app/components/materialIcon';
 
 
 // 타입 정의 추가
@@ -13,12 +14,12 @@ interface MenuItem {
   name: string;
   title: string;
   href: string;
-  icon: React.ElementType;
+  icon: {name: string, type: string, props?: string};
   submenu?: {
     name: string;
     title: string;
     href: string;
-    icon: React.ElementType;
+    icon: {name: string, type: string, props?: string};
   }[];
 }
 
@@ -42,7 +43,7 @@ export default function NavLinks({ extended }: { extended: boolean }) {
       {SideMenuList[userRole as keyof typeof SideMenuList].map((link: MenuItem) => {
         if (session?.user?.role !== "admin" && link.name === 'user') return null;
 
-        const LinkIcon = link.icon;
+        const LinkIcon = <MaterialIcon name={link.icon.name} type={link.icon.type} props={`${link.icon.props} w-6`} />;
         const isExpanded = expandedMenu === link.name;
 
         return (
@@ -58,7 +59,7 @@ export default function NavLinks({ extended }: { extended: boolean }) {
                   }
                 )}
               >
-                <LinkIcon className="w-6" />
+                {LinkIcon}
                 <p className={clsx("hidden duration-150",
                   { 'md:block': extended }
                 )}>{link.title}</p>
@@ -75,7 +76,7 @@ export default function NavLinks({ extended }: { extended: boolean }) {
                   }
                 )}
               >
-                <LinkIcon className="w-6" />
+                {LinkIcon}
                 <p className={clsx("hidden duration-150",
                   { 'md:block': extended }
                 )}>{link.title}</p>
@@ -85,7 +86,7 @@ export default function NavLinks({ extended }: { extended: boolean }) {
             {link.name === 'settings' && isExpanded && link.submenu && (
               <div>
                 {link.submenu.map((subItem) => {
-                  const SubItemIcon = subItem.icon;
+                  const SubItemIcon = <MaterialIcon name={subItem.icon.name} type={subItem.icon.type} props={`${subItem.icon.props} w-5`} />;
                   const isActive = pathname.startsWith(subItem.href);  // 이 부분 수정
                   return (
                     <Link
@@ -100,7 +101,7 @@ export default function NavLinks({ extended }: { extended: boolean }) {
                         }
                       )}
                     >
-                      <SubItemIcon className="w-5" />
+                      {SubItemIcon}
                       <p className={clsx("hidden duration-150",
                         { 'md:block': extended }
                       )}>{subItem.title}</p>

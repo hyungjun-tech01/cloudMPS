@@ -44,14 +44,14 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           // const passwordsMatch = await bcrypt.compare(user_password, userPassword);
 
           // if (passwordsMatch)
-            return {
-              id: 'admin',   //userAttr.id,
-              name: 'admin', // userAttr.name,
-              full_name: 'admin', //userAttr.full_name,
-              email: '',  //userAttr.email,
-              role: 'admin',  //userAttr.role ?? "user",
-              image: ""
-            };
+          return {
+            id: 'admin',   //userAttr.id,
+            name: 'admin', // userAttr.name,
+            full_name: 'admin', //userAttr.full_name,
+            email: '',  //userAttr.email,
+            role: 'admin',  //userAttr.role ?? "user",
+            image: ""
+          };
           // } else {
           //   return {
           //     id: '0001',
@@ -70,37 +70,42 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   ],
   callbacks: {
     authorized: ({ auth, request: { nextUrl } }) => {
+      console.log("authorized called");
       // check login --------------------------------------------
       const isLoggedIn = !!auth?.user;
-      const isOnProtected = !(nextUrl.pathname.startsWith('/login'));
-      if (isOnProtected) {
-        if (isLoggedIn) return true;
-        return Response.redirect(new URL('/login', nextUrl));
-      } else if (isLoggedIn) {
-        return Response.redirect(new URL('/', nextUrl));
-      }
+      const isOnTop = nextUrl.pathname === "/";
+      const isOnHome = nextUrl.pathname.startsWith('/home');
 
-      // check admin --------------------------------------------
-      const isAdmin = auth?.user.role === "admin";
-      const isManager = auth?.user.role === "manager";
-      const userMenu = nextUrl.pathname.startsWith('/user');
-      const groupMenu = nextUrl.pathname.startsWith('/group');
-      const editMenu = nextUrl.pathname.endsWith('/edit');
+      if (isLoggedIn) {
+        if(isOnTop) {
+          return Response.redirect(new URL('/home', nextUrl));
+        }
 
-      if(userMenu) {
-        if(isAdmin) return true;
-        return Response.redirect(new URL('/', nextUrl));
-      }
-      if(groupMenu) {
-        if(editMenu) {
-          if(isAdmin) return true;
-          return Response.redirect(new URL('/', nextUrl));
-        } else {
-          if(isAdmin || isManager) return true;
-          return Response.redirect(new URL('/', nextUrl));
+        const isAdmin = auth?.user.role === "admin";
+        const isManager = auth?.user.role === "manager";
+        const userMenu = nextUrl.pathname.startsWith('/user');
+        const groupMenu = nextUrl.pathname.startsWith('/group');
+        const editMenu = nextUrl.pathname.endsWith('/edit');
+
+        if (userMenu) {
+          if (isAdmin) return true;
+          return Response.redirect(new URL('/home', nextUrl));
+        }
+        if (groupMenu) {
+          if (editMenu) {
+            if (isAdmin) return true;
+            return Response.redirect(new URL('/home', nextUrl));
+          } else {
+            if (isAdmin || isManager) return true;
+            return Response.redirect(new URL('/home', nextUrl));
+          }
+        }
+      } else {
+        if(isOnHome) {
+          return Response.redirect(new URL('/login', nextUrl));
         }
       }
-      
+
       return true;
     },
     jwt: async ({ token, user }) => {

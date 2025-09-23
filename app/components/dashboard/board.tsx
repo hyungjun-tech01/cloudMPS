@@ -1,34 +1,20 @@
-// import {
-//     AccountCircleOutlined,
-//     FileCopyOutlined,
-//     ErrorOutlined,
-//     PaidOutlined,
-//     PrintOutlined,
-//     WarningOutlined
-// } from "@mui/icons-material";
-import clsx from 'clsx';
 import { auth } from "@/auth";
 import Card from "./card";
 import type { IValueObject } from "./card";
-
-import { formatCurrency } from '../../lib/utils';
+import MaterialIcon from '@/app/components/materialIcon';
+import { formatCurrency } from '@/app/libs/utils';
 import { redirect } from 'next/navigation'; // 적절한 리다이렉트 함수 import
 
 
-const iconMap = {
-    collected: PaidOutlined,
-    users: AccountCircleOutlined,
-    devices: PrintOutlined,
-    pages: FileCopyOutlined,
-    error: ErrorOutlined,
-    warning: WarningOutlined,
-};
 
-
-export default async function BoardWrapper({ trans }: { trans: (key: string) => string }) {
+export default async function BoardWrapper({ trans }: { trans: Record<string, string> }) {
     const session = await auth();
-    const adapter = MyDBAdapter();
-    const boardInfo: { title: string, value: string | number, type: string, color?: string }[] = [];
+    // const adapter = MyDBAdapter();
+    const boardInfo: { 
+        title: string,
+        value: string | number,
+        icon?: {name: string, type: string, color?: string}
+    }[] = [];
 
     const userName = session?.user.name;
 
@@ -37,15 +23,14 @@ export default async function BoardWrapper({ trans }: { trans: (key: string) => 
 
         // 여기서 redirect 함수를 사용해 리다이렉트 처리
         redirect('/login'); // '/login'으로 리다이렉트
-        // notFound();
     };
 
     if (session?.user.role === "admin") {
         const [device_status, top5users, top5devices] =
             await Promise.all([
-                adapter.getDevicesStatus(),
-                adapter.getTop5UserFor30days(),
-                adapter.getTop5DevicesFor30days(),
+                {normal_count: 0, error_count: 0, warning_count: 0, low_supply_count: 0, offline_count: 0},
+                [{user_name: 'test1', total_pages_sum: '0'}, {user_name: 'test2', total_pages_sum: '0'}, {user_name: 'test3', total_pages_sum: '0'}, {user_name: 'test4', total_pages_sum: '0'}, {user_name: 'test5', total_pages_sum: '0'}],
+                [{device_name: 'test1', total_pages_sum: '0'}, {device_name: 'test2', total_pages_sum: '0'}, {device_name: 'test3', total_pages_sum: '0'}, {device_name: 'test4', total_pages_sum: '0'}, {device_name: 'test5', total_pages_sum: '0'}]
             ]);
 
         const normal_count = Number(device_status.normal_count);
@@ -63,26 +48,35 @@ export default async function BoardWrapper({ trans }: { trans: (key: string) => 
             title: item.device_name, value: item.total_pages_sum
         }));
 
-        boardInfo.push({ title: trans("dashboard.total_device"), value: total_count, type: "devices" });
-        boardInfo.push({ title: trans("dashboard.normal_device"), value: normal_count, type: "devices", color: "blue" });
-        boardInfo.push({ title: trans("dashboard.error_device"), value: error_count, type: "error", color: "red" });
-        boardInfo.push({ title: trans("dashboard.low_supply_device"), value: low_supply_count, type: "warning", color: "yellow" });
+        boardInfo.push({ 
+            title: trans.total_device,
+            value: total_count,
+            icon: {name: "print", type: "outlined", color: "text-blue-500"}
+        });
+        boardInfo.push({ 
+            title: trans.normal_device,
+            value: normal_count,
+            icon: {name: "print", type: "outlined", color: "text-blue-500"}
+        });
+        boardInfo.push({ 
+            title: trans.error_device,
+            value: error_count,
+            icon: {name: "error", type: "outlined", color: "text-red-500"}
+        });
+        boardInfo.push({ 
+            title: trans.low_supply_device,
+            value: low_supply_count,
+            icon: {name: "warning", type: "outlined", color: "text-yellow-500"}
+        });
 
         return (
             <>
                 <div className="rounded-xl bg-gray-50 p-2 border border-gray-300">
                     { boardInfo.map((item, idx) => {
-                        const Icon = iconMap[item.type as keyof typeof iconMap];
                         return (
                             <div key={idx} className="flex p-4 justify-between">
                                 <div className="flex justify-start">
-                                    {!!Icon && <Icon className={clsx("h-6 w-6", 
-                                        {"text-gray-700": !item.color}, 
-                                        {"text-red-500" : item.color === "red"},
-                                        {"text-yellow-500" : item.color === "yellow"},
-                                        {"text-blue-500" : item.color === "blue"},
-                                        )} 
-                                    />}
+                                    {!!item.icon && <MaterialIcon name={item.icon.name} type={item.icon.type} props={`h-6 w-6 ${item.icon.color}`} /> }
                                     <h3 className="ml-2 text-base text-sm">{item.title}</h3>
                                 </div>
                                 <div>{item.value}</div>
@@ -90,24 +84,37 @@ export default async function BoardWrapper({ trans }: { trans: (key: string) => 
                         )
                     })}
                 </div>
-                <Card title={trans("dashboard.top5_users")} value={top5userInfo} type="users" />
-                <Card title={trans("dashboard.top5_devices")} value={top5devicesInfo} type="devices" />
+                <Card title={trans.top5_users} value={top5userInfo} icon={{name: "account_circle", type: "outlined", color: "text-gray-500"}} />
+                <Card title={trans.top5_devices} value={top5devicesInfo} icon={{name: "print", type: "outlined", color: "text-blue-500"}} />
             </>
         )
     } else {
         const [myUsageStatus, myInfo] = await Promise.all([
-            adapter.getUsageStatusByUser(userName),
-            adapter.getUserByName(userName)
+            // adapter.getUsageStatusByUser(userName),
+            // adapter.getUserByName(userName)
+            {total_job_count: 0, copy_print_total_pages: 0}, {balance: 0}
         ]);
 
-        boardInfo.push({ title: trans("dashboard.total_job_count"), value: myUsageStatus.total_job_count || 0, type: "pages" });
-        boardInfo.push({ title: trans("dashboard.total_pages"), value: myUsageStatus.copy_print_total_pages || 0, type: "pages" });
-        boardInfo.push({ title: trans("account.balance"), value: formatCurrency(myInfo.balance?? 0, 'ko'), type: "collected" });
+        boardInfo.push({ 
+            title: trans.total_job_count,
+            value: myUsageStatus.total_job_count || 0,
+            icon : {name: "file_copy", type: "outlined", color: "text-blue-500"}
+        });
+        boardInfo.push({ 
+            title: trans.total_pages,
+            value: myUsageStatus.copy_print_total_pages || 0,
+            icon: {name: "file_copy", type: "outlined", color: "text-blue-500"}}
+        );
+        boardInfo.push({ 
+            title: trans.balance,
+            value: formatCurrency(myInfo.balance?? 0, 'ko'),
+            icon: {name: "paid", type: "outlined", color: "text-gray-500"}
+        });
 
         return (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                 { boardInfo.map((item, idx) => (
-                    <Card key={idx} title={item.title} value={item.value} type={item.type as keyof typeof iconMap} />
+                    <Card key={idx} title={item.title} value={item.value} icon={item.icon} />
                 ))}
             </div>
         )

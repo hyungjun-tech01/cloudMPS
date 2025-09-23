@@ -1,14 +1,20 @@
 {
-  "login": {
+  "home": {
     "company_user": "기업회원",
-    "company_code" : "기업코드",
     "doc": "문서",
-    "id": "아이디",
     "intro": "소개",
     "login": "로그인",
-    "password": "비밀번호",
+    "message_1": "효율적인 업무 관리와 혁신을 위한 플랫폼",
+    "message_2": "Cloud MPS는 업무를 더 효율적이고 효과적으로 관리할 수 있는 플랫폼입니다.",
+    "message_3": "Cloud MPS의 힘을 활용하여 업무를 개선하세요.",
     "personal_user": "개인회원",
-    "register": "회원가입",
+    "register": "회원가입"
+  },
+  "login": {
+    "company_code" : "기업코드",
+    "id": "아이디",
+    "login": "로그인",
+    "password": "비밀번호",
     "title": "로그인",
     "userId": "사용자 아이디"
   },
@@ -38,5 +44,29 @@
     "private_email": "이메일",
     "private_address": "주소",
     "private_birth": "생년월일"
+  },
+  "dashboard": {
+    "balance": "잔액",
+    "dashboard": "대쉬보드",
+    "device_info": "장치 정보",
+    "error_device": "오류 기기",
+    "from": "시작일",
+    "low_supply_device": "소모품 부족",
+    "normal_device": "정상 기기",
+    "offline_device": "오프라인 기기",
+    "page_info": "페이지 정보",
+    "print_pages": "출력 매수",
+    "printed_page": "출력 페이지",
+    "recent_printed_page": "최근 1달간 출력 동향",
+    "scan_pages": "스캔 매수",
+    "to": "종료일",
+    "today_pages": "금일 매수",
+    "top5_users": "최근 1달간 최다 사용자",
+    "top5_devices": "최근 1달간 최다 사용기기",
+    "total_device": "전체 기기",
+    "total_job_count": "총 출력 작업",
+    "total_pages": "총 페이지",
+    "user_name_or_id": "사용자 이름 또는 ID",
+    "warning_device": "경고"
   }
 }

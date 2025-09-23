@@ -1,14 +1,20 @@
 {
-  "login": {
+  "home": {
     "company_user": "Company User",
-    "company_code": "Company Code",
     "doc": "Documents",
     "intro": "Introduction",
+    "login": "Login",
+    "message_1": "Driving Efficiency and Innovation in Your Workplace",
+    "message_2": "Cloud MPS is a platform that helps you manage your business more efficiently and effectively.",
+    "message_3": "Discover the power of Cloud MPS today and improve your business.",
+    "personal_user": "Personal User",
+    "register": "Register"
+  },
+  "login": {
+    "company_code": "Company Code",
     "id": "ID",
     "login": "Login",
     "password": "Password",
-    "personal_user": "Personal User",
-    "register": "Register",
     "title": "Login",
     "userId": "User ID"
   },
@@ -38,5 +44,29 @@
     "private_email": "Email",
     "private_address": "Address",
     "private_birth": "Birth"
+  },
+  "dashboard": {
+    "balance": "Balance",
+    "dashboard": "Dashboard",
+    "device_info": "Device Info",
+    "error_device": "Error Device",
+    "from": "Start Date",
+    "low_supply_device": "Low Supply Device",
+    "normal_device": "Normal Device",
+    "offline_device": "Offline Device",
+    "page_info": "Page Info",
+    "print_pages": "Print Pages",
+    "printed_page": "Printed Page",
+    "recent_printed_page": "Recent Printed Page",
+    "scan_pages": "Scan Pages",
+    "to": "End Date",
+    "today_pages": "Today Pages",
+    "top5_users": "Top 5 Users",
+    "top5_devices": "Top 5 Devices",
+    "total_device": "Total Device",
+    "total_job_count": "Total Job Count",
+    "total_pages": "Total Pages",
+    "user_name_or_id": "User Name or ID",
+    "warning_device": "Warning"
   }
 }
