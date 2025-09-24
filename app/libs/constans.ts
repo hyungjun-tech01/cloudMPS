@@ -1,4 +1,3 @@
-
 export const SideMenuList = {
     admin: [
         { name: 'dashboard', title: '대쉬보드', href: '/dashboard', icon: {name: 'space_dashboard', type: 'outlined'} },

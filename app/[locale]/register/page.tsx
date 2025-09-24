@@ -20,12 +20,7 @@ export default async function Page(props: {
   const userType = searchParams?.userType || "company";
   const locale = (await props.params).locale;
   const trans = await getDictionary(locale);
-  const languageData = {
-    title : trans.login.title,
-    agreement : trans.register.agreement,
-    information : trans.register.information,
-    complete : trans.register.complete,
-  }
+
   return (
     <main className="flex items-center justify-center">
       <div className="relative mx-auto flex w-full max-w-[960px] flex-col p-4 md:-mt-8">
@@ -33,7 +28,7 @@ export default async function Page(props: {
           {trans.register.title}
         </div>
         <Suspense>
-          <RegisterForm userType={userType} trans={languageData} action={register}/>
+          <RegisterForm userType={userType} trans={trans} action={register}/>
         </Suspense>
       </div>
     </main>

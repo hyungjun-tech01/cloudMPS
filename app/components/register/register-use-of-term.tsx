@@ -12,15 +12,15 @@ export default function RegisterUseOfTerm({
     userType, trans 
 }: {
     userType: "company" | "personal",
-    trans: Record<string, string>
+    trans: Record<string, Record<string, string>>
 }) {
     const [agreed, setAgreed] = useState<number>(0);
     const handleAgreeAll = (event: React.ChangeEvent<HTMLInputElement>) => {
         console.log('agree_all');
-        const CBUseOfTerm = document.getElementById('agree_use_of_term');
-        const CBPrivacy = document.getElementById('agree_privacy_policy');
-        const CBPosition = document.getElementById('agree_position_policy');
-        const CBEventPromotion = document.getElementById('agree_event_promotion_policy');
+        const CBUseOfTerm = document.getElementById('agree_use_of_term') as HTMLInputElement;
+        const CBPrivacy = document.getElementById('agree_privacy_policy') as HTMLInputElement;
+        const CBPosition = document.getElementById('agree_position_policy') as HTMLInputElement;
+        const CBEventPromotion = document.getElementById('agree_event_promotion_policy') as HTMLInputElement;
         if(event.target.checked) {
             setAgreed(Agreed.All);
             if(!!CBUseOfTerm) CBUseOfTerm.checked = true;
@@ -59,22 +59,22 @@ export default function RegisterUseOfTerm({
                 <input type="checkbox" id="agree_use_of_term" className='h-4 w-4' onChange={handleUseOfTermAgreeChange}/>
                 <label htmlFor="agree_use_of_term" className='ml-2'>Use of Term</label>
             </div>
-            <div className='mt-2 w-full h-40 bg-gray-100 overflow-auto border-[1px] border-gray-400 rounded-sm' >{trans.term_of_use}</div>
+            <div className='mt-2 w-full h-40 bg-gray-100 overflow-auto border-[1px] border-gray-400 rounded-sm' >{trans.register.term_of_use}</div>
             <div className='mt-6 px-2 flex flex-row justify-start items-center w-full h-5'>
                 <input type="checkbox" id="agree_privacy_policy" className='h-4 w-4' onChange={handlePrivacyPolicyAgreeChange}/>
                 <label htmlFor="agree_privacy_policy" className='ml-2'>Privacy Policy</label>
             </div>
-            <div className='mt-2 w-full h-40 bg-gray-100 overflow-auto border-[1px] border-gray-400 rounded-sm'>{trans.privacy_policy}</div>
+            <div className='mt-2 w-full h-40 bg-gray-100 overflow-auto border-[1px] border-gray-400 rounded-sm'>{trans.register.privacy_policy}</div>
             <div className='mt-6 px-2 flex flex-row justify-start items-center w-full h-5'>
                 <input type="checkbox" id="agree_position_policy" className='h-4 w-4' onChange={handlePositionPolicyAgreeChange}/>
                 <label htmlFor="agree_position_policy" className='ml-2'>Position Policy</label>
             </div>
-            <div className='mt-2 w-full h-40 bg-gray-100 overflow-auto border-[1px] border-gray-400 rounded-sm'>{trans.position_policy}</div>
+            <div className='mt-2 w-full h-40 bg-gray-100 overflow-auto border-[1px] border-gray-400 rounded-sm'>{trans.register.position_policy}</div>
             <div className='mt-6 px-2 flex flex-row justify-start items-center w-full h-5'>
                 <input type="checkbox" id="agree_event_promotion_policy" className='h-4 w-4' onChange={handleEventPromotionPolicyAgreeChange}/>
                 <label htmlFor="agree_event_promotion_policy" className='ml-2'>Event & Promotion Policy</label>
             </div>
-            <div className='mt-2 w-full h-40 bg-gray-100 overflow-auto border-[1px] border-gray-400 rounded-sm'>{trans.event_promotion_policy}</div>
+            <div className='mt-2 w-full h-40 bg-gray-100 overflow-auto border-[1px] border-gray-400 rounded-sm'>{trans.register.event_promotion_policy}</div>
         </div>
     )
 }

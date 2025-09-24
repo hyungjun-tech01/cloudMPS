@@ -6,6 +6,7 @@ import { authenticate, RegisterState } from '@/app/libs/actions';
 import 'material-icons/iconfont/material-icons.css';
 
 import RegisterUseOfTerm from './register-use-of-term';
+import RegisterUserInfo from './register-user-info';
 
 enum RegisterStep {
   AGREEMENT = 0,
@@ -20,7 +21,7 @@ export default function RegisterForm({
   action
 }: {
   userType: "company" | "personal";
-  trans: Record<string, string>
+  trans: Record<string, Record<string, string>>
   action: (prevState: void | RegisterState, formData: FormData) => Promise<void>
 }) {
   const [errorMessage, formAction, isPending] = useActionState(
@@ -33,20 +34,23 @@ export default function RegisterForm({
 
   const registerSteps = [
     {
-      title: trans.agreement,
-      content: <RegisterUseOfTerm trans={trans} userType={userType} />,
+      title: trans.register.agreement,
+      content: <RegisterUseOfTerm trans={trans} userType={userType} />
     },
     {
-      title: trans.information,
-      content: 'Information',
+      title: trans.register.information,
+      content: <RegisterUserInfo trans={trans} userType={userType} />
     },
     {
-      title: trans.complete,
+      title: trans.register.complete,
       content: 'Complete',
     }
   ];
 
   const handleNextStep = () => {
+    if(registerStep === RegisterStep.AGREEMENT) {
+
+    }
     setRegisterStep(registerStep + 1);
   }
   const handlePrevStep = () => {
@@ -61,10 +65,10 @@ export default function RegisterForm({
       <div className="flex-1 rounded-b-lg bg-gray-50 px-6 pb-4 pt-8">
         <Steps current={registerStep} items={items} responsive />
         <div className="mt-8">{registerSteps[registerStep].content}</div>
-        <div className="flex mt-4">
-          {registerStep < registerSteps.length - 1 && (
-            <Button type="primary" onClick={() => handleNextStep()}>
-              Next
+        <div className="flex justify-end mt-4">
+          {registerStep > 0 && (
+            <Button className="my-0 mx-2" onClick={() => handlePrevStep()}>
+              Previous
             </Button>
           )}
           {registerStep === registerSteps.length - 1 && (
@@ -72,9 +76,9 @@ export default function RegisterForm({
               Done
             </Button>
           )}
-          {registerStep > 0 && (
-            <Button className="my-0 mx-2" onClick={() => handlePrevStep()}>
-              Previous
+          {registerStep < registerSteps.length - 1 && (
+            <Button type="primary" onClick={() => handleNextStep()}>
+              Next
             </Button>
           )}
         </div>

@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import mainImage from '@/app/images/mainImage.png';
 import getDictionary from '@/app/libs/dictionaries';
-import 'material-icons/iconfont/material-icons.css';
 import HomeForm from '@/app/components/home-form';
 
 export default async function Page(
