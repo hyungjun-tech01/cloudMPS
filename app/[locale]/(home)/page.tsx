@@ -5,6 +5,7 @@ import getDictionary from '@/app/libs/dictionaries';
 import clsx from "clsx";
 import { auth } from "@/auth";
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: 'Dashboard',
@@ -26,10 +27,12 @@ export default async function Page(props: {
   const params = await props.params;
   const locale = params.locale;
 
-  const trans = await getDictionary(locale);
-
   const session = await auth();
+  if(!session?.user) {
+    redirect('/intro');
+  }
   const isAdmin = session?.user.role === "admin";
+  const trans = await getDictionary(locale);
 
   return (
     <main>

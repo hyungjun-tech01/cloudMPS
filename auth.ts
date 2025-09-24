@@ -18,10 +18,9 @@ declare module "next-auth" {
   }
 }
 
-
 export const { auth, handlers, signIn, signOut } = NextAuth({
   pages: {
-    signIn: '/login',
+    signIn: "/login",
   },
   providers: [
     Credentials({
@@ -33,7 +32,9 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         if (parsedCredentials.success) {
           const { user_name, user_password } = parsedCredentials.data;
 
-          console.log(`Credential : (id) ${user_name} / (pwd) ${user_password}`);
+          console.log(
+            `Credential : (id) ${user_name} / (pwd) ${user_password}`
+          );
           // if(user_name !== 'admin') {
           // const adapter = MyDBAdapter();
           // const userAttr = await adapter.getAccount(user_name);
@@ -45,12 +46,12 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
           // if (passwordsMatch)
           return {
-            id: 'admin',   //userAttr.id,
-            name: 'admin', // userAttr.name,
-            full_name: 'admin', //userAttr.full_name,
-            email: '',  //userAttr.email,
-            role: 'admin',  //userAttr.role ?? "user",
-            image: ""
+            id: "admin", //userAttr.id,
+            name: "admin", // userAttr.name,
+            full_name: "admin", //userAttr.full_name,
+            email: "", //userAttr.email,
+            role: "admin", //userAttr.role ?? "user",
+            image: "",
           };
           // } else {
           //   return {
@@ -73,39 +74,41 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       console.log("authorized called");
       // check login --------------------------------------------
       const isLoggedIn = !!auth?.user;
-      const isOnTop = nextUrl.pathname === "/";
-      const isOnHome = nextUrl.pathname.startsWith('/home');
+      const isOnIntro = nextUrl.pathname.startsWith("/intro");
+      const isOnProtected = !(nextUrl.pathname.startsWith("/login")
+        || (nextUrl.pathname.startsWith("/register"))
+        || (nextUrl.pathname.startsWith("/intro"))
+      );
 
-      if (isLoggedIn) {
-        if(isOnTop) {
-          return Response.redirect(new URL('/home', nextUrl));
-        }
+      if (isOnProtected) {
+        if (!isLoggedIn) {
+          console.log("isOnProtected & not LoggedIn");
+          return Response.redirect(new URL('/intro', nextUrl))
+        };
+      } else if (isLoggedIn) {
+        return Response.redirect(new URL('/', nextUrl));
+      };
 
-        const isAdmin = auth?.user.role === "admin";
-        const isManager = auth?.user.role === "manager";
-        const userMenu = nextUrl.pathname.startsWith('/user');
-        const groupMenu = nextUrl.pathname.startsWith('/group');
-        const editMenu = nextUrl.pathname.endsWith('/edit');
+      const isAdmin = auth?.user.role === "admin";
+      const isManager = auth?.user.role === "manager";
+      const userMenu = nextUrl.pathname.startsWith("/user");
+      const groupMenu = nextUrl.pathname.startsWith("/group");
+      const editMenu = nextUrl.pathname.endsWith("/edit");
 
-        if (userMenu) {
+      if (userMenu) {
+        if (isAdmin) return true;
+        return Response.redirect(new URL("/", nextUrl));
+      }
+      if (groupMenu) {
+        if (editMenu) {
           if (isAdmin) return true;
-          return Response.redirect(new URL('/home', nextUrl));
-        }
-        if (groupMenu) {
-          if (editMenu) {
-            if (isAdmin) return true;
-            return Response.redirect(new URL('/home', nextUrl));
-          } else {
-            if (isAdmin || isManager) return true;
-            return Response.redirect(new URL('/home', nextUrl));
-          }
-        }
-      } else {
-        if(isOnHome) {
-          return Response.redirect(new URL('/login', nextUrl));
+          return Response.redirect(new URL("/", nextUrl));
+        } else {
+          if (isAdmin || isManager) return true;
+          return Response.redirect(new URL("/", nextUrl));
         }
       }
-
+      
       return true;
     },
     jwt: async ({ token, user }) => {
@@ -123,6 +126,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         session.user.full_name = token.full_name as string | undefined;
       }
       return session;
-    }
-  }
+    },
+  },
 });

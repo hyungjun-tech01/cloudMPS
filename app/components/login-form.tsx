@@ -14,7 +14,7 @@ export default function LoginForm({
   trans: Record<string, string>;
 }) {
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || '/home';
+  const callbackUrl = searchParams.get('callbackUrl') || '/';
   const [errorMessage, formAction, isPending] = useActionState(
     authenticate,
     undefined,
