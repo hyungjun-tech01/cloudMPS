@@ -9,9 +9,37 @@ export default function RegisterUserInfo({
     userType: "company" | "personal",
     trans: Record<string, Record<string, string | string[]>>
 }) {
-    const formItems: ISection[] = [
+    const formItems: ISection[] = userType === "company" ? [
         {
-            title: trans.user.secTitle_details, description: trans.user.user_edit_details_description, items: [
+            title: trans.company.information,
+            description: "",
+            items: [
+                { name: 'companyName', title: trans.company.company_name, type: 'input', defaultValue: "", placeholder: "" },
+                { name: 'ceoName', title: trans.company.ceo_name, type: 'input', defaultValue: "", placeholder: "" },
+                { name: 'companyRegistrationNo', title: trans.company.business_registration_code, type: 'input', defaultValue: "", placeholder: "" },
+                
+                { name: 'userNotes', title: trans.user.note, type: 'input', defaultValue: "", placeholder: "" },
+            ]
+        },
+        {
+            title: trans.user.secTitle_account_details,
+            description: trans.user.user_edit_account_description,
+            items: [
+                { name: 'userBalanceCurrent', title: trans.user.balance_current, type: 'currency', defaultValue: 0, placeholder: trans.user.placeholder_balance_initial },
+            ]
+        },
+        {
+            title: trans.user.secTitle_etc, description: trans.user.user_edit_account_description, items: [
+                { name: 'userDepartment', title: trans.user.department, type: 'input', defaultValue: "" },
+                { name: 'userCardNumber', title: trans.user.card_number, type: 'input', defaultValue: "" },
+                { name: 'userCardNumber2', title: trans.user.card_number2, type: 'input', defaultValue: "" },
+            ]
+        },
+    ] : [
+        {
+            title: trans.user.secTitle_info,
+            description: "",
+            items: [
                 { name: 'userName', title: "ID", type: 'input', defaultValue: "", placeholder: trans.user.placeholder_user_name },
                 { name: 'userFullName', title: trans.user.full_name, type: 'input', defaultValue: "", placeholder: trans.user.placeholder_full_name },
                 { name: 'userEmail', title: trans.user.email, type: 'input', defaultValue: "", placeholder: trans.user.placeholder_email },
