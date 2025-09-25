@@ -97,9 +97,8 @@ export default function RegisterForm({
   const items = registerSteps.map((step) => ({ key: step.title, title: step.title }));
 
   return (
-    <form action={formAction} >
+    
       <div className="flex-1 rounded-b-lg bg-gray-50 px-6 pb-4 pt-8">
-        <input type="hidden" name="agreements" value={agreements} />
         <Steps current={registerStep} items={items} responsive />
         <div className="mt-8">{registerSteps[registerStep].content}</div>
         <div className="flex h-8 items-end space-x-1">
@@ -110,7 +109,9 @@ export default function RegisterForm({
             </>
           )}
         </div>
+        <form action={formAction} >
+          <input type="hidden" name="agreements" value={agreements} />
+        </form>
       </div>
-    </form>
   );
 }

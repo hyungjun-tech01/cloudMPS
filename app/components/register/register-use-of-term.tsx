@@ -77,7 +77,7 @@ export default function RegisterUseOfTerm({
             </div>
             <div className='mt-2 w-full h-40 p-2 bg-gray-100 overflow-auto border-[1px] border-gray-400 rounded-sm' >
                 {Array.isArray(trans.use_of_term)  &&
-                    trans.use_of_term.map((item) => <div className="mb-4">{item.map((content:string) => <div>{content}</div>)}</div>)}
+                    trans.use_of_term.map((item, idx) => <div key={idx} className="mb-4">{item.map((content:string, index:number) => <div key={index}>{content}</div>)}</div>)}
             </div>
             <div className='mt-6 px-2 flex flex-row justify-start items-center w-full h-5'>
                 <input type="checkbox" id="agree_privacy_policy" name="agree_privacy_policy" className='h-4 w-4' onChange={handleAgreePrivacyPolicy}/>
@@ -85,7 +85,7 @@ export default function RegisterUseOfTerm({
             </div>
             <div className='mt-2 w-full h-40 p-2 bg-gray-100 overflow-auto border-[1px] border-gray-400 rounded-sm'>
                 {Array.isArray(trans.privacy_policy)  &&
-                    trans.privacy_policy.map((item) => <div className="mb-4">{item.map((content:string) => <div>{content}</div>)}</div>)}
+                    trans.privacy_policy.map((item, idx) => <div key={idx} className="mb-4">{item.map((content:string, index:number) => <div key={index}>{content}</div>)}</div>)}
             </div>
             <div className='mt-6 px-2 flex flex-row justify-start items-center w-full h-5'>
                 <input type="checkbox" id="agree_position_policy" name="agree_position_policy" className='h-4 w-4' onChange={handleAgreePositionPolicy}/>
@@ -93,7 +93,7 @@ export default function RegisterUseOfTerm({
             </div>
             <div className='mt-2 w-full h-40 p-2 bg-gray-100 overflow-auto border-[1px] border-gray-400 rounded-sm'>
             {Array.isArray(trans.position_policy)  &&
-                    trans.position_policy.map((item) => <div className="mb-4">{item.map((content:string) => <div>{content}</div>)}</div>)}
+                    trans.position_policy.map((item, idx) => <div key={idx} className="mb-4">{item.map((content:string, index:number) => <div key={index}>{content}</div>)}</div>)}
             </div>
             <div className='mt-6 px-2 flex flex-row justify-start items-center w-full h-5'>
                 <input type="checkbox" id="agree_event_promotion_policy" name="agree_event_promotion_policy" className='h-4 w-4' onChange={handleAgreeEventPolicy}/>
@@ -101,7 +101,7 @@ export default function RegisterUseOfTerm({
             </div>
             <div className='mt-2 w-full h-40 p-2 bg-gray-100 overflow-auto border-[1px] border-gray-400 rounded-sm'>
             {Array.isArray(trans.event_promotion_policy)  &&
-                    trans.event_promotion_policy.map((item) => <div className="mb-4">{item.map((content:string) => <div>{content}</div>)}</div>)}
+                    trans.event_promotion_policy.map((item, idx) => <div key={idx} className="mb-4">{item.map((content:string, index:number) => <div key={index}>{content}</div>)}</div>)}
             </div>
             <div id="input-error" aria-live="polite" aria-atomic="true">
                 {!!state?.message &&
