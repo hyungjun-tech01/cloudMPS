@@ -7,7 +7,7 @@ export default function RegisterUserInfo({
     userType, trans 
 }: {
     userType: "company" | "personal",
-    trans: Record<string, Record<string, string>>
+    trans: Record<string, Record<string, string | string[]>>
 }) {
     const formItems: ISection[] = [
         {

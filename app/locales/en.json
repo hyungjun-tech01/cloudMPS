@@ -1,4 +1,8 @@
 {
+  "common": {
+    "next": "Next",
+    "previous": "Previous"
+  },
   "home": {
     "company_user": "Company User",
     "doc": "Documents",
@@ -24,7 +28,7 @@
     "information": "Information",
     "complete": "Complete",
     "agree_all": "Agree All",
-    "term_of_use": "Term of Use",
+    "use_of_term": "Use of Term",
     "privacy_policy": "Privacy Policy",
     "position_policy": "Position Policy",
     "event_promotion_policy": "Event and Marketing Promotion Policy",
@@ -43,7 +47,9 @@
     "private_phone": "Phone",
     "private_email": "Email",
     "private_address": "Address",
-    "private_birth": "Birth"
+    "private_birth": "Birth",
+    "error_omit_required_agreement": "Omitted required agreement",
+    "error_need_agree": "This is required to register."
   },
   "dashboard": {
     "balance": "Balance",

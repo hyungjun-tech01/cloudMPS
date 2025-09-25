@@ -31,7 +31,7 @@ export async function authenticate(
     }
 };
 
-// ----------- Register -----------
+// ----------- Register -------------------------------------------------------------
 export type RegisterState = {
     errors?: {
         userName?: string[];
