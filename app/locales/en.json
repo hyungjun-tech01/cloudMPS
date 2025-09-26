@@ -99,8 +99,12 @@
     "zip_code" : "Company Postal Code",
     "company_multi_query":"Company MultiQuery",
     "ma_non_extended": "MA Non Extended",
+
+    "secTitle_company_info": "Company Information",
+    "secTitle_manager_info": "Manager Information",
     "loading_add": "Now, loading the needed data to add new company ...",
-    "loading_detail": "Now, loading the details of company..."
+    "loading_detail": "Now, loading the details of company...",
+    "placeholder_company_name": "Enter company name"
   },
   "user": {
     "card_number": "Primary Card No.",
@@ -120,8 +124,9 @@
     "mobile":"Mobile Phone",
     "new_user":"New User",
     "password":"Password",
+    "password_again": "Confirm Password",
     "password_new":"New Password",
-    "password_new_again": "New Password Again",
+    "password_new_again": "Confirm New Password",
     "password_change": "Change Password",
     "password_change_confirm": "Change Password Confirm",
     "password_current": "Current Password",
@@ -129,9 +134,10 @@
     "position":"Position",
     "private_group":"Group",
     "secTitle_account_details": "Details",
+    "secTitle_change_password": "Change Password",
     "secTitle_info": "User Information",
     "secTitle_etc": "Etc",
-    "secTitle_password": "Change Password",
+    "secTitle_password": "Password",
     "secTitle_statistics": "Statistics",
     "select_dept": "-- Select Department --",
     "remain_amount":"Remained Amount",

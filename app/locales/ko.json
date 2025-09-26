@@ -99,8 +99,12 @@
     "salesman":"영업담당",
     "search_name": "회사명 검색",
     "zip_code" : "업체우편번호",
+
+    "secTitle_company_info": "업체 정보",
+    "secTitle_manager_info": "관리자 정보",
     "loading_add": "신규 업체 추가를 위한 기반 정보를 불러오고 있습니다.",
-    "loading_detail": "업체에 대한 상세 정보를 불러오고 있습니다."
+    "loading_detail": "업체에 대한 상세 정보를 불러오고 있습니다.",
+    "placeholder_company_name": "회사명을 입력하세요"
   },
   "user": {
     "card_number": "카드번호(1)",
@@ -119,6 +123,8 @@
     "memo":"메모",
     "mobile":"휴대전화",
     "new_user":"사용자등록",
+    "password":"비밀번호",
+    "password_again": "비밀번호 재입력",
     "password_new":"새 비밀번호",
     "password_new_again": "새 비밀번호 재입력",
     "password_change":"변경 비밀번호",
@@ -128,9 +134,10 @@
     "position":"직급",
     "private_group":"그룹",
     "secTitle_account_details": "계정 내역",
+    "secTitle_change_password": "비밀번호 변경",
     "secTitle_info": "사용자 정보",
     "secTitle_etc": "관련 내역",
-    "secTitle_password": "비밀번호 변경",
+    "secTitle_password": "비밀번호 입력",
     "secTitle_statistics": "통계",
     "select_dept": "-- 부서 선택 --",
     "subTitle_budget": "조절 및 과금",
@@ -155,8 +162,10 @@
     "placeholder_email": "사용자 이메일을 입력하세요",
     "placeholder_home_directory": "사용자 홈디렉토리를 입력하세요",
     "placeholder_user_name" : "사용자의 ID를 입력하세요",
-    "placeholder_password_new" : "새 비밀번호를 입력하세요",
-    "placeholder_password_new_again" : "새 비밀번호를 다시 입력하세요"
+    "placeholder_change_password" : "새 비밀번호를 입력하세요",
+    "placeholder_change_password_again" : "새 비밀번호를 다시 입력하세요",
+    "placeholder_password_new" : "비밀번호를 입력하세요",
+    "placeholder_password_new_again" : "비밀번호를 다시 입력하세요"
   },
   "account": {
     "balance":"잔액",

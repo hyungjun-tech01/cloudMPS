@@ -9,70 +9,59 @@ export default function RegisterUserInfo({
     userType: "company" | "personal",
     trans: Record<string, Record<string, string | string[]>>
 }) {
-    const formItems: ISection[] = userType === "company" ? [
+    const formItems: { company : ISection[], personal : ISection[]} = {
+      company : [
         {
-            title: trans.company.information,
+            title: trans.company.secTitle_company_info,
             description: "",
             items: [
-                { name: 'companyName', title: trans.company.company_name, type: 'input', defaultValue: "", placeholder: "" },
+                { name: 'companyName', title: trans.company.company_name, type: 'input', defaultValue: "", placeholder: trans.company.placeholder_company_name },
                 { name: 'ceoName', title: trans.company.ceo_name, type: 'input', defaultValue: "", placeholder: "" },
                 { name: 'companyRegistrationNo', title: trans.company.business_registration_code, type: 'input', defaultValue: "", placeholder: "" },
-                
-                { name: 'userNotes', title: trans.user.note, type: 'input', defaultValue: "", placeholder: "" },
+                { name: 'companyBusinessItem', title: trans.company.business_item, type: 'input', defaultValue: "", placeholder: "" },
+                { name: 'companyBusinessType', title: trans.company.business_type, type: 'input', defaultValue: "", placeholder: "" },
             ]
         },
         {
-            title: trans.user.secTitle_account_details,
-            description: trans.user.user_edit_account_description,
-            items: [
-                { name: 'userBalanceCurrent', title: trans.user.balance_current, type: 'currency', defaultValue: 0, placeholder: trans.user.placeholder_balance_initial },
+            title: trans.company.secTitle_manager_info, description: trans.user.user_edit_account_description, items: [
+              { name: 'userName', title: trans.user.user_name, type: 'input', defaultValue: "", placeholder: trans.user.placeholder_full_name },
+              { name: 'userEmail', title: trans.user.email, type: 'input', defaultValue: "", placeholder: trans.user.placeholder_email },
+              { name: 'userDepartment', title: trans.user.department, type: 'input', defaultValue: "" },
             ]
         },
         {
-            title: trans.user.secTitle_etc, description: trans.user.user_edit_account_description, items: [
-                { name: 'userDepartment', title: trans.user.department, type: 'input', defaultValue: "" },
-                { name: 'userCardNumber', title: trans.user.card_number, type: 'input', defaultValue: "" },
-                { name: 'userCardNumber2', title: trans.user.card_number2, type: 'input', defaultValue: "" },
-            ]
+          title: trans.user.secTitle_password, description: "",
+          items: [
+              { name: 'userPwdNew', title: trans.user.password, type: 'password', defaultValue: "", placeholder: trans.user.placeholder_password_new },
+              { name: 'userPwdNewAgain', title: trans.user.password_again, type: 'password', defaultValue: "", placeholder: trans.user.placeholder_password_new_again },
+          ]
         },
-    ] : [
+      ],
+      personal: [
         {
             title: trans.user.secTitle_info,
             description: "",
             items: [
-                { name: 'userName', title: "ID", type: 'input', defaultValue: "", placeholder: trans.user.placeholder_user_name },
-                { name: 'userFullName', title: trans.user.full_name, type: 'input', defaultValue: "", placeholder: trans.user.placeholder_full_name },
+                { name: 'userName', title: trans.user.user_name, type: 'input', defaultValue: "", placeholder: trans.user.placeholder_full_name },
                 { name: 'userEmail', title: trans.user.email, type: 'input', defaultValue: "", placeholder: trans.user.placeholder_email },
-                { name: 'userHomeDirectory', title: trans.user.home_directory, type: 'input', defaultValue: "", placeholder: trans.user.placeholder_home_directory },
-                {
-                    name: 'userDisabledPrinting', title: trans.user.enable_disable_printing, type: 'select', defaultValue: "N", options: [
-                        { title: trans.user.enable_printing, value: 'N' },
-                        { title: trans.user.disable_printing, value: 'Y' }
-                    ]
-                },
-                { name: 'userNotes', title: trans.user.note, type: 'input', defaultValue: "", placeholder: "" },
             ]
         },
         {
-            title: trans.user.secTitle_account_details, description: trans.user.user_edit_account_description, items: [
-                { name: 'userBalanceCurrent', title: trans.user.balance_current, type: 'currency', defaultValue: 0, placeholder: trans.user.placeholder_balance_initial },
-            ]
+          title: trans.user.secTitle_password, description: "",
+          items: [
+              { name: 'userPwdNew', title: trans.user.password, type: 'password', defaultValue: "", placeholder: trans.user.placeholder_password_new },
+              { name: 'userPwdNewAgain', title: trans.user.password_again, type: 'password', defaultValue: "", placeholder: trans.user.placeholder_password_new_again },
+          ]
         },
-        {
-            title: trans.user.secTitle_etc, description: trans.user.user_edit_account_description, items: [
-                { name: 'userDepartment', title: trans.user.department, type: 'input', defaultValue: "" },
-                { name: 'userCardNumber', title: trans.user.card_number, type: 'input', defaultValue: "" },
-                { name: 'userCardNumber2', title: trans.user.card_number2, type: 'input', defaultValue: "" },
-            ]
-        },
-    ];
+      ]
+    };
 
     return (
         <div className="rounded-xl bg-slate-100 p-4 md:p-6">
-        {formItems.map((sec: ISection, idx) => {
+        {formItems[userType].map((sec: ISection, idx) => {
           return (
             <div key={idx} className={clsx('w-full p-2 flex flex-col md:flex-row',
-              { 'border-b': idx !== formItems.length - 1 }
+              { 'border-b': idx !== formItems[userType].length - 1 }
             )}>
               <div className='w-full md:w-1/3 pb-4 md:pr-6'>
                 <div className='mb-5 text-xl font-semibold'>{sec.title}</div>

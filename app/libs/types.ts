@@ -1,10 +1,10 @@
 export interface IEditItem {
   name: string;
-  title: string;
+  title: string | string[];
   type: "label" | "input" | "currency" | "select" | "checked" | "chart" | "password" | "hidden" | "react-select" | "button" | "status_bar";
   defaultValue: string | number;
-  placeholder?: string;
-  options?: { title: string; value: string | number; suffix?: string }[] | null;
+  placeholder?: string | string[];
+  options?: { title: string | string[]; value: string | number; suffix?: string }[] | null;
   locale?: string;
   error?: string[] | null;
   chartData?: { xlabels: string[], ydata: number[], maxY: number };
@@ -13,7 +13,7 @@ export interface IEditItem {
 };
 
 export interface ISection {
-  title: string;
+  title: string | string[];
   description: string | object | string[];
   items: IEditItem[];
 };
