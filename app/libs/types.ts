@@ -17,3 +17,24 @@ export interface ISection {
   description: string | object | string[];
   items: IEditItem[];
 };
+
+export interface UserData {
+  companyName?: string;
+  ceoName?: string;
+  companyRegistrationNo?: string;
+  business_type?: string;
+  business_item?: string;
+  userName: string;
+  userFullName?: string;
+  userEmail: string;
+  userPassword: string;
+  userType: "company" | "person";
+};
+
+export interface RegisterData {
+  termsOfService: "Y" | "N";
+  privacyPolicy: "Y" | "N";
+  locationInfoPolicy: "Y" | "N";
+  eventPromotionPolicy: "Y" | "N";
+  userData: UserData;
+}

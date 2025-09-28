@@ -28,7 +28,7 @@ export default async function Page(props: {
           {trans.register.title}
         </div>
         <Suspense>
-          <RegisterForm userType={userType} trans={trans} action={register}/>
+          <RegisterForm userType={userType} trans={trans} />
         </Suspense>
       </div>
     </main>

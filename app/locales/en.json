@@ -30,10 +30,13 @@
     "agree_all": "Agree All",
     "use_of_term": "Use of Term",
     "privacy_policy": "Privacy Policy",
-    "position_policy": "Position Policy",
+    "location_info_policy": "Location Info Policy",
     "event_promotion_policy": "Event and Marketing Promotion Policy",
     "error_omit_required_agreement": "Omitted required agreement",
-    "error_need_agree": "This is required to register."
+    "error_need_agree": "This is required to register.",
+    "error_need_input": "The required input",
+    "error_pwd_legnth": "Password length should not be lesss than 6",
+    "error_pwd_mismatch": "Input passwords don't match each other"
   },
   "dashboard": {
     "balance": "Balance",
@@ -149,8 +152,11 @@
     "user_id":"User Id",
     "user_name":"User Name",
     "user_role":"Role",
-    "miss_password_item" :"Some missing input items.",
-    "min_password_length":"Password must be at least 5 characters long.",
+    "errors_in_inputs": "Input Error(s). Error(s) in inuputs",
+    "error_miss_input" :"Some missing input items.",
+    "error_min_password_length":"Password must be at least 6 characters long.",
+    "error_input_type_string": "Type of Input should be 'string'.",
+    "error_input_type_email": "Input might not be email. Please check",
     "change_password_same":"Confirm Change Password and Change Password must be the same.",
     "placeholder_balance_initial" : "Enter initial balance",
     "placeholder_department": "Enter User's department",
@@ -194,7 +200,7 @@
       "-사용자 이름 (법인의 경우 법인 명), 생년월일 (법인의 경우 법인 등록 번호), 주소, 성별, 국내 또는 해외"
     ]
   ],
-  "position_policy": [
+  "location_info_policy": [
     ["위치정보 이용 동의"],
     [
       "제 1 조 [목적]",

@@ -2,7 +2,7 @@ import { useActionState, useState } from 'react';
 import { AgreementState } from './register-form';
 
 
-export default function RegisterUseOfTerm({
+export default function RegisterTermsOfService({
     userType, trans, action 
 }: {
     userType: "company" | "personal",
@@ -14,18 +14,18 @@ export default function RegisterUseOfTerm({
     const [agreed, setAgreed] = useState(0);
 
     const handleAgreeAll = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const CBUseOfTerm = document.getElementById('agree_use_of_term') as HTMLInputElement;
+        const CBTermsOfService = document.getElementById('agree_terms_of_service') as HTMLInputElement;
         const CBPrivacy = document.getElementById('agree_privacy_policy') as HTMLInputElement;
-        const CBPosition = document.getElementById('agree_position_policy') as HTMLInputElement;
+        const CBPosition = document.getElementById('agree_location_info_policy') as HTMLInputElement;
         const CBEventPromotion = document.getElementById('agree_event_promotion_policy') as HTMLInputElement;
         if(event.target.checked) {
-            if(!!CBUseOfTerm) CBUseOfTerm.checked = true;
+            if(!!CBTermsOfService) CBTermsOfService.checked = true;
             if(!!CBPrivacy) CBPrivacy.checked = true;
             if(!!CBPosition) CBPosition.checked = true;
             if(!!CBEventPromotion) CBEventPromotion.checked = true;
             setAgreed(15);
         } else {
-            if(!!CBUseOfTerm) CBUseOfTerm.checked = false;
+            if(!!CBTermsOfService) CBTermsOfService.checked = false;
             if(!!CBPrivacy) CBPrivacy.checked = false;
             if(!!CBPosition) CBPosition.checked = false;
             if(!!CBEventPromotion) CBEventPromotion.checked = false;
@@ -42,8 +42,8 @@ export default function RegisterUseOfTerm({
                 if(agreeAllEl.checked) agreeAllEl.checked = false;
             }
         }
-    }
-    const handleAgreeUseOfTerm = (event: React.ChangeEvent<HTMLInputElement>) => {
+    };
+    const handleAgreeTermsOfService = (event: React.ChangeEvent<HTMLInputElement>) => {
         const updated = event.target.checked ? agreed | 1 : agreed & ~(1)
         handleCheckAgreed(updated);
     };
@@ -51,7 +51,7 @@ export default function RegisterUseOfTerm({
         const updated = event.target.checked ? agreed | 2 : agreed & ~(2);
         handleCheckAgreed(updated);
     };
-    const handleAgreePositionPolicy = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleAgreeLocationInfoPolicy = (event: React.ChangeEvent<HTMLInputElement>) => {
         const updated = event.target.checked ? agreed | 4 : agreed & ~(4);
         handleCheckAgreed(updated);
     };
@@ -59,7 +59,6 @@ export default function RegisterUseOfTerm({
         const updated = event.target.checked ? agreed | 8 : agreed & ~(8);
         handleCheckAgreed(updated);
     };
-
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         formAction(new FormData(event.currentTarget));
@@ -72,12 +71,12 @@ export default function RegisterUseOfTerm({
                 <label htmlFor="agree_all" className='ml-2'>{trans.register.agree_all}</label>
             </div>
             <div className='mt-6 px-2 flex flex-row justify-start items-center w-full h-5'>
-                <input type="checkbox" id="agree_use_of_term" name="agree_use_of_term" className='h-4 w-4' onChange={handleAgreeUseOfTerm}/>
-                <label htmlFor="agree_use_of_term" className='ml-2'>{trans.register.use_of_term}</label>
+                <input type="checkbox" id="agree_terms_of_service" name="agree_terms_of_service" className='h-4 w-4' onChange={handleAgreeTermsOfService}/>
+                <label htmlFor="agree_terms_of_service" className='ml-2'>{trans.register.terms_of_service}</label>
             </div>
             <div className='mt-2 w-full h-40 p-2 bg-gray-100 overflow-auto border-[1px] border-gray-400 rounded-sm' >
-                {Array.isArray(trans.use_of_term)  &&
-                    trans.use_of_term.map((item, idx) => <div key={idx} className="mb-4">{item.map((content:string, index:number) => <div key={index}>{content}</div>)}</div>)}
+                {Array.isArray(trans.terms_of_service)  &&
+                    trans.terms_of_service.map((item, idx) => <div key={idx} className="mb-4">{item.map((content:string, index:number) => <div key={index}>{content}</div>)}</div>)}
             </div>
             <div className='mt-6 px-2 flex flex-row justify-start items-center w-full h-5'>
                 <input type="checkbox" id="agree_privacy_policy" name="agree_privacy_policy" className='h-4 w-4' onChange={handleAgreePrivacyPolicy}/>
@@ -88,12 +87,12 @@ export default function RegisterUseOfTerm({
                     trans.privacy_policy.map((item, idx) => <div key={idx} className="mb-4">{item.map((content:string, index:number) => <div key={index}>{content}</div>)}</div>)}
             </div>
             <div className='mt-6 px-2 flex flex-row justify-start items-center w-full h-5'>
-                <input type="checkbox" id="agree_position_policy" name="agree_position_policy" className='h-4 w-4' onChange={handleAgreePositionPolicy}/>
-                <label htmlFor="agree_position_policy" className='ml-2'>{trans.register.position_policy}</label>
+                <input type="checkbox" id="agree_location_info_policy" name="agree_location_info_policy" className='h-4 w-4' onChange={handleAgreeLocationInfoPolicy}/>
+                <label htmlFor="agree_location_info_policy" className='ml-2'>{trans.register.location_info_policy}</label>
             </div>
             <div className='mt-2 w-full h-40 p-2 bg-gray-100 overflow-auto border-[1px] border-gray-400 rounded-sm'>
-            {Array.isArray(trans.position_policy)  &&
-                    trans.position_policy.map((item, idx) => <div key={idx} className="mb-4">{item.map((content:string, index:number) => <div key={index}>{content}</div>)}</div>)}
+            {Array.isArray(trans.location_info_policy)  &&
+                    trans.location_info_policy.map((item, idx) => <div key={idx} className="mb-4">{item.map((content:string, index:number) => <div key={index}>{content}</div>)}</div>)}
             </div>
             <div className='mt-6 px-2 flex flex-row justify-start items-center w-full h-5'>
                 <input type="checkbox" id="agree_event_promotion_policy" name="agree_event_promotion_policy" className='h-4 w-4' onChange={handleAgreeEventPolicy}/>
