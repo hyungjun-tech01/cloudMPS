@@ -25,7 +25,9 @@ interface MenuItem {
 
 export default function NavLinks({ extended }: { extended: boolean }) {
   const pathname = usePathname();
-  const category = usePathname().split('/')[1];
+  const splittedPathname = pathname.split('/');
+  const locale = splittedPathname[0];
+  const category = splittedPathname[1];
   const { data: session } = useSession();
   const userRole = session?.user?.role ?? "user";
   const [expandedMenu, setExpandedMenu] = useState<string | null>(null);
@@ -41,8 +43,6 @@ export default function NavLinks({ extended }: { extended: boolean }) {
   return (
     <>
       {SideMenuList[userRole as keyof typeof SideMenuList].map((link: MenuItem) => {
-        if (session?.user?.role !== "admin" && link.name === 'user') return null;
-
         const LinkIcon = <MaterialIcon name={link.icon.name} type={link.icon.type} props={`${link.icon.props} w-6`} />;
         const isExpanded = expandedMenu === link.name;
 
