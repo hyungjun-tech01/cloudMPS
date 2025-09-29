@@ -23,20 +23,29 @@
     "userId": "User ID"
   },
   "register": {
-    "title": "Register / Agreement",
     "agreement": "Agreement",
-    "information": "Information",
-    "complete": "Complete",
     "agree_all": "Agree All",
-    "use_of_term": "Use of Term",
-    "privacy_policy": "Privacy Policy",
-    "location_info_policy": "Location Info Policy",
+    "complete": "Registration is completed.",
     "event_promotion_policy": "Event and Marketing Promotion Policy",
     "error_omit_required_agreement": "Omitted required agreement",
-    "error_need_agree": "This is required to register.",
+    "error_need_agree": "(This is required to register.)",
     "error_need_input": "The required input",
     "error_pwd_legnth": "Password length should not be lesss than 6",
-    "error_pwd_mismatch": "Input passwords don't match each other"
+    "error_pwd_mismatch": "Input passwords don't match each other",
+    "error_change_password_same":"Confirm Change Password and Change Password must be the same.",
+    "errors_in_inputs": "Input Error(s). Error(s) in inuputs",
+    "error_miss_input" :"Some missing input items.",
+    "error_min_password_length":"Password must be at least 6 characters long.",
+    "error_input_type_string": "Type of Input should be 'string'.",
+    "error_input_type_email": "Input might not be email. Please check",
+    "information": "Information",
+    "location_info_policy": "Location Info Policy",
+    "login_next": "Please log in to use services of 'Cloud MPS'",
+    "next": "Next",
+    "privacy_policy": "Privacy Policy",
+    "pervious": "Previous",
+    "terms_of_service": "Use of Term",
+    "title": "Register / Agreement"
   },
   "dashboard": {
     "balance": "Balance",
@@ -152,12 +161,6 @@
     "user_id":"User Id",
     "user_name":"User Name",
     "user_role":"Role",
-    "errors_in_inputs": "Input Error(s). Error(s) in inuputs",
-    "error_miss_input" :"Some missing input items.",
-    "error_min_password_length":"Password must be at least 6 characters long.",
-    "error_input_type_string": "Type of Input should be 'string'.",
-    "error_input_type_email": "Input might not be email. Please check",
-    "change_password_same":"Confirm Change Password and Change Password must be the same.",
     "placeholder_balance_initial" : "Enter initial balance",
     "placeholder_department": "Enter User's department",
     "placeholder_email": "Enter User's Email",
@@ -177,7 +180,7 @@
     "transaction_date": "Transaction Date",
     "transaction_type": "Transaction Type"
   },
-  "use_of_term": [
+  "terms_of_service": [
     ["[MyLation] Cloud MPS 서비스 약관"],
     ["제 1 조 [목적]",
       "본 이용 약관은 MyLation이 제공하는 렌탈 관리 프로그램 Cloud MPS (이하 \"프로그램\"이라 함)를 통해 제공되는 모든 서비스를 사용하기 위해 회사와 회원간에 이루어집니다 (이하 \" 회사\")"

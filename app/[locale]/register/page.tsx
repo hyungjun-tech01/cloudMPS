@@ -2,14 +2,13 @@ import { Suspense } from 'react';
 import RegisterForm from '@/app/components/register/register-form';
 import getDictionary from '@/app/libs/dictionaries';
 import type { Metadata } from "next";
-import { register } from '@/app/libs/actions';
 
 export const metadata: Metadata = {
   title: 'Register',
 }
 
 interface IRegister {
-  userType?: "company" | "personal";
+  userType?: "company" | "person";
 }
 
 export default async function Page(props: {
@@ -19,7 +18,18 @@ export default async function Page(props: {
   const searchParams = await props.searchParams;
   const userType = searchParams?.userType || "company";
   const locale = (await props.params).locale;
-  const trans = await getDictionary(locale);
+  const t = await getDictionary(locale);
+  const trans = {
+    company: t.company,
+    register: t.register,
+    user: t.user
+  }
+  const terms = {
+    terms_of_service: t.terms_of_service,
+    privacy_policy: t.privacy_policy,
+    location_info_policy: t.location_info_policy,
+    event_promotion_policy: t.event_promotion_policy
+  };
 
   return (
     <main className="flex items-center justify-center">
@@ -28,7 +38,7 @@ export default async function Page(props: {
           {trans.register.title}
         </div>
         <Suspense>
-          <RegisterForm userType={userType} trans={trans} />
+          <RegisterForm userType={userType} trans={trans} terms={terms}/>
         </Suspense>
       </div>
     </main>

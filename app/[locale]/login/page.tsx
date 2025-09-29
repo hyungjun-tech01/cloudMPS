@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 }
 
 interface ILogin {
-  userType?: "company" | "personal";
+  userType?: "company" | "person";
 }
 
 export default async function LoginPage(props: {

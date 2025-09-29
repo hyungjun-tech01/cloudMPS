@@ -10,7 +10,7 @@ export default function LoginForm({
   userType,
   trans
 }:{
-  userType: 'company' | 'personal';
+  userType: 'company' | 'person';
   trans: Record<string, string>;
 }) {
   const searchParams = useSearchParams();

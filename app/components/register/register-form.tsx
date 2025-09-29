@@ -1,10 +1,9 @@
 "use client";
 
 import { useActionState, useState } from "react";
+import Link from 'next/link';
 import { z } from "zod";
 import { Steps } from "antd";
-import { register } from "@/app/libs/actions";
-import "material-icons/iconfont/material-icons.css";
 
 import RegisterTermsOfService from "./register-use-of-term";
 import RegisterUserInfo from "./register-user-info";
@@ -17,9 +16,9 @@ enum RegisterStep {
 
 export type AgreementState = {
   errors?: {
-    agreeTermsOfService?: string[];
-    agreePrivacyPolicy?: string[];
-    agreeLocationInfoPolicy?: string[];
+    agreeTermsOfService?: string;
+    agreePrivacyPolicy?: string;
+    agreeLocationInfoPolicy?: string;
   };
   message?: string | null;
 };
@@ -51,9 +50,19 @@ export type RegisterCompanyUserState = {
 export default function RegisterForm({
   userType,
   trans,
+  terms,
 }: {
-  userType: "company" | "personal";
-  trans: Record<string, Record<string, string | string[]>>;
+  userType: "company" | "person";
+  trans: { company: Record<string, string>,
+    register: Record<string, string>,
+    user: Record<string, string>
+  };
+  terms: {
+    terms_of_service: string[][];
+    privacy_policy: string[][];
+    location_info_policy: string[][];
+    event_promotion_policy: string[][];
+  }
 }) {
   const [agreed, setAgreed] = useState({
     termsOfService : false,
@@ -61,6 +70,8 @@ export default function RegisterForm({
     locationInfoPolicy: false,
     eventPromotionPolicy: false,
   })
+
+  const loginLink = userType === "company" ? "/login?userType=company" : "/login?userType=person";
 
   // use of terms --------------------------------------------------------------------
   const actionAgreement = (
@@ -75,13 +86,19 @@ export default function RegisterForm({
     );
 
     // check if necessary agreements are done ----------------------------------------
-    if (!agreeTermsOfService || !agreePrivacyPolicy || !agreeLocationInfoPolicy) {
+    const check_errors: Record<string, string> = {};
+    if (!agreeTermsOfService) {
+      check_errors["agreeTermsOfService"] = trans.register.error_need_agree;
+    };
+    if(!agreePrivacyPolicy) {
+      check_errors["agreePrivacyPolicy"] = trans.register.error_need_agree;
+    };
+    if(!agreeLocationInfoPolicy) {
+      check_errors["agreeLocationInfoPolicy"] = trans.register.error_need_agree;
+    }
+    if (Object.keys(check_errors).length > 0) {
       return {
-        errors: {
-          agreeTermsOfService: [trans.register.error_need_agree],
-          agreePrivacyPolicy: [trans.register.error_need_agree],
-          agreeLocationInfoPolicy: [trans.register.error_need_agree],
-        },
+        errors: check_errors,
         message: trans.register.error_omit_required_agreement,
       } as AgreementState;
     }
@@ -110,96 +127,169 @@ export default function RegisterForm({
           }
         }
       }),
-    userFullName: z.string({
-        error: trans.user.error_input_type_string as string,
+    userFullName: z.string().min(1, {
+        error: trans.register.error_miss_input as string,
       }),
     userEmail: z.email({
-        error: trans.user.error_input_type_email as string,
+        error: trans.register.error_input_type_email as string,
       }),
     userPwdNew: z.string().min(6, {
       error: (issue) => issue.input === undefined ?
-        trans.user.error_miss_input as string:
+        trans.register.error_miss_input as string:
         trans.register.error_pwd_min_legnth as string
       }),
     userPwdNewAgain: z.string().min(6, {
       error: (issue) => issue.input === undefined ?
-        trans.user.error_miss_input as string:
+        trans.register.error_miss_input as string:
         trans.register.error_pwd_min_legnth as string
       })
   });
 
   const CompanyUserFormSchema = z.object({
+    companyName: z.string().trim().min(1, {
+      error: (issue) => {
+        if(issue.input === undefined) {
+          return trans.register.error_miss_input as string;
+        } else if(issue.code ==="too_small") {
+          return trans.register.error_miss_input as string;
+        } else {
+          return  trans.register.error_input_type_string as string;
+        }
+      }
+    }),
+    ceoName: z.string().min(1, {
+      error: (issue) => {
+        if(issue.input === undefined) {
+          return trans.register.error_miss_input as string;
+        } else if(issue.code ==="too_small") {
+          return trans.register.error_miss_input as string;
+        } else {
+          return  trans.register.error_input_type_string as string;
+        }
+      }
+    }),
+    companyRegistrationNo: z.string().min(1, {
+      error: (issue) => {
+        if(issue.input === undefined) {
+          return trans.register.error_miss_input as string;
+        } else if(issue.code ==="too_small") {
+          return trans.register.error_miss_input as string;
+        } else {
+          return  trans.register.error_input_type_string as string;
+        }
+      }
+    }),
     userName: z.string().min(1, {
         error: (issue) => {
           if(issue.input === undefined) {
-            return trans.user.error_miss_input as string;
+            return trans.register.error_miss_input as string;
           } else if(issue.code ==="too_small") {
-            return trans.user.error_miss_input as string;
+            return trans.register.error_miss_input as string;
           } else {
-            return  trans.user.error_input_type_string as string;
+            return  trans.register.error_input_type_string as string;
           }
         }
       }),
-    userFullName: z.string({
-        error: trans.user.error_input_type_string as string,
-      }),
     userEmail: z.email({
-        error: trans.user.error_input_type_email as string,
+        error: trans.register.error_input_type_email as string,
       }),
     userPwdNew: z.string().min(6, {
       error: (issue) => issue.input === undefined ?
-        trans.user.error_miss_input as string:
+        trans.register.error_miss_input as string:
         trans.register.error_pwd_min_legnth as string
       }),
     userPwdNewAgain: z.string().min(6, {
       error: (issue) => issue.input === undefined ?
-        trans.user.error_miss_input as string:
+        trans.register.error_miss_input as string:
         trans.register.error_pwd_min_legnth as string
       })
   });
 
-  const actionRegisterUser = (
+  const actionRegisterUser = async (
     prevState: void | RegisterPersonalUserState | RegisterCompanyUserState,
     formData: FormData
   ) => {
+    console.log("actionRegisterUser called");
+    const userType = formData.get("userType");
+    console.log("actionRegisterUser / userType :", userType);
+
     let validatedFields = null;
     if (userType === "company") {
       validatedFields = CompanyUserFormSchema.safeParse({
-
+        companyName: formData.get('companyName'),
+        ceoName: formData.get('ceoName'),
+        companyRegistrationNo: formData.get('companyRegistrationNo'),
+        userName: formData.get('userName'),
+        userEmail: formData.get('userEmail'),
+        userPwdNew: formData.get('userPwdNew'),
+        userPwdNewAgain: formData.get('userPwdNewAgain'),
       });
-      if (!validatedFields.success) {
-        return {
-          errors: z.treeifyError(validatedFields.error).errors,
-          message: trans.user.errors_in_inputs,
-        };
-      };
     } else {
       validatedFields = PersonalUserFormSchema.safeParse({
         userName: formData.get("userName"),
         userFullName: formData.get("userFullName"),
         userEmail: formData.get("userEmail"),
-        userPwd: formData.get("userPwdNew"),
-        userPwdAgain: formData.get("userPwdNewAgain"),
+        userPwdNew: formData.get("userPwdNew"),
+        userPwdNewAgain: formData.get("userPwdNewAgain"),
       });
     };
 
     if (!validatedFields.success) {
+      const tree = z.treeifyError(validatedFields.error);
+      console.log("actionRegisterUser / error :", tree);
       return {
-        errors: z.treeifyError(validatedFields.error).errors,
-        message: trans.user.errors_in_inputs,
-      };
+        errors: tree.properties,
+        message: trans.register.errors_in_inputs,
+      } as RegisterPersonalUserState | RegisterCompanyUserState;
     };
 
     // check if passwords are same ----------------------------------------
     const { userPwdNew, userPwdNewAgain } = validatedFields.data;
     if (userPwdNew !== userPwdNewAgain) {
       return {
-        errors: {
-          userPwd: trans.register.error_pwd_mismatch
-        },
+        errors: [
+          {userPwdNew: trans.register.error_pwd_mismatch}
+        ],
         message: trans.register.error_pwd_mismatch,
       } as RegisterPersonalUserState | RegisterCompanyUserState;
     };
+
+    const registerData = {
+      ...validatedFields.data,
+      agreements: agreed
+    };
+
+    console.log('Register :', registerData);
+
+    // try {
+    //   const resp = await fetch(`${BASE_PATH}/user/signup_request`, {
+    //     method: 'post',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify(registerData)
+    //   });
+
+    //   const result = await resp.json();
+    //   if(!!result) {
+    //     if(result["ResultCode"] === 0) {
+    //       // Succeeded ---------------------------
+          handleNextStep();
+          return;
+    //     } else {
+    //       return {
+    //         message: result["ErrorMessage"]
+    //       } as RegisterCompanyUserState | RegisterPersonalUserState;  
+    //     };
+    //   } else {
+    //     return {
+    //       message: "No Response from server"
+    //     } as RegisterCompanyUserState | RegisterPersonalUserState;
+    //   }
+    // } catch(err) {
+    //   console.error(`\t[ Regsiter ] Error : ${err}`);
+    //   return {
+    //     message: err
+    //   } as RegisterCompanyUserState | RegisterPersonalUserState;
+    // }
   };
 
   // control ---------------------------------------------------------------------------
@@ -219,7 +309,8 @@ export default function RegisterForm({
       title: trans.register.agreement,
       content: (
         <RegisterTermsOfService
-          trans={trans}
+          trans={trans.register}
+          terms={terms}
           userType={userType}
           action={actionAgreement}
         />
@@ -239,7 +330,10 @@ export default function RegisterForm({
     },
     {
       title: trans.register.complete,
-      content: "Complete",
+      content: <>
+        <div className="p-8 flex justify-center items-center text-2xl">{trans.register.complete}</div>
+        <Link href={loginLink} className="p-4 flex justify-center items-center text-blue-500">{trans.register.login_next}</Link>
+      </>,
     },
   ];
 

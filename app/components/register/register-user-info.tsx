@@ -15,8 +15,8 @@ export default function RegisterUserInfo({
   action,
   goback,
 }: {
-  userType: "company" | "personal";
-  trans: Record<string, Record<string, string | string[]>>;
+  userType: "company" | "person";
+  trans: Record<string, Record<string, string>>;
   agreements: {
     termsOfService: boolean,
     privacyPolicy: boolean,
@@ -26,13 +26,13 @@ export default function RegisterUserInfo({
   action: (
     prevState: void | RegisterPersonalUserState | RegisterCompanyUserState,
     formData: FormData,
-  ) => void | RegisterPersonalUserState | RegisterCompanyUserState;
+  ) => Promise<void | RegisterPersonalUserState | RegisterCompanyUserState>;
   goback: () => void;
 }) {
   const initialState: RegisterPersonalUserState | RegisterCompanyUserState = { message: null, errors: {} };
-  const [state, formAction] = useActionState(action, initialState);
+  const [state, formAction, isPending] = useActionState(action, initialState, undefined);
   
-  const formItems: { company: ISection[]; personal: ISection[] } = {
+  const formItems: { company: ISection[]; person: ISection[] } = {
     company: [
       {
         title: trans.company.secTitle_company_info,
@@ -122,7 +122,7 @@ export default function RegisterUserInfo({
         ],
       },
     ],
-    personal: [
+    person: [
       {
         title: trans.user.secTitle_info,
         description: "",
@@ -136,7 +136,7 @@ export default function RegisterUserInfo({
           },
           {
             name: "userFullName",
-            title: trans.user.user_full_name,
+            title: trans.user.full_name,
             type: "input",
             defaultValue: "",
             placeholder: trans.user.placeholder_full_name,
@@ -173,8 +173,13 @@ export default function RegisterUserInfo({
     ],
   };
 
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    formAction(new FormData(event.currentTarget));
+  };
+
   return (
-    <form action={formAction} className="rounded-xl bg-slate-100 p-4 md:p-6">
+    <form onSubmit={handleSubmit} className="rounded-xl bg-slate-100 p-4 md:p-6">
       {formItems[userType].map((sec: ISection, idx) => {
         return (
           <div
@@ -218,10 +223,10 @@ export default function RegisterUserInfo({
                   locale={item.locale}
                   chartData={item.chartData}
                   other={item.other}
-                  error={(!!state?.errors && !!state?.errors[item.name as 
+                  errors={(!!state?.errors && !!state?.errors[item.name as 
                     keyof RegisterPersonalUserState['errors'] | keyof RegisterCompanyUserState['errors']])
                     ? state?.errors[item.name as
-                      keyof RegisterPersonalUserState['errors'] | keyof RegisterCompanyUserState['errors']]
+                      keyof RegisterPersonalUserState['errors'] | keyof RegisterCompanyUserState['errors']]["errors"]
                     : null
                   }
                 />
@@ -238,21 +243,21 @@ export default function RegisterUserInfo({
         }
       </div>
       <div>
-        <input type="hidden" name="val_user_type" value={userType } />
-        <input type="hidden" name="val_terms_of_service" value={agreements.termsOfService ? "Y" : "N" } />
-        <input type="hidden" name="val_privacy_policy" value={agreements.privacyPolicy ? "Y" : "N" } />
-        <input type="hidden" name="val_location_policy" value={agreements.locationInfoPolicy ? "Y" : "N" } />
-        <input type="hidden" name="val_terms_event_poromotion_policy" value={agreements.eventPromotionPolicy ? "Y" : "N" } />
+        <input type="hidden" name="userType" value={userType } />
+        <input type="hidden" name="termsOfService" value={agreements.termsOfService ? "Y" : "N" } />
+        <input type="hidden" name="privacyPolicy" value={agreements.privacyPolicy ? "Y" : "N" } />
+        <input type="hidden" name="locationPolicy" value={agreements.locationInfoPolicy ? "Y" : "N" } />
+        <input type="hidden" name="eventPoromotionPolicy" value={agreements.eventPromotionPolicy ? "Y" : "N" } />
       </div>
       <div className="flex justify-between mt-4">
         <div 
           className="flex h-10 items-center rounded-lg bg-slate-900 px-4 text-sm font-medium text-slate-50 transition-colors hover:bg-slate-600"
           onClick={goback}
         >
-          {trans.common.previous}
+          {trans.register.previous}
         </div>
-        <button type="submit" className="flex h-10 items-center rounded-lg bg-slate-900 px-4 text-sm font-medium text-slate-50 transition-colors hover:bg-slate-600">
-            {trans.common.next}
+        <button type="submit" className="flex h-10 items-center rounded-lg bg-slate-900 px-4 text-sm font-medium text-slate-50 transition-colors hover:bg-slate-600" aria-disabled={isPending}>
+            {trans.register.next}
         </button>
       </div>
     </form>

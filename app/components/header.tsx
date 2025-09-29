@@ -81,7 +81,7 @@ export default function Header({ extendSideNav }: IHeader) {
                         <MaterialIcon name="menu" type="outlined" props="h-6 w-6 text-slate-50 cursor-pointer" />
                     </div>
                     <h4 className="grow pl-1 text-slate-50 text-2xl font-semibold">
-                        <Link href="/home">
+                        <Link href="/intro">
                             Cloud MPS
                         </Link>
                     </h4>

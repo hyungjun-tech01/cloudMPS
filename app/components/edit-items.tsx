@@ -28,7 +28,7 @@ export function EditItem({
   placeholder,
   options,
   locale,
-  error,
+  errors,
   chartData,
   other,
   onChange,
@@ -66,8 +66,8 @@ export function EditItem({
               />
             </div>
             <div id={`${name}-error`} aria-live="polite" aria-atomic="true">
-              {error &&
-                error.map((error: string) => (
+              {!!errors &&
+                errors.map((error: string) => (
                   <p className="mt-2 text-sm text-red-500" key={error}>
                     {error}
                   </p>
@@ -90,7 +90,7 @@ export function EditItem({
                 type="text"
                 defaultValue={defaultValue}
                 placeholder={placeholder}
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                className="peer block w-full rounded-md border bg-slate-50 border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 required
               />
               {
@@ -98,8 +98,8 @@ export function EditItem({
               }
             </div>
             <div id={`${name}-error`} aria-live="polite" aria-atomic="true">
-              {error &&
-                error.map((error: string) => (
+              {errors &&
+                errors.map((error: string) => (
                   <p className="mt-2 text-sm text-red-500" key={error}>
                     {error}
                   </p>
@@ -133,8 +133,8 @@ export function EditItem({
               </label>
             </div>
             <div id={`${name}-error`} aria-live="polite" aria-atomic="true">
-              {error &&
-                error.map((error: string) => (
+              {!!errors &&
+                errors.map((error: string) => (
                   <p className="mt-2 text-sm text-red-500" key={error}>
                     {error}
                   </p>
@@ -167,8 +167,8 @@ export function EditItem({
             </select>
           </div>
           <div id={`${name}-error`} aria-live="polite" aria-atomic="true">
-            {error &&
-              error.map((error: string) => (
+            {!!errors &&
+              errors.map((error: string) => (
                 <p className="mt-2 text-sm text-red-500" key={error}>
                   {error}
                 </p>
@@ -189,12 +189,12 @@ export function EditItem({
                 name={name}
                 type="password"
                 placeholder={placeholder}
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                className="peer block w-full rounded-md border bg-slate-50 border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               />
             </div>
             <div id={`${name}-error`} aria-live="polite" aria-atomic="true">
-              {error &&
-                error.map((error: string) => (
+              {!!errors &&
+                errors.map((error: string) => (
                   <p className="mt-2 text-sm text-red-500" key={error}>
                     {error}
                   </p>

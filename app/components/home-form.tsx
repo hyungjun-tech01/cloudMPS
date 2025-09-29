@@ -5,10 +5,10 @@ import { Switch } from 'antd';
 import Link from 'next/link';
 
 export default function HomeForm({ trans }: { trans: Record<string, string> }) {
-    const [userType, setUserType] = useState<'company' | 'personal'>('company');
+    const [userType, setUserType] = useState<'company' | 'person'>('company');
 
     const handleUserTypeChange = (value: boolean) => {
-        setUserType(value ? 'company' : 'personal');
+        setUserType(value ? 'company' : 'person');
     }
 
     return (
