@@ -1,8 +1,8 @@
 import NextAuth, { DefaultSession } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { z } from "zod";
-// import bcrypt from "bcrypt";
-// import MyDBAdapter from '@/app/lib/adapter';
+import { login } from "@/app/libs/actions";
+import { LoginResultData } from "@/app/libs/types";
 
 declare module "next-auth" {
   interface User {
@@ -25,34 +25,47 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   providers: [
     Credentials({
       async authorize(credentials) {
-        const parsedCredentials = z
-          .object({ user_name: z.string(), user_password: z.string().min(6) })
-          .safeParse(credentials);
+        console.log("authorize :", credentials);
+        const parsedCredentials = z.object({
+            user_name: z.string(),
+            password: z.string().min(6),
+          }).safeParse(credentials);
 
         if (parsedCredentials.success) {
-          const { user_name, user_password } = parsedCredentials.data;
+          const { user_name, password } = parsedCredentials.data;
+          const company_code = credentials["company_code"] as string  ?? null;
+          const ip_address = credentials["ip_address"] as string ?? null;
 
           console.log(
-            `Credential : (id) ${user_name} / (pwd) ${user_password}`
+            `Credential : (id) ${user_name} / (pwd) ${password}`
           );
-          // if(user_name !== 'admin') {
-          // const adapter = MyDBAdapter();
-          // const userAttr = await adapter.getAccount(user_name);
-          // console.log('Account : ', userAttr);
-          // if (!userAttr) return null;
-
-          // const userPassword = userAttr.password;
-          // const passwordsMatch = await bcrypt.compare(user_password, userPassword);
-
-          // if (passwordsMatch)
-          return {
-            id: "admin", //userAttr.id,
-            name: "admin", // userAttr.name,
-            full_name: "admin", //userAttr.full_name,
-            email: "", //userAttr.email,
-            role: "admin", //userAttr.role ?? "user",
-            image: "",
+          
+          const loginData = {
+            user_name: user_name,
+            password: password,
+            company_code: company_code,
+            ip_address: ip_address
           };
+
+          const loginResult: LoginResultData | null = await login(loginData);
+
+          if(loginResult === null) return null;
+
+          console.log("Login Result: ", loginResult);
+          
+          if(loginResult.ResultCode !== "0" ) {
+            console.log("Error :", loginResult.ErrorMessage);
+            return null;
+          }
+          
+          return {
+            id: user_name,
+            name: user_name,
+            email: "",
+            role: "admin",
+            token: (loginResult as LoginResultData)["token"]
+          };
+          
           // } else {
           //   return {
           //     id: '0001',

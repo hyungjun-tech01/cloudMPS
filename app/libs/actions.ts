@@ -7,7 +7,7 @@ import { z } from "zod";
 
 import { signIn, signOut } from '@/auth';
 import { BASE_PATH } from './constans';
-import { UserData } from './types';
+import { UserData, LoginData } from './types';
 
 
 export async function logout() {
@@ -33,6 +33,17 @@ export async function authenticate(
     }
 };
 
+export const fetchIp = async () => {
+    try {
+        const res = await fetch('/api/get-ip');
+        const data = await res.json();
+        return data.ip;
+    } catch (error) {
+        console.error('IP 가져오기 실패:', error);
+        return null;
+    }
+};
+
 // ----------- Register -------------------------------------------------------------
 export async function register(registerData: UserData) {
     console.log('[ Register ]', registerData);
@@ -48,3 +59,19 @@ export async function register(registerData: UserData) {
     //     return false;
     // };
 };
+
+// ----------- Login ----------------------------------------------------------------
+export async function login(data: LoginData) {
+    try {
+        const resp = await fetch(`${BASE_PATH}/api/users/login`, {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        });
+        return resp.json();
+
+    } catch (err) {
+        console.error(`\t[ Regsiter ] Error : ${err}`);
+        return null;
+    };
+}

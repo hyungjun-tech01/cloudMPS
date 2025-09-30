@@ -39,6 +39,19 @@ export interface RegisterData {
   userData: UserData;
 }
 
+export interface LoginData {
+  user_name: string;
+  password: string;
+  company_code?: string | null;
+  ip_address: string | null;
+}
+
+export interface LoginResultData {
+  ResultCode: string | number,
+  ErrorMessage: string,
+  token: string,
+}
+
 // 타입 정의 추가
 export interface ISideMenuItem {
   name: string;
