@@ -1,5 +1,6 @@
 {
   "common": {
+    "email": "Email",
     "next": "Next",
     "previous": "Previous"
   },
@@ -20,7 +21,9 @@
     "login": "Login",
     "password": "Password",
     "title": "Login",
-    "userId": "User ID"
+    "userId": "User ID",
+    "company_login": "login for company member",
+    "person_login": "login for personal member"
   },
   "register": {
     "agreement": "Agreement",

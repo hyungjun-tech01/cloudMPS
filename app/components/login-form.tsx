@@ -1,6 +1,7 @@
 'use client';
 
 import { useActionState } from 'react';
+import Link from 'next/link';
 import { authenticate } from '@/app/libs/actions';
 import { useSearchParams } from 'next/navigation';
 import 'material-icons/iconfont/material-icons.css';
@@ -23,9 +24,19 @@ export default function LoginForm({
   return (
     <form action={formAction} >
       <div className="flex-1 rounded-b-lg bg-gray-50 px-6 pb-4 pt-8">
-        <h1 className="mb-3 text-2xl">
-          {trans.title}
-        </h1>
+        <div className="flex justify-between items-end">
+          <h1 className="mb-3 text-2xl">
+            {trans.title}
+          </h1>
+          {userType === "company"
+            ? <Link href="/login?userType=person">
+                {trans.person_login} ▶
+              </Link>
+            :  <Link href="/login?userType=company">
+                {trans.company_login} ▶
+              </Link>
+          }
+        </div>
         <div className="w-full">
           {userType === 'company' && 
             <div className='mb-4'>

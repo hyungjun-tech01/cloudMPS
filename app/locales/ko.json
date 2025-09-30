@@ -21,7 +21,9 @@
     "login": "로그인",
     "password": "비밀번호",
     "title": "로그인",
-    "userId": "사용자 아이디"
+    "userId": "사용자 아이디",
+    "company_login": "기업회원 로그인",
+    "person_login": "개인회원 로그인"
   },
   "register": {
     "agreement": "동의",
