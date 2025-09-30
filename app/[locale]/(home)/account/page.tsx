@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { IButtonInfo, ISection } from '@/app/components/edit-items';
+import { IButtonInfo, ISection } from '@/app/libs/types';
 import { EditForm } from '@/app/components/user/edit-form';
 import Breadcrumbs from '@/app/components/breadcrumbs';
 
@@ -22,44 +22,45 @@ export default async function Page(props: {
         return notFound();
 
     // console.log('[Account] current user :', session.user);
-    const adapter = MyDBAdapter();
-    const [t, user] = await Promise.all([
+    // const adapter = MyDBAdapter();
+    const [trans, user] = await Promise.all([
         getDictionary(locale),
-        adapter.getUserByName(session.user.name)
+        // adapter.getUserByName(session.user.name)
+        {}
     ]);
 
     // Items -------------------------------------------------------------------
     const items: ISection[] = [
         {
-            title: t('user.secTitle_details'), description: "",
+            title: trans.user.secTitle_details, description: "",
             items: [
                 { name: 'userName', title: 'ID', type: 'label', defaultValue: user.user_name },
-                { name: 'userFullName', title: t('user.full_name'), type: 'input', defaultValue: user.full_name, placeholder: t('user.placeholder_full_name') },
-                { name: 'userEmail', title: t('common.email'), type: 'input', defaultValue: user.email, placeholder: t('user.placeholder_email') },
-                { name: 'userDepartment', title: t('user.department'), type: 'input', defaultValue: user.department, placeholder: t('user.placeholder_department') },
-                { name: 'userCardNumber', title: t('user.card_number'), type: 'input', defaultValue: user.card_number },
-                { name: 'userCardNumber2', title: t('user.card_number2'), type: 'input', defaultValue: user.card_number2 },
+                { name: 'userFullName', title: trans.user.full_name, type: 'input', defaultValue: user.full_name, placeholder: trans.user.placeholder_full_name') },
+                { name: 'userEmail', title: trans.common.email, type: 'input', defaultValue: user.email, placeholder: trans.user.placeholder_email') },
+                { name: 'userDepartment', title: trans.user.department, type: 'input', defaultValue: user.department, placeholder: trans.user.placeholder_department') },
+                { name: 'userCardNumber', title: trans.user.card_number, type: 'input', defaultValue: user.card_number },
+                { name: 'userCardNumber2', title: trans.user.card_number2, type: 'input', defaultValue: user.card_number2 },
             ]
         },
         {
-            title: t('user.secTitle_password'), description: "",
+            title: trans.user.secTitle_password, description: "",
             items: [
-                { name: 'userPwdNew', title: t('user.password_new'), type: 'password', defaultValue: "", placeholder: t('user.placeholder_password_new') },
-                { name: 'userPwdNewAgain', title: t('user.password_new_again'), type: 'password', defaultValue: "", placeholder: t('user.placeholder_password_new_again') },
+                { name: 'userPwdNew', title: trans.user.password_new, type: 'password', defaultValue: "", placeholder: trans.user.placeholder_password_new') },
+                { name: 'userPwdNewAgain', title: trans.user.password_new_again, type: 'password', defaultValue: "", placeholder: trans.user.placeholder_password_new_again') },
             ]
         },
     ];
 
     const buttonItems: IButtonInfo = {
-        cancel: { title: t('common.cancel'), link: '/' },
-        go: { title: t('user.update_user') },
+        cancel: { title: trans.common.cancel, link: '/' },
+        go: { title: trans.user.update_user },
     };
 
     return (
         <main>
             <Breadcrumbs
                 breadcrumbs={[
-                    { label: t('common.account'), href: '/account', active: true },
+                    { label: trans.common.account, href: '/account', active: true },
                 ]}
             />
 

@@ -1,5 +1,6 @@
 {
   "common": {
+    "email": "이메일",
     "next": "다음",
     "previous": "이전"
   },

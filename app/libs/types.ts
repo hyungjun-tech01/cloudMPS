@@ -38,3 +38,25 @@ export interface RegisterData {
   eventPromotionPolicy: "Y" | "N";
   userData: UserData;
 }
+
+// 타입 정의 추가
+export interface ISideMenuItem {
+  name: string;
+  title: string;
+  href: string;
+  icon: {name: string, type: string, props?: string};
+  submenu?: {
+    name: string;
+    title: string;
+    href: string;
+    icon: {name: string, type: string, props?: string};
+  }[];
+}
+
+export interface IButtonInfo {
+  cancel: { title: string, link: string },
+  go: { title: string },
+  save?: {title:string},
+  delete?: {title:string},
+  add?:{title:string}
+};
