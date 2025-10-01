@@ -8,7 +8,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: 'Dashboard',
+  title: 'Control Jobs',
 }
 
 interface IDashboardParams {
@@ -36,13 +36,11 @@ export default async function Page(props: {
 
   return (
     <main>
-      <h1 className="mb-4 text-xl md:text-2xl">"Dashboard"</h1>
-      <div className={clsx("flex", {"flex-col mb-4 md:flex-row": isAdmin}, {"flex-col": !isAdmin})}>
-        <div className={clsx("flex flex-col gap-6 mb-6", {"md:w-1/4": isAdmin})}>
-          <Suspense fallback={<CardsSkeleton />}>
-            <BoardWrapper trans={trans.dashboard}/>
-          </Suspense>
-        </div>
+      <h1 className="mb-4 text-xl md:text-2xl">{trans.controlJobs.controlJobs}</h1>
+      <div className={clsx("flex flex-col mb-4 md:flex-row")}>
+        <Suspense fallback={<CardsSkeleton />}>
+          <BoardWrapper trans={trans.controlJobs}/>
+        </Suspense>
       </div>
     </main>
   );
