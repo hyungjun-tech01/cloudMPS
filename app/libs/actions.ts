@@ -71,7 +71,25 @@ export async function login(data: LoginData) {
         return resp.json();
 
     } catch (err) {
-        console.error(`\t[ Regsiter ] Error : ${err}`);
+        console.error(`\t[ Login ] Error : ${err}`);
+        return null;
+    };
+}
+
+// ----------- User ------------------------------------------------------------------
+export async function getUserInfo(userName: string, ipAddr:string, token: string) {
+    try {
+        const resp = await fetch(`${BASE_PATH}/api/users/getuserinfo`, {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json',
+                'session_token': token
+             },
+            body: JSON.stringify({user_name: userName, ip_address: ipAddr}),
+        });
+        return resp.json();
+
+    } catch (err) {
+        console.error(`\t[ Login ] Error : ${err}`);
         return null;
     };
 }

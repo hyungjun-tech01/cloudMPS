@@ -1,7 +1,7 @@
 import NextAuth, { DefaultSession } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { z } from "zod";
-import { login } from "@/app/libs/actions";
+import { login, getUserInfo } from "@/app/libs/actions";
 import { LoginResultData } from "@/app/libs/types";
 
 declare module "next-auth" {
@@ -29,16 +29,14 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         const parsedCredentials = z.object({
             user_name: z.string(),
             password: z.string().min(6),
-          }).safeParse(credentials);
+        }).safeParse(credentials);
 
         if (parsedCredentials.success) {
           const { user_name, password } = parsedCredentials.data;
-          const company_code = credentials["company_code"] as string  ?? null;
+          const company_code = credentials["company_code"] as string  ?? "";
           const ip_address = credentials["ip_address"] as string ?? null;
 
-          console.log(
-            `Credential : (id) ${user_name} / (pwd) ${password}`
-          );
+          // console.log(`Credential : (id) ${user_name} / (pwd) ${password} / (company code) ${company_code}`);
           
           const loginData = {
             user_name: user_name,
@@ -48,22 +46,29 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           };
 
           const loginResult: LoginResultData | null = await login(loginData);
+          console.log("[Login] Result :", loginResult);
 
           if(loginResult === null) return null;
-
-          console.log("Login Result: ", loginResult);
-          
           if(loginResult.ResultCode !== "0" ) {
-            console.log("Error :", loginResult.ErrorMessage);
+            console.log("[Login] Error :", loginResult.ErrorMessage);
+            return null;
+          }
+
+          const userInfoResult = await getUserInfo(user_name, ip_address, loginResult.token);
+          console.log("[User Info] Result :", userInfoResult);
+
+          if(userInfoResult.ResultCode !== '0') {
+            console.log("[User Info] Error :", userInfoResult.ErrorMessage);
             return null;
           }
           
           return {
-            id: user_name,
-            name: user_name,
-            email: "",
-            role: "admin",
-            token: (loginResult as LoginResultData)["token"]
+            id: userInfoResult.user.user_id,
+            name: userInfoResult.user.user_name,
+            full_name: userInfoResult.user.full_name,
+            email: userInfoResult.user.email,
+            role: userInfoResult.user["role"] ?? "admin",
+            token: loginResult.token
           };
           
           // } else {
