@@ -5,7 +5,7 @@ export default function MaterialIcon({
     name, type, props
 }: {
     name: string,
-    type: string | undefined,
+    type?: string,
     props: string
 }) {
     const type_name = 'material-icons' + (type ? `-${type}` : '');

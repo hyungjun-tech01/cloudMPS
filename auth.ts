@@ -26,51 +26,57 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     Credentials({
       async authorize(credentials) {
         console.log("authorize :", credentials);
-        const parsedCredentials = z.object({
+        const parsedCredentials = z
+          .object({
             user_name: z.string(),
             password: z.string().min(6),
-        }).safeParse(credentials);
+          })
+          .safeParse(credentials);
 
         if (parsedCredentials.success) {
           const { user_name, password } = parsedCredentials.data;
-          const company_code = credentials["company_code"] as string  ?? "";
-          const ip_address = credentials["ip_address"] as string ?? null;
+          const company_code = (credentials["company_code"] as string) ?? "";
+          const ip_address = (credentials["ip_address"] as string) ?? null;
 
           // console.log(`Credential : (id) ${user_name} / (pwd) ${password} / (company code) ${company_code}`);
-          
+
           const loginData = {
             user_name: user_name,
             password: password,
             company_code: company_code,
-            ip_address: ip_address
+            ip_address: ip_address,
           };
 
           const loginResult: LoginResultData | null = await login(loginData);
           console.log("[Login] Result :", loginResult);
 
-          if(loginResult === null) return null;
-          if(loginResult.ResultCode !== "0" ) {
+          if (loginResult === null) return null;
+          if (loginResult.ResultCode !== "0") {
             console.log("[Login] Error :", loginResult.ErrorMessage);
             return null;
           }
 
-          const userInfoResult = await getUserInfo(user_name, ip_address, loginResult.token);
+          const userInfoResult = await getUserInfo(
+            user_name,
+            ip_address,
+            loginResult.token
+          );
           console.log("[User Info] Result :", userInfoResult);
 
-          if(userInfoResult.ResultCode !== '0') {
+          if (userInfoResult.ResultCode !== "0") {
             console.log("[User Info] Error :", userInfoResult.ErrorMessage);
             return null;
           }
-          
+
           return {
             id: userInfoResult.user.user_id,
             name: userInfoResult.user.user_name,
             full_name: userInfoResult.user.full_name,
             email: userInfoResult.user.email,
             role: userInfoResult.user["role"] ?? "admin",
-            token: loginResult.token
+            token: loginResult.token,
           };
-          
+
           // } else {
           //   return {
           //     id: '0001',
@@ -93,19 +99,20 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       // check login --------------------------------------------
       const isLoggedIn = !!auth?.user;
       const isOnIntro = nextUrl.pathname.startsWith("/intro");
-      const isOnProtected = !(nextUrl.pathname.startsWith("/login")
-        || (nextUrl.pathname.startsWith("/register"))
-        || (nextUrl.pathname.startsWith("/intro"))
+      const isOnProtected = !(
+        nextUrl.pathname.startsWith("/login") ||
+        nextUrl.pathname.startsWith("/register") ||
+        nextUrl.pathname.startsWith("/intro")
       );
 
       if (isOnProtected) {
         if (!isLoggedIn) {
           console.log("isOnProtected & not LoggedIn");
-          return Response.redirect(new URL('/intro', nextUrl))
-        };
+          return Response.redirect(new URL("/intro", nextUrl));
+        }
       } else if (isLoggedIn) {
-        return Response.redirect(new URL('/', nextUrl));
-      };
+        return Response.redirect(new URL("/", nextUrl));
+      }
 
       const isAdmin = auth?.user.role === "admin";
       const isManager = auth?.user.role === "manager";
@@ -126,7 +133,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           return Response.redirect(new URL("/", nextUrl));
         }
       }
-      
+
       return true;
     },
     jwt: async ({ token, user }) => {
