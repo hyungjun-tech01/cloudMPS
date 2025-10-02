@@ -25,15 +25,15 @@ export default function SideMenuItem({
             <>
                 <div
                     onClick={handleClick}
-                    className={clsx(
-                        "flex h-[48px] items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-base text-gray-500 font-medium duration-150 hover:bg-slate-200 hover:text-slate-700 cursor-pointer",
-                        {
-                            'grow md:flex-none md:justify-start md:p-2 md:px-3': extended,
-                        }
-                    )}
+                    className="flex h-[48px] items-center justify-between gap-2 rounded-md bg-gray-50 p-3 text-base text-gray-500 font-medium duration-150 hover:bg-slate-200 hover:text-slate-700 cursor-pointer"
                 >
-                    {LinkIcon}
-                    <p className={clsx("hidden duration-150", { 'md:block': extended } )}>{title}</p>
+                    <div className={clsx('flex justifiy-center gap-2', {
+                            'grow md:flex-none md:justify-start md:p-2 md:px-3': extended,
+                    })}>
+                        {LinkIcon}
+                        <p className={clsx("hidden duration-150", { 'md:block': extended } )}>{title}</p>
+                    </div>
+                    {extended && <MaterialIcon name={selected ? "keyboard_arrow_up" : "keyboard_arrow_down"} props="h-4 w-4" />}
                 </div>
                 {selected && submenu.map((subItem) => {
                     const SubItemIcon = <MaterialIcon name={subItem.icon.name} type={subItem.icon.type} props={`${subItem.icon.props} w-5`} />;
@@ -43,7 +43,7 @@ export default function SideMenuItem({
                             key={subItem.name}
                             href={subItem.href}
                             className={clsx(
-                                "flex h-[40px] items-center gap-3 rounded-md bg-slate-50 text-sm text-gray-500 font-medium duration-150 hover:bg-slate-200 hover:text-slate-700",
+                                "flex h-[42px] items-center gap-3 rounded-md bg-slate-50 text-sm text-gray-500 font-medium duration-150 hover:bg-slate-200 hover:text-slate-700",
                                 {
                                     'bg-slate-200 text-slate-700': isActive,  // 이 부분 수정,
                                     'grow md:flex-none md:justify-start md:py-2 md:pl-3 md:ml-8': extended,
