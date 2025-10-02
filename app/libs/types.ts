@@ -47,9 +47,9 @@ export interface LoginData {
 }
 
 export interface LoginResultData {
-  ResultCode: string | number,
-  ErrorMessage: string,
-  token: string,
+  ResultCode: string | number;
+  ErrorMessage: string;
+  token: string;
 }
 
 // 타입 정의 추가
@@ -68,8 +68,13 @@ export interface ISideMenuItem {
 
 export interface IButtonInfo {
   cancel: { title: string, link: string },
-  go: { title: string },
-  save?: {title:string},
-  delete?: {title:string},
-  add?:{title:string}
+  go: { title: string };
+  save?: {title:string};
+  delete?: {title:string};
+  add?:{title:string};
+};
+
+export interface ICardSubItem {
+  first: { title: string, value: string, sub?: { title: string, value: number|string, color?:string }[] };
+  second: { title: string, value: { title: string, value: number|string, color?:string }[] };
 };

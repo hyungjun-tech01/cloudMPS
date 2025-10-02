@@ -37,7 +37,7 @@ export default async function Page(props: {
   return (
     <main>
       <h1 className="mb-4 text-xl md:text-2xl">{trans.controlJobs.controlJobs}</h1>
-      <div className={clsx("flex flex-col mb-4 md:flex-row")}>
+      <div className={clsx("flex flex-col mb-4")}>
         <Suspense fallback={<CardsSkeleton />}>
           <BoardWrapper trans={trans.controlJobs}/>
         </Suspense>

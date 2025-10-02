@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import { ICardSubItem } from "@/app/libs/types";
 import Card from "./card";
 import { formatCurrency } from '@/app/libs/utils';
 import { redirect } from 'next/navigation'; // 적절한 리다이렉트 함수 import
@@ -15,28 +16,84 @@ export default async function BoardWrapper({ trans }: { trans: Record<string, st
         redirect('/login'); // '/login'으로 리다이렉트
     };
 
-    const valMonthlyUsage:Record<string, Record<string, number|string>> = {
-        auto: { current: 0, total: 0, error: 0, period: "월별", target: 58, created: 0, not_created: 58},
-        manual: { current: 0, total: 0, error: 0, period: "월별", target: 166, created: 0, not_created: 166},
-    };
+    const valMonthlyUsage : ICardSubItem[] = [
+        {
+            first: { title: "자동", value: "0/0", sub: [{title: "미생성", value: 0}] },
+            second: { title: "당월", value: [
+                { title: "대상", value: 58 },
+                { title: "생성", value: 0, color: "text-blue-600" },
+                { title: "미생성", value: 58, color: "text-red-600" }
+            ]}
+        },
+        {   
+            first: { title: "수동", value: "0/0", sub: [{title: "미생성", value: 0}] },
+            second: { title: "당월", value: [
+                { title: "대상", value: 166 },
+                { title: "생성", value: 0, color: "text-blue-600" },
+                { title: "미생성", value: 166, color: "text-red-600" }
+            ]}
+        }
+    ];
 
-    const valSales:Record<string, Record<string, number|string>> = {
-        auto: { current: 0, total: 0, error: 0, period: "월별", target: 140, created: 67, not_created: 81},
-        manual: { current: 0, total: 0, error: 0, period: "월별", target: 627, created: 1, not_created: 626},
-    };
+    const valSales : ICardSubItem[] = [
+        {
+            first: { title: "자동", value: "0/0", sub: [{title: "미생성", value: 0}] },
+            second: { title: "당월", value: [
+                { title: "대상", value: 140 },
+                { title: "생성", value: 67, color: "text-blue-600" },
+                { title: "미생성", value: 81, color: "text-red-600" }
+            ]}
+        },
+        {   
+            first: { title: "수동", value: "0/0", sub: [{title: "미생성", value: 0}] },
+            second: { title: "당월", value: [
+                { title: "대상", value: 627 },
+                { title: "생성", value: 1, color: "text-blue-600" },
+                { title: "미생성", value: 626, color: "text-red-600" }
+            ]}
+        }
+    ];
 
-    const valAS:Record<string, Record<string, number>>= {
-        auto: { value: 0, applied: 159, waiting: 2, processing: 8, canceled: 640, completed: 86, postponed: 2},
-        manual: { value: 0, applied: 286, waiting: 132, processing: 16, canceled: 118, completed: 219, postponed: 1},
-    };
+    const valAS : ICardSubItem[] = [
+        {
+            first: { title: "신규", value: "0"},
+            second: { title: "누적", value: [ { title: "당월", value: 13 }, { title: "전월", value: 56 }, { title: "진행", value: 8 }, { title: "취소", value: 640 }, { title: "완료", value: 86 }, { title: "보류", value: 2 }
+            ]}
+        },
+        {   
+            first: { title: "수동접수", value: "0"},
+            second: { title: "현황", value: [
+                { title: "접수", value: 286 }, { title: "대기", value: 132 }, { title: "진행", value: 16 }, { title: "취소", value: 118 }, { title: "완료", value: 219 }, { title: "보류", value: 1 }
+            ]}
+        }
+    ];
 
-    const valMonitor:Record<string, Record<string, number>> = {
-        updated: { current: 0, thisMonth: 7, lastMonth: 33 },
-        ink: { current: 56, total:162, until4: 0, until30: 26, over30: 106, lowSupply: 2 },
-        laser: { current: 83, total:303, until4: 0, until30: 24, over30: 220, lowSupply: 48 }
-    }
+    const valMonitor : ICardSubItem[] = [
+        {
+            first: { title: "신규", value: "0" },
+            second: { title: "누적", value: [ { title: "당월", value: 13 }, { title: "전월", value: 56 } ]}
+        },
+        {   
+            first: { title: "잉크젯", value: "56/162" },
+            second: { title: "지연/잔량부족", value: [
+                { title: "3~4일", value: 0, color: "text-red-600"  },
+                { title: "4~30일", value: 262, color: "text-red-600" },
+                { title: "30일 이상", value: 106, color: "text-red-600" },
+                { title: "소모품 부족", value: 2, color: "text-red-600" }
+            ]}
+        },
+        {   
+            first: { title: "레이저", value: "83/303" },
+            second: { title: "지연/잔량부족", value: [
+                { title: "3~4일", value: 0, color: "text-red-600" },
+                { title: "4~30일", value: 24, color: "text-red-600" },
+                { title: "30일 이상", value: 220, color: "text-red-600" },
+                { title: "소모품 부족", value: 48, color: "text-red-600" }
+            ]}
+        }
+    ];
 
-    const tempCardData: { title: string, type: string, data: Record<string, Record<string, number|string>>}[] = [
+    const tempCardData: { title: string, type: string, data: ICardSubItem[] }[] = [
         { title: trans.monthy_usage, type: "monthlyUsage", data: valMonthlyUsage },
         { title: trans.sales, type: "sales", data: valSales },
         { title: trans.as, type: "as", data: valAS },
@@ -50,5 +107,4 @@ export default async function BoardWrapper({ trans }: { trans: Record<string, st
             )}
         </div>
     )
-    
 }
