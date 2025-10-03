@@ -54,6 +54,14 @@ export const SideMenuList : {
       title: "출력장치",
       href: "/device",
       icon: { name: "print", type: "outlined" },
+      submenu: [
+        {
+          name: "monitor",
+          title: "모니터링",
+          href: "/device",
+          icon: { name: "monitor_heart", type: "outlined" },
+        },
+      ]
     },
     group: {
       name: "group",

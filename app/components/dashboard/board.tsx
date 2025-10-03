@@ -1,7 +1,6 @@
 import { auth } from "@/auth";
 import { ICardSubItem } from "@/app/libs/types";
 import Card from "./card";
-import { formatCurrency } from '@/app/libs/utils';
 import { redirect } from 'next/navigation'; // 적절한 리다이렉트 함수 import
 
 
@@ -103,7 +102,7 @@ export default async function BoardWrapper({ trans }: { trans: Record<string, st
     return (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             { tempCardData.map(item => 
-                <Card key={item.type} title={item.title} type={item.type} value={item.data} />
+                <Card key={item.type} title={item.title} value={item.data} />
             )}
         </div>
     )
