@@ -1,8 +1,12 @@
 {
   "common": {
+    "country": "Country",
+    "currency": "Currency",
     "email": "Email",
     "next": "Next",
-    "previous": "Previous"
+    "previous": "Previous",
+    "language": "Language",
+    "time_zone": "Time Zone"
   },
   "home": {
     "company_user": "Company User",
@@ -28,7 +32,8 @@
   "register": {
     "agreement": "Agreement",
     "agree_all": "Agree All",
-    "complete": "Registration is completed.",
+    "complete": "Completed.",
+    "completed": "Registration is completed.",
     "event_promotion_policy": "Event and Marketing Promotion Policy",
     "error_omit_required_agreement": "Omitted required agreement",
     "error_need_agree": "(This is required to register.)",
@@ -89,20 +94,24 @@
     "ceo_name" : "CEO Name", 
     "closure_date" :"Closure Date",
     "company":"Company",
+    "company_code": "Company Code",
+    "company_code_exists": "I know my company code",
     "company_details":"Company Details",
     "company_manage": "Company Management",
     "company_name":"Company Name",
+    "company_name_en":"English Company Name",
     "company_scale":"Company Scale",
     "counter":"Counter",
+    "deal_company_code": "Deal Company Code",
     "deal_type":"Deal Type",
     "deal_type_mixed": "Mixed",
     "deal_type_sales": "Sales",
     "deal_type_purchase": "Purchase",
     "deal_type_etc": "Etc",
-    "company_name_en":"English Company Name",
     "engineer":"Engineer",
     "establishment_date"   : "Establishment",
     "fax_number" : "Company Fax Number",
+    "general_company": "General",
     "group":"Group",
     "homepage" :"Homepage",
     "information": "Company Information",
@@ -112,6 +121,8 @@
     "ind_type_education": "Education",
     "memo" : "Company Momo",
     "new_company":"New Company",
+    "no_company_code": "I don't have company code",
+    "partner_company": "Partner",
     "phone_number" : "Company Phone Number",
     "salesman":"SalesMan",
     "search_name": "Search Company Name",
@@ -123,7 +134,9 @@
     "secTitle_manager_info": "Manager Information",
     "loading_add": "Now, loading the needed data to add new company ...",
     "loading_detail": "Now, loading the details of company...",
-    "placeholder_company_name": "Enter company name"
+    "placeholder_company_code": "Enter company code if you have",
+    "placeholder_company_name": "Enter company name",
+    "placeholder_deal_company_code": "Enter your dealer code if you have"
   },
   "device": {
     "monitoring": "Monitoring",

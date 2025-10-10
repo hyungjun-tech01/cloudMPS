@@ -20,6 +20,7 @@ export default async function Page(props: {
   const locale = (await props.params).locale;
   const t = await getDictionary(locale);
   const trans = {
+    common: t.common,
     company: t.company,
     register: t.register,
     user: t.user
