@@ -9,6 +9,7 @@ export const metadata: Metadata = {
 
 interface IRegister {
   userType?: "company" | "person";
+  searchCompany?: string;
 }
 
 export default async function Page(props: {
@@ -17,7 +18,9 @@ export default async function Page(props: {
 }) {
   const searchParams = await props.searchParams;
   const userType = searchParams?.userType || "company";
+  const searchCompany = searchParams?.searchCompany;
   const locale = (await props.params).locale;
+
   const t = await getDictionary(locale);
   const trans = {
     common: t.common,
@@ -32,6 +35,21 @@ export default async function Page(props: {
     event_promotion_policy: t.event_promotion_policy
   };
 
+  //fake company info
+  const fakeSearchedCompanies = !!searchCompany ? [{
+      key: '110001',
+      company_code: '110001',
+      company_name : 'Sindoh',
+      address : '서울시 성동구 성수이로24길 3',
+    },
+    {
+      key: '110041',
+      company_code: '110041',
+      company_name : 'NodeData',
+      address : '서울시 구로구 가산디지털단지',
+    },
+  ] : null;
+
   return (
     <main className="flex items-center justify-center">
       <div className="relative mx-auto flex w-full max-w-[960px] flex-col p-4 md:-mt-8">
@@ -39,7 +57,7 @@ export default async function Page(props: {
           {trans.register.title}
         </div>
         <Suspense>
-          <RegisterForm userType={userType} trans={trans} terms={terms}/>
+          <RegisterForm userType={userType} searchResult={fakeSearchedCompanies} trans={trans} terms={terms}/>
         </Suspense>
       </div>
     </main>

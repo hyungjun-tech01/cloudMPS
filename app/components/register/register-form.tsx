@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useState } from "react";
 import Link from 'next/link';
 import { z } from "zod";
 import { Steps } from "antd";
@@ -49,10 +49,12 @@ export type RegisterCompanyUserState = {
 
 export default function RegisterForm({
   userType,
+  searchResult,
   trans,
   terms,
 }: {
   userType: "company" | "person";
+  searchResult: object[] | null;
   trans: { company: Record<string, string>,
     register: Record<string, string>,
     user: Record<string, string>
@@ -321,6 +323,7 @@ export default function RegisterForm({
       content: (
         <RegisterUserInfo
           userType={userType}
+          searchResult={searchResult}
           trans={trans}
           agreements={agreed}
           action={actionRegisterUser}

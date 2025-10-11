@@ -1,4 +1,6 @@
 import { useActionState, useEffect, useState } from "react";
+import { Table } from 'antd';
+import type { TableColumnsType, TableProps } from 'antd';
 import clsx from "clsx";
 import { IEditItem, ISection } from "@/app/libs/types";
 import { EditItem } from "../edit-items";
@@ -6,16 +8,26 @@ import {
   RegisterPersonalUserState,
   RegisterCompanyUserState,
 } from "./register-form";
+import Search from "@/app/components/register/searchCompany";
+
+interface SearchCompnayDataType {
+  key: React.Key;
+  company_code: string;
+  company_name: string;
+  address: string;
+}
 
 
 export default function RegisterUserInfo({
   userType,
+  searchResult,
   trans,
   agreements,
   action,
   goback,
 }: {
   userType: "company" | "person";
+  searchResult: SearchCompnayDataType[] | null;
   trans: Record<string, Record<string, string>>;
   agreements: {
     termsOfService: boolean,
@@ -32,6 +44,7 @@ export default function RegisterUserInfo({
   const initialState: RegisterPersonalUserState | RegisterCompanyUserState = { message: null, errors: {} };
   const [state, formAction, isPending] = useActionState(action, initialState, undefined);
   const [haveCompanyCode, setHaveCompanyCode] = useState(false);
+  const [formItems, setFormItems] = useState<ISection[]>([]);
 
   const ItemsOfNoCompanyCode : ISection[] = [
     {
@@ -162,86 +175,128 @@ export default function RegisterUserInfo({
     },
   ];
 
-  const ItemsOfHavingCompanyCode : ISection[]= [
+  // const ItemsOfHavingCompanyCode : ISection[]= [
+  //   {
+  //     title: trans.company.secTitle_company_info,
+  //     description: "",
+  //     items: [
+  //       {
+  //         name: "companyCode",
+  //         title: trans.company.company_code,
+  //         type: "input",
+  //         defaultValue: "",
+  //         placeholder: trans.company.placeholder_company_code,
+  //       },
+  //       {
+  //         name: "dealCompanyCode",
+  //         title: trans.company.deal_company_code,
+  //         type: "input",
+  //         defaultValue: "",
+  //         placeholder: trans.company.placeholder_deal_company_code,
+  //       }
+  //     ],
+  //   },
+  //   {
+  //     title: trans.company.secTitle_manager_info,
+  //     description: trans.user.user_edit_account_description,
+  //     items: [
+  //       {
+  //         name: "userName",
+  //         title: trans.user.user_name,
+  //         type: "input",
+  //         defaultValue: "",
+  //         placeholder: trans.user.placeholder_full_name,
+  //       },
+  //       {
+  //         name: "userEmail",
+  //         title: trans.user.email,
+  //         type: "input",
+  //         defaultValue: "",
+  //         placeholder: trans.user.placeholder_email,
+  //       }
+  //     ],
+  //   },
+  //   {
+  //     title: trans.user.secTitle_password,
+  //     description: "",
+  //     items: [
+  //       {
+  //         name: "userPwdNew",
+  //         title: trans.user.password,
+  //         type: "password",
+  //         defaultValue: "",
+  //         placeholder: trans.user.placeholder_password_new,
+  //       },
+  //       {
+  //         name: "userPwdNewAgain",
+  //         title: trans.user.password_again,
+  //         type: "password",
+  //         defaultValue: "",
+  //         placeholder: trans.user.placeholder_password_new_again,
+  //       },
+  //     ],
+  //   },
+  // ];
+
+  const ColumnsForSearchedCompany : TableColumnsType<SearchCompnayDataType> = [
     {
-      title: trans.company.secTitle_company_info,
-      description: "",
-      items: [
-        {
-          name: "companyCode",
-          title: trans.company.company_code,
-          type: "input",
-          defaultValue: "",
-          placeholder: trans.company.placeholder_company_code,
-        },
-        {
-          name: "dealCompanyCode",
-          title: trans.company.deal_company_code,
-          type: "input",
-          defaultValue: "",
-          placeholder: trans.company.placeholder_deal_company_code,
-        }
-      ],
+      title: trans.company.company_code,
+      dataIndex: 'company_code',
+      key: 'company_code',
     },
     {
-      title: trans.company.secTitle_manager_info,
-      description: trans.user.user_edit_account_description,
-      items: [
-        {
-          name: "userName",
-          title: trans.user.user_name,
-          type: "input",
-          defaultValue: "",
-          placeholder: trans.user.placeholder_full_name,
-        },
-        {
-          name: "userEmail",
-          title: trans.user.email,
-          type: "input",
-          defaultValue: "",
-          placeholder: trans.user.placeholder_email,
-        }
-      ],
+      title: trans.company.company_name,
+      dataIndex: 'company_name',
+      key: 'company_name',
     },
     {
-      title: trans.user.secTitle_password,
-      description: "",
-      items: [
-        {
-          name: "userPwdNew",
-          title: trans.user.password,
-          type: "password",
-          defaultValue: "",
-          placeholder: trans.user.placeholder_password_new,
-        },
-        {
-          name: "userPwdNewAgain",
-          title: trans.user.password_again,
-          type: "password",
-          defaultValue: "",
-          placeholder: trans.user.placeholder_password_new_again,
-        },
-      ],
-    },
+      title: trans.company.address,
+      dataIndex: 'address',
+      key: 'address',
+    }
   ];
-  
-  const formItems: { company: ISection[]; person: ISection[] } = {
-    company: [],
-    person: [
-      {
-        title: trans.user.secTitle_info,
+
+  const rowSelection: TableProps<SearchCompnayDataType>['rowSelection'] = {
+    onChange: (selectedRowKeys: React.Key[], selectedRows: SearchCompnayDataType[]) => {
+      // console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+      setFormItems([{
+        title: trans.company.secTitle_company_info,
         description: "",
         items: [
           {
-            name: "userName",
-            title: "ID",
-            type: "input",
-            defaultValue: "",
-            placeholder: trans.user.placeholder_user_name,
+            name: "companyCode",
+            title: trans.company.company_code,
+            type: "label",
+            defaultValue: selectedRows[0].company_code,
           },
           {
-            name: "userFullName",
-            title: trans.user.full_name,
+            name: "companyName",
+            title: trans.company.company_name,
+            type: "label",
+            defaultValue: selectedRows[0].company_name,
+          },
+          {
+            name: "address",
+            title: trans.company.address,
+            type: "label",
+            defaultValue: selectedRows[0].address,
+          },
+          {
+            name: "dealCompanyCode",
+            title: trans.company.deal_company_code,
+            type: "input",
+            defaultValue: "",
+            placeholder: trans.company.placeholder_deal_company_code,
+          }
+        ],
+      },
+      {
+        title: trans.company.secTitle_manager_info,
+        description: trans.user.user_edit_account_description,
+        items: [
+          {
+            name: "userName",
+            title: trans.user.user_name,
             type: "input",
             defaultValue: "",
             placeholder: trans.user.placeholder_full_name,
@@ -252,7 +307,7 @@ export default function RegisterUserInfo({
             type: "input",
             defaultValue: "",
             placeholder: trans.user.placeholder_email,
-          },
+          }
         ],
       },
       {
@@ -274,22 +329,22 @@ export default function RegisterUserInfo({
             placeholder: trans.user.placeholder_password_new_again,
           },
         ],
-      },
-    ],
+      }]);
+    },
+    getCheckboxProps: (record: SearchCompnayDataType) => ({
+      disabled: record.company_name === 'Disabled User', // Column configuration not to be checked
+      name: record.company_name,
+    }),
   };
-
-  if(haveCompanyCode) {
-    formItems.company = ItemsOfHavingCompanyCode;
-  } else {
-    formItems.company = ItemsOfNoCompanyCode;
-  }
-
+  
   const handleChangeHaveCompanyCode = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log("Change - have company code :", event.target.id);
     if(event.target.id === "rb_company_code_yes") {
       setHaveCompanyCode(true);
+      setFormItems([]);
     } else {
       setHaveCompanyCode(false);
+      setFormItems([...ItemsOfNoCompanyCode]);
     }
   };
 
@@ -297,6 +352,66 @@ export default function RegisterUserInfo({
     event.preventDefault();
     formAction(new FormData(event.currentTarget));
   };
+
+  useEffect(() => {
+    if(userType === 'person') {
+      setFormItems([
+        {
+          title: trans.user.secTitle_info,
+          description: "",
+          items: [
+            {
+              name: "userName",
+              title: "ID",
+              type: "input",
+              defaultValue: "",
+              placeholder: trans.user.placeholder_user_name,
+            },
+            {
+              name: "userFullName",
+              title: trans.user.full_name,
+              type: "input",
+              defaultValue: "",
+              placeholder: trans.user.placeholder_full_name,
+            },
+            {
+              name: "userEmail",
+              title: trans.user.email,
+              type: "input",
+              defaultValue: "",
+              placeholder: trans.user.placeholder_email,
+            },
+          ],
+        },
+        {
+          title: trans.user.secTitle_password,
+          description: "",
+          items: [
+            {
+              name: "userPwdNew",
+              title: trans.user.password,
+              type: "password",
+              defaultValue: "",
+              placeholder: trans.user.placeholder_password_new,
+            },
+            {
+              name: "userPwdNewAgain",
+              title: trans.user.password_again,
+              type: "password",
+              defaultValue: "",
+              placeholder: trans.user.placeholder_password_new_again,
+            },
+          ],
+        },
+      ]);
+    } else {
+      if(haveCompanyCode) {
+        setFormItems([]);
+      } else {
+        setFormItems([...ItemsOfNoCompanyCode]);
+      }
+    }
+  }, [userType, haveCompanyCode]);
 
   return (
     <>
@@ -307,13 +422,28 @@ export default function RegisterUserInfo({
           <label htmlFor="rb_company_code_no">{trans.company.no_company_code}</label> 
         </div>
       }
+      { !!haveCompanyCode && 
+        <div className="mt-4 flex items-center justify-between gap-2 md:mt-8 mb-4">
+          <Search queryName="searchCompany" placeholder={trans.company.placeholder_company_code} buttonTitle={trans.common.search}/>
+        </div>
+      }
+      {
+        !!searchResult && 
+          <div className="border border-slate-500 rounded-md mb-4">
+            <Table 
+              rowSelection={{ type: 'radio', ...rowSelection }}
+              dataSource={searchResult}
+              columns={ColumnsForSearchedCompany}
+            />
+          </div> 
+      }
       <form onSubmit={handleSubmit} className="rounded-xl bg-slate-100 p-4 md:p-6">
-        {formItems[userType].map((sec: ISection, idx) => {
+        {formItems.map((sec: ISection, idx) => {
           return (
             <div
               key={idx}
               className={clsx("w-full p-2 flex flex-col md:flex-row", {
-                "border-b": idx !== formItems[userType].length - 1,
+                "border-b": idx !== formItems.length - 1,
               })}
             >
               <div className="w-full md:w-1/3 pb-4 md:pr-6">

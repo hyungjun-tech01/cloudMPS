@@ -6,6 +6,7 @@
     "next": "다음",
     "previous": "이전",
     "language": "언어",
+    "search": "찾기",
     "time_zone": "시간대"
   },
   "home": {
@@ -134,7 +135,7 @@
     "secTitle_manager_info": "관리자 정보",
     "loading_add": "신규 업체 추가를 위한 기반 정보를 불러오고 있습니다.",
     "loading_detail": "업체에 대한 상세 정보를 불러오고 있습니다.",
-    "placeholder_company_code": "회사 코드가 있다면 입력하세요.",
+    "placeholder_company_code": "회사 코드를 입력하세요.",
     "placeholder_company_name": "회사명을 입력하세요.",
     "placeholder_deal_company_code": "관리업체코드가 있다면 입력하세요."
   },
