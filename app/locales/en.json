@@ -135,6 +135,7 @@
     "secTitle_manager_info": "Manager Information",
     "loading_add": "Now, loading the needed data to add new company ...",
     "loading_detail": "Now, loading the details of company...",
+    "placeholder_business_reg_no": "Enter Business Registration No.",
     "placeholder_company_code": "Enter company code if you have",
     "placeholder_company_name": "Enter company name",
     "placeholder_deal_company_code": "Enter your dealer code if you have"
