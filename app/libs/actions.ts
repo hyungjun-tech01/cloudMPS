@@ -6,7 +6,7 @@ import { AuthError } from 'next-auth';
 import { z } from "zod";
 
 import { signIn, signOut } from '@/auth';
-import { BASE_PATH } from './constans';
+import { BASE_PATH } from './constants';
 import { UserData, LoginData } from './types';
 
 

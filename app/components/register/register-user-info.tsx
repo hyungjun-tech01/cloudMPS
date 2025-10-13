@@ -16,7 +16,7 @@ import {
 import Search from "@/app/components/register/searchCompany";
 
 
-interface SearchCompnayDataType {
+export interface SearchCompnayDataType {
   key: React.Key;
   company_code: string;
   company_name: string;
@@ -62,7 +62,7 @@ export default function RegisterUserInfo({
   for(const [key, data] of Object.entries(countries)) {
     CountryList.push({title:data.name, value: key});
 
-    for(const val of data.languages) {
+    for(const val of data.currency) {
       const foundIdx = CurrencyList.findIndex(item => item.value === val);
       if(foundIdx === -1) {
         CurrencyList.push({title: val, value: val});
@@ -161,7 +161,7 @@ export default function RegisterUserInfo({
   };
 
   const handleSelectLanguage = (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
-    console.log("handleSelectLanguage :", event.target.value);
+    // console.log("handleSelectLanguage :", event.target.value);
     
     // Update options for country selection -------------------------------------------------
     const selectCountryElem = document.getElementById('companyCountry') as HTMLSelectElement;
@@ -171,16 +171,92 @@ export default function RegisterUserInfo({
     const selectTimeZoneElem = document.getElementById('timeZone') as HTMLSelectElement;
     selectTimeZoneElem.length = 0;
 
+    // Update options for currency selection -------------------------------------------------
+    const selectCurrencyElem = document.getElementById('currencyCode') as HTMLSelectElement;
+    selectCurrencyElem.length = 0;
+
     let tempIdx = 0;
+    const tempTimeZoneList:string[] = [];
+    const tempCurrencyList:string[] = [];
+    
     for(const [key, data] of Object.entries(countries)) {
       if(data.languages.includes(event.target.value as TLanguageCode)) {
         selectCountryElem.options[tempIdx++] = new Option(data.native, key);
+        
+        const tempTimeZones = getCountry(key)?.timezones;
+        if(!!tempTimeZones) {
+          for(let i=0; i<tempTimeZones.length; i++) {
+            if(!tempTimeZoneList.includes(tempTimeZones[i])) {
+              tempTimeZoneList.push(tempTimeZones[i]);
+            };
+          };
+        };
+
+        for(const val of data.currency) {
+          if(!tempCurrencyList.includes(val)) {
+            tempCurrencyList.push(val);
+          };
+        };
       };
+    };
+
+    for(let i=0; i<tempTimeZoneList.length; i++) {
+      selectTimeZoneElem.options[i] = new Option(tempTimeZoneList[i], tempTimeZoneList[i]);
+    };
+
+    for(let i=0; i<tempCurrencyList.length; i++) {
+      selectCurrencyElem.options[i] = new Option(tempCurrencyList[i], tempCurrencyList[i]);
     };
   };
 
   const handleSelectCurrency = (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
     console.log("handleSelectCurrency :", event.target.value);
+
+    // Update options for country selection -------------------------------------------------
+    const selectCountryElem = document.getElementById('companyCountry') as HTMLSelectElement;
+    selectCountryElem.length = 0;
+
+    // Update options for Time Zone selection -------------------------------------------------
+    const selectTimeZoneElem = document.getElementById('timeZone') as HTMLSelectElement;
+    selectTimeZoneElem.length = 0;
+
+    // Update options for language selection -------------------------------------------------
+    const selectLanguageElem = document.getElementById('language') as HTMLSelectElement;
+    selectLanguageElem.length = 0;
+
+    let tempIdx = 0;
+    const tempTimeZoneList:string[] = [];
+    const tempLanguageList:string[] = [];
+
+    for(const [key, data] of Object.entries(countries)) {
+      if(data.currency.includes(event.target.value)) {
+        selectCountryElem.options[tempIdx++] = new Option(data.native, key);
+
+        const tempTimeZones = getCountry(key)?.timezones;
+        if(!!tempTimeZones) {
+          for(let i=0; i<tempTimeZones.length; i++) {
+            if(!tempTimeZoneList.includes(tempTimeZones[i])) {
+              tempTimeZoneList.push(tempTimeZones[i]);
+            };
+          };
+        };
+
+        for(const val of data.languages) {
+          if(!tempLanguageList.includes(val)) {
+            tempLanguageList.push(val);
+          };
+        };
+      }
+    };
+
+    for(let i=0; i<tempTimeZoneList.length; i++) {
+      selectTimeZoneElem.options[i] = new Option(tempTimeZoneList[i], tempTimeZoneList[i]);
+    };
+
+    for(let i=0; i<tempLanguageList.length; i++) {
+      const tempLang = languages[tempLanguageList[i] as TLanguageCode];
+      selectLanguageElem.options[i] = new Option(tempLang.native, tempLanguageList[i]);
+    };
   };
 
   const ColumnsForSearchedCompany : TableColumnsType<SearchCompnayDataType> = [
@@ -221,12 +297,6 @@ export default function RegisterUserInfo({
             defaultValue: selectedRows[0].company_name,
           },
           {
-            name: "address",
-            title: trans.company.address,
-            type: "label",
-            defaultValue: selectedRows[0].address,
-          },
-          {
             name: "dealCompanyCode",
             title: trans.company.deal_company_code,
             type: "input",
@@ -240,7 +310,7 @@ export default function RegisterUserInfo({
         description: trans.user.user_edit_account_description,
         items: [
           {
-            name: "userName",
+            name: "userFullName",
             title: trans.user.user_name,
             type: "input",
             defaultValue: "",
@@ -316,7 +386,7 @@ export default function RegisterUserInfo({
               title: trans.company.business_registration_code,
               type: "input",
               defaultValue: "",
-              placeholder: "",
+              placeholder: trans.company.placeholder_business_reg_no,
             },
             {
               name: "dealCompanyCode",
@@ -338,7 +408,7 @@ export default function RegisterUserInfo({
               type: "select",
               defaultValue: "",
               onChange: handleSelectTimeZone,
-              options: Object.values(getAllTimezones()).map(timezone => ({title: timezone.name, value: timezone.name})),
+              options: TimeZoneList,
             },
             {
               name: "companyCountry",
@@ -385,7 +455,7 @@ export default function RegisterUserInfo({
           description: trans.user.user_edit_account_description,
           items: [
             {
-              name: "userName",
+              name: "userFullName",
               title: trans.user.user_name,
               type: "input",
               defaultValue: "",
@@ -437,7 +507,7 @@ export default function RegisterUserInfo({
           description: "",
           items: [
             {
-              name: "userName",
+              name: "userFullName",
               title: "ID",
               type: "input",
               defaultValue: "",
@@ -511,7 +581,7 @@ export default function RegisterUserInfo({
                 title: trans.company.business_registration_code,
                 type: "input",
                 defaultValue: "",
-                placeholder: "",
+                placeholder: trans.company.placeholder_business_reg_no,
               },
               {
                 name: "dealCompanyCode",
@@ -580,7 +650,7 @@ export default function RegisterUserInfo({
             description: trans.user.user_edit_account_description,
             items: [
               {
-                name: "userName",
+                name: "userFullName",
                 title: trans.user.user_name,
                 type: "input",
                 defaultValue: "",

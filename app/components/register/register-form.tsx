@@ -5,13 +5,19 @@ import Link from 'next/link';
 import { z } from "zod";
 import { Steps } from "antd";
 
+import { BASE_PATH } from "@/app/libs/constants";
 import RegisterTermsOfService from "./register-use-of-term";
-import RegisterUserInfo from "./register-user-info";
+import RegisterUserInfo, { SearchCompnayDataType } from "./register-user-info";
+import RegisterVerification from "./register-verification";
+import { time } from "console";
+import { languages } from "countries-list";
+
 
 enum RegisterStep {
   AGREEMENT = 0,
   INFORMATION = 1,
-  COMPLETE = 2,
+  VERIFICATION = 2,
+  COMPLETE = 3,
 }
 
 export type AgreementState = {
@@ -47,6 +53,13 @@ export type RegisterCompanyUserState = {
   message?: string | null;
 };
 
+export type RegisterVerificationState = {
+  errors?: {
+    verificationCode?: string[];
+  };
+  message?: string | null;
+};
+
 export default function RegisterForm({
   userType,
   searchResult,
@@ -54,7 +67,7 @@ export default function RegisterForm({
   terms,
 }: {
   userType: "company" | "person";
-  searchResult: object[] | null;
+  searchResult: SearchCompnayDataType[] | null;
   trans: { company: Record<string, string>,
     register: Record<string, string>,
     user: Record<string, string>
@@ -71,9 +84,24 @@ export default function RegisterForm({
     privacyPolicy: false,
     locationInfoPolicy: false,
     eventPromotionPolicy: false,
-  })
+  });
+
+  const [verifyCode, setVerifyCode] = useState<string>("");
+  const [companyCode, setCompanyCode] = useState<string>("");
 
   const loginLink = userType === "company" ? "/login?userType=company" : "/login?userType=person";
+
+  // control ---------------------------------------------------------------------------
+  const [registerStep, setRegisterStep] = useState<RegisterStep>(
+    RegisterStep.AGREEMENT
+  );
+
+  const handleNextStep = () => {
+    setRegisterStep(registerStep + 1);
+  };
+  const handlePrevStep = () => {
+    setRegisterStep(registerStep - 1);
+  };
 
   // use of terms --------------------------------------------------------------------
   const actionAgreement = (
@@ -148,18 +176,8 @@ export default function RegisterForm({
   });
 
   const CompanyUserFormSchema = z.object({
+    companyType: z.enum(["GENERAL", "PARTNER"]),
     companyName: z.string().trim().min(1, {
-      error: (issue) => {
-        if(issue.input === undefined) {
-          return trans.register.error_miss_input as string;
-        } else if(issue.code ==="too_small") {
-          return trans.register.error_miss_input as string;
-        } else {
-          return  trans.register.error_input_type_string as string;
-        }
-      }
-    }),
-    ceoName: z.string().min(1, {
       error: (issue) => {
         if(issue.input === undefined) {
           return trans.register.error_miss_input as string;
@@ -181,7 +199,75 @@ export default function RegisterForm({
         }
       }
     }),
-    userName: z.string().min(1, {
+    dealCompanyCode: z.string(),
+    ceoName: z.string().min(1, {
+      error: (issue) => {
+        if(issue.input === undefined) {
+          return trans.register.error_miss_input as string;
+        } else if(issue.code ==="too_small") {
+          return trans.register.error_miss_input as string;
+        } else {
+          return  trans.register.error_input_type_string as string;
+        }
+      }
+    }),
+    timeZone: z.string(),
+    companyCountry: z.string(),
+    language: z.string(),
+    currencyCode: z.string(),
+    companyBusinessItem: z.string(),
+    companyBusinessType: z.string(),
+    userFullName: z.string().min(1, {
+        error: (issue) => {
+          if(issue.input === undefined) {
+            return trans.register.error_miss_input as string;
+          } else if(issue.code ==="too_small") {
+            return trans.register.error_miss_input as string;
+          } else {
+            return  trans.register.error_input_type_string as string;
+          }
+        }
+      }),
+    userEmail: z.email({
+        error: trans.register.error_input_type_email as string,
+      }),
+    userPwdNew: z.string().min(6, {
+      error: (issue) => issue.input === undefined ?
+        trans.register.error_miss_input as string:
+        trans.register.error_pwd_min_legnth as string
+      }),
+    userPwdNewAgain: z.string().min(6, {
+      error: (issue) => issue.input === undefined ?
+        trans.register.error_miss_input as string:
+        trans.register.error_pwd_min_legnth as string
+      })
+  });
+
+  const CompanyUserFormSchema2 = z.object({
+    companyCode: z.string().trim().min(1, {
+      error: (issue) => {
+        if(issue.input === undefined) {
+          return trans.register.error_miss_input as string;
+        } else if(issue.code ==="too_small") {
+          return trans.register.error_miss_input as string;
+        } else {
+          return  trans.register.error_input_type_string as string;
+        }
+      }
+    }),
+    companyName: z.string().trim().min(1, {
+      error: (issue) => {
+        if(issue.input === undefined) {
+          return trans.register.error_miss_input as string;
+        } else if(issue.code ==="too_small") {
+          return trans.register.error_miss_input as string;
+        } else {
+          return  trans.register.error_input_type_string as string;
+        }
+      }
+    }),
+    dealCompanyCode: z.string(),
+    userFullName: z.string().min(1, {
         error: (issue) => {
           if(issue.input === undefined) {
             return trans.register.error_miss_input as string;
@@ -217,18 +303,38 @@ export default function RegisterForm({
 
     let validatedFields = null;
     if (userType === "company") {
-      validatedFields = CompanyUserFormSchema.safeParse({
-        companyName: formData.get('companyName'),
-        ceoName: formData.get('ceoName'),
-        companyRegistrationNo: formData.get('companyRegistrationNo'),
-        userName: formData.get('userName'),
-        userEmail: formData.get('userEmail'),
-        userPwdNew: formData.get('userPwdNew'),
-        userPwdNewAgain: formData.get('userPwdNewAgain'),
-      });
+      const companyCode = formData.get('companyCode');
+      if(!companyCode) {
+        validatedFields = CompanyUserFormSchema.safeParse({
+          companyType: formData.get('companyType'),
+          companyName: formData.get('companyName'),
+          companyRegistrationNo: formData.get('companyRegistrationNo'),
+          ceoName: formData.get('ceoName'),
+          dealCompanyCode: formData.get('dealCompanyCode'),
+          timeZone: formData.get('timeZone'),
+          companyCountry: formData.get('companyCountry'),
+          language: formData.get('language'),
+          currencyCode: formData.get('currencyCode'),
+          companyBusinessItem: formData.get('companyBusinessItem'),
+          companyBusinessType: formData.get('companyBusinessType'),
+          userFullName: formData.get('userFullName'),
+          userEmail: formData.get('userEmail'),
+          userPwdNew: formData.get('userPwdNew'),
+          userPwdNewAgain: formData.get('userPwdNewAgain'),
+        });
+      } else {
+        validatedFields = CompanyUserFormSchema2.safeParse({
+          companyCode: formData.get('companyCode'),
+          companyName: formData.get('companyName'),
+          dealCompanyCode: formData.get('dealCompanyCode'),
+          userFullName: formData.get('userFullName'),
+          userEmail: formData.get('userEmail'),
+          userPwdNew: formData.get('userPwdNew'),
+          userPwdNewAgain: formData.get('userPwdNewAgain'),
+        });
+      }
     } else {
       validatedFields = PersonalUserFormSchema.safeParse({
-        userName: formData.get("userName"),
         userFullName: formData.get("userFullName"),
         userEmail: formData.get("userEmail"),
         userPwdNew: formData.get("userPwdNew"),
@@ -236,7 +342,7 @@ export default function RegisterForm({
       });
     };
 
-    if (!validatedFields.success) {
+    if (!!validatedFields && validatedFields.error) {
       const tree = z.treeifyError(validatedFields.error);
       console.log("actionRegisterUser / error :", tree);
       return {
@@ -263,48 +369,89 @@ export default function RegisterForm({
 
     console.log('Register :', registerData);
 
-    // try {
-    //   const resp = await fetch(`${BASE_PATH}/user/signup_request`, {
-    //     method: 'post',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify(registerData)
-    //   });
+    try {
+      const resp = await fetch(`${BASE_PATH}/user/signup_request`, {
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(registerData)
+      });
 
-    //   const result = await resp.json();
-    //   if(!!result) {
-    //     if(result["ResultCode"] === 0) {
-    //       // Succeeded ---------------------------
+      const result = await resp.json();
+      if(!!result) {
+        if(result["ResultCode"] === 0) {
+          // Succeeded ---------------------------
+          if(!!result["verification_code"]) {
+            setVerifyCode(result["verification_code"]);
+          };
+          if(!!result["company_code"]) {
+            setCompanyCode(result["company_code"]);
+          };
           handleNextStep();
           return;
-    //     } else {
-    //       return {
-    //         message: result["ErrorMessage"]
-    //       } as RegisterCompanyUserState | RegisterPersonalUserState;  
-    //     };
-    //   } else {
-    //     return {
-    //       message: "No Response from server"
-    //     } as RegisterCompanyUserState | RegisterPersonalUserState;
-    //   }
-    // } catch(err) {
-    //   console.error(`\t[ Regsiter ] Error : ${err}`);
-    //   return {
-    //     message: err
-    //   } as RegisterCompanyUserState | RegisterPersonalUserState;
-    // }
+        } else {
+          return {
+            message: result["ErrorMessage"]
+          } as RegisterCompanyUserState | RegisterPersonalUserState;  
+        };
+      } else {
+        return {
+          message: "No Response from server"
+        } as RegisterCompanyUserState | RegisterPersonalUserState;
+      }
+    } catch(err) {
+      console.error(`\t[ Regsiter ] Error : ${err}`);
+      return {
+        message: err
+      } as RegisterCompanyUserState | RegisterPersonalUserState;
+    }
   };
 
-  // control ---------------------------------------------------------------------------
-  const [registerStep, setRegisterStep] = useState<RegisterStep>(
-    RegisterStep.AGREEMENT
-  );
+  // user verification ------------------------------------------------------------------
+  const actionVerification = async (
+    prevState: void | RegisterVerificationState,
+    formData: FormData
+  ) => {
+    console.log("actionVerification called");
+    const userFullName = formData.get("userFullName");
+    const userEmail = formData.get("userEmail");
+    const userPwd = formData.get("userPwd");
 
-  const handleNextStep = () => {
-    setRegisterStep(registerStep + 1);
-  };
-  const handlePrevStep = () => {
-    setRegisterStep(registerStep - 1);
-  };
+    const code1 = formData.get("code_1st");
+    const code2 = formData.get("code_2nd");
+    const code3 = formData.get("code_3rd");
+    const code4 = formData.get("code_4th");
+    const code5 = formData.get("code_5th");
+    const code6 = formData.get("code_6th");
+
+    const verificationCode = `${code1}${code2}${code3}${code4}${code5}${code6}`;
+    console.log("actionVerification / verificationCode :", verificationCode);
+
+    if(verificationCode !== verifyCode) {
+    } else {
+      try {
+        const resp = await fetch(`${BASE_PATH}/user/login_vericode`, {
+          method: 'post',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_name: userFullName,
+            user_email: userEmail,
+            user_pwd: userPwd,
+            verification_code: verificationCode,
+            company_code: companyCode
+          })
+        });
+
+        const result = await resp.json();
+        if(!!result) {
+          if(result["ResultCode"] === 0) {
+            handleNextStep();
+          }
+        };
+      } catch(err) {
+        console.error(`\t[ Regsiter ] Error : ${err}`);
+      }
+    }
+  }
 
   const registerSteps = [
     {
@@ -327,6 +474,16 @@ export default function RegisterForm({
           trans={trans}
           agreements={agreed}
           action={actionRegisterUser}
+          goback={handlePrevStep}
+        />
+      ),
+    },
+    {
+      title: trans.register.verification,
+      content: (
+        <RegisterVerification
+          trans={trans}
+          action={actionVerification}
           goback={handlePrevStep}
         />
       ),

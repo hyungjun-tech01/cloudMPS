@@ -35,6 +35,7 @@
     "agree_all": "전체 동의",
     "complete": "완료",
     "completed": "회원 가입이 완료되었습니다.",
+    "enter_verification_code": "Email로 전송된 인증코드 6자리를 입력하세요",
     "event_promotion_policy": "이벤트 및 마케팅 활용 동의 (선택)",
     "error_omit_required_agreement": "필수 동의 누락",
     "error_need_agree": "(회원 가입을 위한 필수 동의 사항입니다.)",
@@ -54,7 +55,8 @@
     "privacy_policy": "개인정보 수집 및 이용 동의",
     "previous": "이전",
     "terms_of_service": "이용약관 동의",
-    "title": "회원가입 / 약관"
+    "title": "회원가입 / 약관",
+    "verification": "인증"
   },
   "controlJobs": {
     "as": "A/S",
@@ -136,6 +138,7 @@
     "loading_add": "신규 업체 추가를 위한 기반 정보를 불러오고 있습니다.",
     "loading_detail": "업체에 대한 상세 정보를 불러오고 있습니다.",
     "placeholder_business_reg_no": "사업자 등록번호를 입력하세요.",
+    "placeholder_company_ceo": "대표자명을 입력하세요.",
     "placeholder_company_code": "회사 코드를 입력하세요.",
     "placeholder_company_name": "회사명을 입력하세요.",
     "placeholder_deal_company_code": "관리업체코드가 있다면 입력하세요."
