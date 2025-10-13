@@ -4,9 +4,9 @@ import { useActionState, useEffect, useState } from "react";
 import { Table } from 'antd';
 import type { TableColumnsType, TableProps } from 'antd';
 import clsx from "clsx";
-import { getAllTimezones, getCountriesForTimezone } from "countries-and-timezones";
-import type { ICountry, TLanguageCode } from 'countries-list'
-import { getCountryData, countries, languages } from "countries-list";
+import { getAllTimezones, getCountriesForTimezone, getCountry } from "countries-and-timezones";
+import type { TLanguageCode } from 'countries-list'
+import { countries, languages } from "countries-list";
 import { IEditItem, ISection } from "@/app/libs/types";
 import { EditItem } from "../edit-items";
 import {
@@ -52,6 +52,11 @@ export default function RegisterUserInfo({
   const [haveCompanyCode, setHaveCompanyCode] = useState(false);
   const [formItems, setFormItems] = useState<ISection[]>([]);
 
+  const TimeZoneList:{title:string, value:string}[] = [];
+  Object.values(getAllTimezones()).map(timezone => {
+    TimeZoneList.push({title: timezone.name, value: timezone.name})
+  });
+
   const CountryList:{title:string, value:string}[] = [];
   const CurrencyList:{title:string, value:string}[] = [];
   for(const [key, data] of Object.entries(countries)) {
@@ -72,8 +77,8 @@ export default function RegisterUserInfo({
 
   const handleSelectTimeZone = (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
     const tempCountryList:{title:string, value:string}[] = [];
-    let tempLangList:string[] = [];
-    let tempCurrencyList:string[] = [];
+    const tempLangList:string[] = [];
+    const tempCurrencyList:string[] = [];
 
     const tempCountries = getCountriesForTimezone(event.target.value);
     tempCountries.forEach(country => {
@@ -82,8 +87,19 @@ export default function RegisterUserInfo({
         tempCountryList.push({title: foundCountry.name, value: country.id});
       }
       
-      tempLangList = [...tempLangList, ...foundCountry.languages];
-      tempCurrencyList = [...tempCurrencyList, ...foundCountry.currency]
+      foundCountry.languages.forEach(lang => {
+        const foundIdx = tempLangList.findIndex(item => item === lang);
+        if(foundIdx === -1) {
+          tempLangList.push(lang);
+        }
+      });
+
+      foundCountry.currency.forEach(currency => {
+        const foundIdx = tempCurrencyList.findIndex(item => item === currency);
+        if(foundIdx === -1) {
+          tempCurrencyList.push(currency);
+        }
+      });
     });
 
     // Update options for country selection -------------------------------------------------
@@ -113,208 +129,59 @@ export default function RegisterUserInfo({
   };
 
   const handleSelectCountry = (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
-    console.log("handleSelectCountry :", event.target.value);
+    // console.log("handleSelectCountry :", event.target.value);
+    const selectedCountryData = countries[event.target.value as keyof typeof countries];
+
+    // Update options for time zone selection -------------------------------------------------
+    const selectTimeZoneElem = document.getElementById('timeZone') as HTMLSelectElement;
+    selectTimeZoneElem.length = 0;
+
+    const tempTimeZoneList = getCountry(event.target.value)?.timezones;
+    if(!!tempTimeZoneList) {
+      for(let i=0; i<tempTimeZoneList.length; i++) {
+        selectTimeZoneElem.options[i] = new Option(tempTimeZoneList[i], tempTimeZoneList[i]);
+      }
+    };
+
+    // Update options for language selection -------------------------------------------------
+    const selectLanguageElem = document.getElementById('language') as HTMLSelectElement;
+    selectLanguageElem.length = 0;
+
+    for(let i=0; i<selectedCountryData.languages.length; i++) {
+      selectLanguageElem.options[i] = new Option(languages[selectedCountryData.languages[i] as TLanguageCode].native, selectedCountryData.languages[i]);
+    };
+
+    // Update options for currency selection -------------------------------------------------
+    const selectCurrencyElem = document.getElementById('currencyCode') as HTMLSelectElement;
+    selectCurrencyElem.length = 0;
+
+    for(let i=0; i<selectedCountryData.currency.length; i++) {
+      selectCurrencyElem.options[i] = new Option(selectedCountryData.currency[i], selectedCountryData.currency[i]);
+    };
   };
 
   const handleSelectLanguage = (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
     console.log("handleSelectLanguage :", event.target.value);
+    
+    // Update options for country selection -------------------------------------------------
+    const selectCountryElem = document.getElementById('companyCountry') as HTMLSelectElement;
+    selectCountryElem.length = 0;
+
+    // Update options for Time Zone selection -------------------------------------------------
+    const selectTimeZoneElem = document.getElementById('timeZone') as HTMLSelectElement;
+    selectTimeZoneElem.length = 0;
+
+    let tempIdx = 0;
+    for(const [key, data] of Object.entries(countries)) {
+      if(data.languages.includes(event.target.value as TLanguageCode)) {
+        selectCountryElem.options[tempIdx++] = new Option(data.native, key);
+      };
+    };
   };
 
   const handleSelectCurrency = (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
     console.log("handleSelectCurrency :", event.target.value);
   };
-
-  // const ItemsOfNoCompanyCode : ISection[] = [
-  //   {
-  //     title: trans.company.secTitle_company_info,
-  //     description: "",
-  //     items: [
-  //       {
-  //         name: "companyType",
-  //         title: trans.company.company_type,
-  //         type: "select",
-  //         defaultValue: "",
-  //         options: [ 
-  //           { title: trans.company.general_company, value: 'GENERAL' },
-  //           { title: trans.company.partner_company, value: 'PARTNER' }
-  //         ]
-  //       },
-  //       {
-  //         name: "companyName",
-  //         title: trans.company.company_name,
-  //         type: "input",
-  //         defaultValue: "",
-  //         placeholder: trans.company.placeholder_company_name,
-  //       },
-  //       {
-  //         name: "companyRegistrationNo",
-  //         title: trans.company.business_registration_code,
-  //         type: "input",
-  //         defaultValue: "",
-  //         placeholder: "",
-  //       },
-  //       {
-  //         name: "dealCompanyCode",
-  //         title: trans.company.deal_company_code,
-  //         type: "input",
-  //         defaultValue: "",
-  //         placeholder: trans.company.placeholder_deal_company_code,
-  //       },
-  //       {
-  //         name: "ceoName",
-  //         title: trans.company.ceo_name,
-  //         type: "input",
-  //         defaultValue: "",
-  //         placeholder: "",
-  //       },
-  //       {
-  //         name: "timeZone",
-  //         title: trans.common.time_zone,
-  //         type: "select",
-  //         defaultValue: "",
-  //         options: [],
-  //       },
-  //       {
-  //         name: "country",
-  //         title: trans.common.country,
-  //         type: "select",
-  //         defaultValue: "",
-  //         options: countryOptions,
-  //       },
-  //       {
-  //         name: "language",
-  //         title: trans.common.language,
-  //         type: "select",
-  //         defaultValue: "",
-  //         options: [ { title: "한글", value: "ko" }, { title: "영어", value: "en" } ],
-  //       },
-  //       {
-  //         name: "currencyCode",
-  //         title: trans.common.currency,
-  //         type: "select",
-  //         defaultValue: "",
-  //         options: [],
-  //       },
-  //       {
-  //         name: "companyBusinessItem",
-  //         title: trans.company.business_item,
-  //         type: "input",
-  //         defaultValue: "",
-  //         placeholder: "",
-  //       },
-  //       {
-  //         name: "companyBusinessType",
-  //         title: trans.company.business_type,
-  //         type: "input",
-  //         defaultValue: "",
-  //         placeholder: "",
-  //       }
-  //     ],
-  //   },
-  //   {
-  //     title: trans.company.secTitle_manager_info,
-  //     description: trans.user.user_edit_account_description,
-  //     items: [
-  //       {
-  //         name: "userName",
-  //         title: trans.user.user_name,
-  //         type: "input",
-  //         defaultValue: "",
-  //         placeholder: trans.user.placeholder_full_name,
-  //       },
-  //       {
-  //         name: "userEmail",
-  //         title: trans.user.email,
-  //         type: "input",
-  //         defaultValue: "",
-  //         placeholder: trans.user.placeholder_email,
-  //       }
-  //     ],
-  //   },
-  //   {
-  //     title: trans.user.secTitle_password,
-  //     description: "",
-  //     items: [
-  //       {
-  //         name: "userPwdNew",
-  //         title: trans.user.password,
-  //         type: "password",
-  //         defaultValue: "",
-  //         placeholder: trans.user.placeholder_password_new,
-  //       },
-  //       {
-  //         name: "userPwdNewAgain",
-  //         title: trans.user.password_again,
-  //         type: "password",
-  //         defaultValue: "",
-  //         placeholder: trans.user.placeholder_password_new_again,
-  //       },
-  //     ],
-  //   },
-  // ];
-
-  // const ItemsOfHavingCompanyCode : ISection[]= [
-  //   {
-  //     title: trans.company.secTitle_company_info,
-  //     description: "",
-  //     items: [
-  //       {
-  //         name: "companyCode",
-  //         title: trans.company.company_code,
-  //         type: "input",
-  //         defaultValue: "",
-  //         placeholder: trans.company.placeholder_company_code,
-  //       },
-  //       {
-  //         name: "dealCompanyCode",
-  //         title: trans.company.deal_company_code,
-  //         type: "input",
-  //         defaultValue: "",
-  //         placeholder: trans.company.placeholder_deal_company_code,
-  //       }
-  //     ],
-  //   },
-  //   {
-  //     title: trans.company.secTitle_manager_info,
-  //     description: trans.user.user_edit_account_description,
-  //     items: [
-  //       {
-  //         name: "userName",
-  //         title: trans.user.user_name,
-  //         type: "input",
-  //         defaultValue: "",
-  //         placeholder: trans.user.placeholder_full_name,
-  //       },
-  //       {
-  //         name: "userEmail",
-  //         title: trans.user.email,
-  //         type: "input",
-  //         defaultValue: "",
-  //         placeholder: trans.user.placeholder_email,
-  //       }
-  //     ],
-  //   },
-  //   {
-  //     title: trans.user.secTitle_password,
-  //     description: "",
-  //     items: [
-  //       {
-  //         name: "userPwdNew",
-  //         title: trans.user.password,
-  //         type: "password",
-  //         defaultValue: "",
-  //         placeholder: trans.user.placeholder_password_new,
-  //       },
-  //       {
-  //         name: "userPwdNewAgain",
-  //         title: trans.user.password_again,
-  //         type: "password",
-  //         defaultValue: "",
-  //         placeholder: trans.user.placeholder_password_new_again,
-  //       },
-  //     ],
-  //   },
-  // ];
 
   const ColumnsForSearchedCompany : TableColumnsType<SearchCompnayDataType> = [
     {
@@ -422,7 +289,138 @@ export default function RegisterUserInfo({
       setFormItems([]);
     } else {
       setHaveCompanyCode(false);
-      setFormItems([...ItemsOfNoCompanyCode]);
+      setFormItems([
+        {
+          title: trans.company.secTitle_company_info,
+          description: "",
+          items: [
+            {
+              name: "companyType",
+              title: trans.company.company_type,
+              type: "select",
+              defaultValue: "",
+              options: [ 
+                { title: trans.company.general_company, value: 'GENERAL' },
+                { title: trans.company.partner_company, value: 'PARTNER' }
+              ]
+            },
+            {
+              name: "companyName",
+              title: trans.company.company_name,
+              type: "input",
+              defaultValue: "",
+              placeholder: trans.company.placeholder_company_name,
+            },
+            {
+              name: "companyRegistrationNo",
+              title: trans.company.business_registration_code,
+              type: "input",
+              defaultValue: "",
+              placeholder: "",
+            },
+            {
+              name: "dealCompanyCode",
+              title: trans.company.deal_company_code,
+              type: "input",
+              defaultValue: "",
+              placeholder: trans.company.placeholder_deal_company_code,
+            },
+            {
+              name: "ceoName",
+              title: trans.company.ceo_name,
+              type: "input",
+              defaultValue: "",
+              placeholder: "",
+            },
+            {
+              name: "timeZone",
+              title: trans.common.time_zone,
+              type: "select",
+              defaultValue: "",
+              onChange: handleSelectTimeZone,
+              options: Object.values(getAllTimezones()).map(timezone => ({title: timezone.name, value: timezone.name})),
+            },
+            {
+              name: "companyCountry",
+              title: trans.common.country,
+              type: "select",
+              defaultValue: "",
+              onChange: handleSelectCountry,
+              options: CountryList,
+            },
+            {
+              name: "language",
+              title: trans.common.language,
+              type: "select",
+              defaultValue: "",
+              onChange: handleSelectLanguage,
+              options: LanguageList,
+            },
+            {
+              name: "currencyCode",
+              title: trans.common.currency,
+              type: "select",
+              defaultValue: "",
+              onChange: handleSelectCurrency,
+              options: CurrencyList,
+            },
+            {
+              name: "companyBusinessItem",
+              title: trans.company.business_item,
+              type: "input",
+              defaultValue: "",
+              placeholder: "",
+            },
+            {
+              name: "companyBusinessType",
+              title: trans.company.business_type,
+              type: "input",
+              defaultValue: "",
+              placeholder: "",
+            }
+          ],
+        },
+        {
+          title: trans.company.secTitle_manager_info,
+          description: trans.user.user_edit_account_description,
+          items: [
+            {
+              name: "userName",
+              title: trans.user.user_name,
+              type: "input",
+              defaultValue: "",
+              placeholder: trans.user.placeholder_full_name,
+            },
+            {
+              name: "userEmail",
+              title: trans.user.email,
+              type: "input",
+              defaultValue: "",
+              placeholder: trans.user.placeholder_email,
+            }
+          ],
+        },
+        {
+          title: trans.user.secTitle_password,
+          description: "",
+          items: [
+            {
+              name: "userPwdNew",
+              title: trans.user.password,
+              type: "password",
+              defaultValue: "",
+              placeholder: trans.user.placeholder_password_new,
+            },
+            {
+              name: "userPwdNewAgain",
+              title: trans.user.password_again,
+              type: "password",
+              defaultValue: "",
+              placeholder: trans.user.placeholder_password_new_again,
+            },
+          ],
+        },
+      ]);
     }
   };
 
@@ -535,7 +533,7 @@ export default function RegisterUserInfo({
                 type: "select",
                 defaultValue: "",
                 onChange: handleSelectTimeZone,
-                options: Object.values(getAllTimezones()).map(timezone => ({title: timezone.name, value: timezone.name})),
+                options: TimeZoneList,
               },
               {
                 name: "companyCountry",
