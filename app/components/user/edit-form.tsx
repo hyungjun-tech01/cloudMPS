@@ -32,17 +32,7 @@ export function EditForm({
   const [ipAddress, setIpAddress] = useState('');
 
   useEffect(() => {
-    const fetchIp = async () => {
-      try {
-        const res = await fetch('/api/get-ip');
-        const data = await res.json();
-        setIpAddress(data.ip);
-      } catch (error) {
-        console.error('IP 가져오기 실패:', error);
-      }
-    };
-
-    fetchIp();
+    fetchIp(setIpAddress);
   }, []);
 
   return (

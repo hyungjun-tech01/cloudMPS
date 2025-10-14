@@ -206,4 +206,4 @@ export const SideMenuList : {
   }
 };
 
-export const BASE_PATH = "/req";
+export const BASE_PATH = "http://localhost:38005";

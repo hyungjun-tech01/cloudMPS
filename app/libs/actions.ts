@@ -1,9 +1,9 @@
 'use server';
 
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+// import { revalidatePath } from "next/cache";
+// import { redirect } from "next/navigation";
 import { AuthError } from 'next-auth';
-import { z } from "zod";
+// import { z } from "zod";
 
 import { signIn, signOut } from '@/auth';
 import { BASE_PATH } from './constants';
@@ -33,31 +33,15 @@ export async function authenticate(
     }
 };
 
-export const fetchIp = async () => {
+export const fetchIp = async (callback:(ip: string) => void) => {
     try {
         const res = await fetch('/api/get-ip');
         const data = await res.json();
-        return data.ip;
+        callback(data.ip);
     } catch (error) {
         console.error('IP 가져오기 실패:', error);
         return null;
     }
-};
-
-// ----------- Register -------------------------------------------------------------
-export async function register(registerData: UserData) {
-    console.log('[ Register ]', registerData);
-    // Server is not ready yet
-    // try {
-    //     const resp = await fetch(`${BASE_PATH}/users/signup_request`, {
-    //         method: "POST",
-    //         headers: { 'Content-Type': 'application/json' },
-    //         body: JSON.stringify(registerData),
-    //     });
-    // } catch (err) {
-    //     console.error(`\t[ Regsiter ] Error : ${err}`);
-    //     return false;
-    // };
 };
 
 // ----------- Login ----------------------------------------------------------------
@@ -90,6 +74,21 @@ export async function getUserInfo(userName: string, ipAddr:string, token: string
 
     } catch (err) {
         console.error(`\t[ Login ] Error : ${err}`);
+        return null;
+    };
+}
+
+// ----------- Register ----------------------------------------------------------------
+export async function register(data: object) {
+    try {
+        const resp = await fetch(`${BASE_PATH}/api/users/signup_request`, {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        });
+        return resp.json();
+    } catch (err) {
+        console.error(`\t[ Register ] Error : ${err}`);
         return null;
     };
 }

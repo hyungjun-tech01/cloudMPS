@@ -5,6 +5,8 @@ import Link from "next/link";
 import { authenticate } from "@/app/libs/actions";
 import { useSearchParams } from "next/navigation";
 import "material-icons/iconfont/material-icons.css";
+import { fetchIp } from "@/app/libs/actions";
+
 
 export default function LoginForm({
   userType,
@@ -22,17 +24,7 @@ export default function LoginForm({
   const [ipAddress, setIpAddress] = useState<string>('');
 
   useEffect(() => {
-    const fetchIp = async () => {
-      try {
-        const res = await fetch("/api/get-ip");
-        const data = await res.json();
-        setIpAddress(data.ip);
-      } catch (error) {
-        console.error("IP 가져오기 실패:", error);
-      }
-    };
-
-    fetchIp();
+    fetchIp(setIpAddress);
   }, []);
 
   return (

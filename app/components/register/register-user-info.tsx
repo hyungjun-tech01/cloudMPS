@@ -773,13 +773,6 @@ export default function RegisterUserInfo({
             </p>
           }
         </div>
-        <div>
-          <input type="hidden" name="userType" value={userType } />
-          <input type="hidden" name="termsOfService" value={agreements.termsOfService ? "Y" : "N" } />
-          <input type="hidden" name="privacyPolicy" value={agreements.privacyPolicy ? "Y" : "N" } />
-          <input type="hidden" name="locationPolicy" value={agreements.locationInfoPolicy ? "Y" : "N" } />
-          <input type="hidden" name="eventPoromotionPolicy" value={agreements.eventPromotionPolicy ? "Y" : "N" } />
-        </div>
         <div className="flex justify-between mt-4">
           <div 
             className="flex h-10 items-center rounded-lg bg-slate-900 px-4 text-sm font-medium text-slate-50 transition-colors hover:bg-slate-600"

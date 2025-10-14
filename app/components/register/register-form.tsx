@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from 'next/link';
 import { z } from "zod";
 import { Steps } from "antd";
@@ -9,8 +9,7 @@ import { BASE_PATH } from "@/app/libs/constants";
 import RegisterTermsOfService from "./register-use-of-term";
 import RegisterUserInfo, { SearchCompnayDataType } from "./register-user-info";
 import RegisterVerification from "./register-verification";
-import { time } from "console";
-import { languages } from "countries-list";
+import { fetchIp, register } from "@/app/libs/actions";
 
 
 enum RegisterStep {
@@ -86,6 +85,7 @@ export default function RegisterForm({
     eventPromotionPolicy: false,
   });
 
+  const [userIp, setUserIp] = useState<string>("");
   const [verifyCode, setVerifyCode] = useState<string>("");
   const [companyCode, setCompanyCode] = useState<string>("");
 
@@ -213,10 +213,34 @@ export default function RegisterForm({
     prevState: void | RegisterPersonalUserState | RegisterCompanyUserState,
     formData: FormData
   ) => {
-    console.log("actionRegisterUser called");
-    const userType = formData.get("userType");
-    console.log("actionRegisterUser / userType :", userType);
+    //-----TEST : Start --------------------------------------
+    // const tempTest = {
+    //   "user_type": "COMPANY",
+    //   "company_type": "GENERAL",
+    //   "company_name": "(주)형성",
+    //   "business_registration_code": "111-1111111-11111-11",
+    //   "company_code": null,
+    //   "deal_company_code": "",
+    //   "ceo_name": "최형성",
+    //   "language": "ko",
+    //   "time_zone": "Asia/Seoul",
+    //   "currency_code": "KRW",
+    //   "country": "KR",
+    //   "terms_of_service": "Y",
+    //   "privacy_policy": "Y",
+    //   "location_information": "Y",
+    //   "notification_email": "N",
+    //   "full_name": "최형성",
+    //   "e_mail_adress": "newtons2002@gmail.com",
+    //   "password": "test",
+    //   "ip_address": "127.0.0.1"
+    // };
 
+    // const tempResult = await register(tempTest);
+    // console.log("tempResult :", tempResult);
+    // return;
+
+    //-----TEST : End ----------------------------------------
     let validatedFields = null;
     if (userType === "company") {
       const companyCode = formData.get('companyCode');
@@ -260,7 +284,7 @@ export default function RegisterForm({
 
     if (!!validatedFields && validatedFields.error) {
       const tree = z.treeifyError(validatedFields.error);
-      console.log("actionRegisterUser / error :", tree);
+      // console.log("actionRegisterUser / error :", tree);
       return {
         errors: tree.properties,
         message: trans.register.errors_in_inputs,
@@ -279,45 +303,48 @@ export default function RegisterForm({
     };
 
     const registerData = {
-      ...validatedFields.data,
-      agreements: agreed
+      user_type : userType.toUpperCase(),
+      company_type : formData.get("companyType"),
+      company_name : formData.get("companyName"),
+      business_registration_code : formData.get("companyRegistrationNo"),
+      company_code : formData.get("companyCode"),
+      deal_company_code : formData.get("dealCompanyCode"),
+      ceo_name : formData.get("ceoName"),
+      language : formData.get("language"),
+      time_zone : formData.get("timeZone"),
+      currency_code : formData.get("currencyCode"),
+      country : formData.get("companyCountry"),
+      terms_of_service : agreed.termsOfService ? "Y" : "N",
+      privacy_policy : agreed.privacyPolicy ? "Y" : "N",
+      location_information : agreed.locationInfoPolicy ? "Y" : "N",
+      notification_email : agreed.eventPromotionPolicy ?  "Y" : "N",
+      full_name :  formData.get("userFullName"),
+      e_mail_adress : formData.get("userEmail"),
+      password : formData.get("userPwdNew"),
+      ip_address : userIp,
     };
 
-    console.log('Register :', registerData);
-
-    try {
-      const resp = await fetch(`${BASE_PATH}/user/signup_request`, {
-        method: 'post',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(registerData)
-      });
-
-      const result = await resp.json();
-      if(!!result) {
-        if(result["ResultCode"] === 0) {
-          // Succeeded ---------------------------
-          if(!!result["verification_code"]) {
-            setVerifyCode(result["verification_code"]);
-          };
-          if(!!result["company_code"]) {
-            setCompanyCode(result["company_code"]);
-          };
-          handleNextStep();
-          return;
-        } else {
-          return {
-            message: result["ErrorMessage"]
-          } as RegisterCompanyUserState | RegisterPersonalUserState;  
+    console.log('Register / data :', registerData);
+    const result = await register(registerData);
+    if(!!result) {
+      if(result["ResultCode"] === 0) {
+        // Succeeded ---------------------------
+        if(!!result["verification_code"]) {
+          setVerifyCode(result["verification_code"]);
         };
+        if(!!result["company_code"]) {
+          setCompanyCode(result["company_code"]);
+        };
+        handleNextStep();
+        return;
       } else {
         return {
-          message: "No Response from server"
-        } as RegisterCompanyUserState | RegisterPersonalUserState;
-      }
-    } catch(err) {
-      console.error(`\t[ Regsiter ] Error : ${err}`);
+          message: result["ErrorMessage"]
+        } as RegisterCompanyUserState | RegisterPersonalUserState;  
+      };
+    } else {
       return {
-        message: err
+        message: "No Response from server"
       } as RegisterCompanyUserState | RegisterPersonalUserState;
     }
   };
@@ -417,6 +444,10 @@ export default function RegisterForm({
     key: step.title,
     title: step.title,
   }));
+
+  useEffect(() => {
+    fetchIp(setUserIp);
+  }, []);
 
   return (
     <div className="flex-1 rounded-b-lg bg-gray-50 px-6 pb-4 pt-8">
