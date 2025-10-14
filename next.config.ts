@@ -1,7 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  async rewrites() {
+    return [
+      {
+        source: '/req/:path*',
+        destination: 'http://localhost:38005/:path*',
+      },
+    ]
+  },
 };
 
 export default nextConfig;

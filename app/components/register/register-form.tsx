@@ -146,88 +146,34 @@ export default function RegisterForm({
 
   // user information ------------------------------------------------------------------
   const PersonalUserFormSchema = z.object({
-    userName: z.string().min(1, {
-        error: (issue) => {
-          if(issue.input === undefined) {
-            return trans.user.error_miss_input as string;
-          } else if(issue.code ==="too_small") {
-            return trans.user.error_miss_input as string;
-          } else {
-            return  trans.user.error_input_type_string as string;
-          }
-        }
-      }),
-    userFullName: z.string().min(1, {
-        error: trans.register.error_miss_input as string,
-      }),
-    userEmail: z.email({
-        error: trans.register.error_input_type_email as string,
-      }),
+    userName: z.string().min(1, { message: trans.user.error_miss_input as string }),
+    userFullName: z.string().min(1, { message: trans.register.error_miss_input as string }),
+    userEmail: z.string().email({ message: trans.register.error_input_type_email as string }),
     userPwdNew: z.string().min(6, {
-      error: (issue) => issue.input === undefined ?
-        trans.register.error_miss_input as string:
-        trans.register.error_pwd_min_legnth as string
-      }),
+      message: trans.register.error_pwd_min_legnth as string
+    }),
     userPwdNewAgain: z.string().min(6, {
-      error: (issue) => issue.input === undefined ?
-        trans.register.error_miss_input as string:
-        trans.register.error_pwd_min_legnth as string
-      })
+      message: trans.register.error_pwd_min_legnth as string
+    })
   });
 
   const CompanyUserFormSchema = z.object({
     companyType: z.enum(["GENERAL", "PARTNER"]),
     companyName: z.string().trim().min(1, {
-      error: (issue) => {
-        if(issue.input === undefined) {
-          return trans.register.error_miss_input as string;
-        } else if(issue.code ==="too_small") {
-          return trans.register.error_miss_input as string;
-        } else {
-          return  trans.register.error_input_type_string as string;
-        }
-      }
+      message: trans.register.error_miss_input as string
     }),
     companyRegistrationNo: z.string().min(1, {
-      error: (issue) => {
-        if(issue.input === undefined) {
-          return trans.register.error_miss_input as string;
-        } else if(issue.code ==="too_small") {
-          return trans.register.error_miss_input as string;
-        } else {
-          return  trans.register.error_input_type_string as string;
-        }
-      }
+      message: trans.register.error_miss_input as string
     }),
     dealCompanyCode: z.string(),
-    ceoName: z.string().min(1, {
-      error: (issue) => {
-        if(issue.input === undefined) {
-          return trans.register.error_miss_input as string;
-        } else if(issue.code ==="too_small") {
-          return trans.register.error_miss_input as string;
-        } else {
-          return  trans.register.error_input_type_string as string;
-        }
-      }
-    }),
+    ceoName: z.string().min(1, { message: trans.user.error_miss_input as string }),
     timeZone: z.string(),
     companyCountry: z.string(),
     language: z.string(),
     currencyCode: z.string(),
     companyBusinessItem: z.string(),
     companyBusinessType: z.string(),
-    userFullName: z.string().min(1, {
-        error: (issue) => {
-          if(issue.input === undefined) {
-            return trans.register.error_miss_input as string;
-          } else if(issue.code ==="too_small") {
-            return trans.register.error_miss_input as string;
-          } else {
-            return  trans.register.error_input_type_string as string;
-          }
-        }
-      }),
+    userFullName: z.string().min(1, { message: trans.user.error_miss_input as string }),
     userEmail: z.email({
         error: trans.register.error_input_type_email as string,
       }),
@@ -244,40 +190,10 @@ export default function RegisterForm({
   });
 
   const CompanyUserFormSchema2 = z.object({
-    companyCode: z.string().trim().min(1, {
-      error: (issue) => {
-        if(issue.input === undefined) {
-          return trans.register.error_miss_input as string;
-        } else if(issue.code ==="too_small") {
-          return trans.register.error_miss_input as string;
-        } else {
-          return  trans.register.error_input_type_string as string;
-        }
-      }
-    }),
-    companyName: z.string().trim().min(1, {
-      error: (issue) => {
-        if(issue.input === undefined) {
-          return trans.register.error_miss_input as string;
-        } else if(issue.code ==="too_small") {
-          return trans.register.error_miss_input as string;
-        } else {
-          return  trans.register.error_input_type_string as string;
-        }
-      }
-    }),
+    companyCode: z.string().trim().min(1, { message: trans.user.error_miss_input as string }),
+    companyName: z.string().trim().min(1, { message: trans.user.error_miss_input as string }),
     dealCompanyCode: z.string(),
-    userFullName: z.string().min(1, {
-        error: (issue) => {
-          if(issue.input === undefined) {
-            return trans.register.error_miss_input as string;
-          } else if(issue.code ==="too_small") {
-            return trans.register.error_miss_input as string;
-          } else {
-            return  trans.register.error_input_type_string as string;
-          }
-        }
-      }),
+    userFullName: z.string().min(1, { message: trans.user.error_miss_input as string }),
     userEmail: z.email({
         error: trans.register.error_input_type_email as string,
       }),

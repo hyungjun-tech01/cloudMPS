@@ -12,15 +12,10 @@ export default function RegisterVerification({
     goback: () => void;
 }) {
     const initialState: RegisterVerificationState = { message: null, errors: {} };
-    const [state, formAction] = useActionState(action, initialState);
-    
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        formAction(new FormData(event.currentTarget));
-    };
+    const [state, formAction, isPending] = useActionState(action, initialState);
 
     return (
-        <form onSubmit={handleSubmit} className='flex flex-col'>
+        <form action={formAction} className='flex flex-col'>
             <div className='justify-center'>
                 <h3 className="">{trans.register.enter_verification_code}</h3>
                 <div className='flex gap-4'>

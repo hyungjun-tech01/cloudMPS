@@ -494,11 +494,6 @@ export default function RegisterUserInfo({
     }
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    formAction(new FormData(event.currentTarget));
-  };
-
   useEffect(() => {
     if(userType === 'person') {
       setFormItems([
@@ -714,7 +709,7 @@ export default function RegisterUserInfo({
             />
           </div> 
       }
-      <form onSubmit={handleSubmit} className="rounded-xl bg-slate-100 p-4 md:p-6">
+      <form action={formAction} className="rounded-xl bg-slate-100 p-4 md:p-6">
         {formItems.map((sec: ISection, idx) => {
           return (
             <div
