@@ -2,7 +2,7 @@ import NextAuth, { DefaultSession } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { z } from "zod";
 import { login, getUserInfo } from "@/app/libs/actions";
-import { LoginResultData } from "@/app/libs/types";
+import { LoginData, LoginResultData } from "@/app/libs/types";
 
 declare module "next-auth" {
   interface User {
@@ -25,29 +25,26 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   providers: [
     Credentials({
       async authorize(credentials) {
-        console.log("authorize :", credentials);
+        // console.log("authorize :", credentials);
         const parsedCredentials = z
           .object({
             user_name: z.string(),
             password: z.string().min(6),
+            company_code: z.string().optional(),
+            verification_code: z.string().optional(),
+            is_init: z.boolean(),
+            ip_address: z.string().nullish(),
           })
           .safeParse(credentials);
 
         if (parsedCredentials.success) {
-          const { user_name, password } = parsedCredentials.data;
-          const company_code = (credentials["company_code"] as string) ?? "";
-          const ip_address = (credentials["ip_address"] as string) ?? null;
-
+          const { 
+            user_name,
+            ip_address 
+          } = parsedCredentials.data;
           // console.log(`Credential : (id) ${user_name} / (pwd) ${password} / (company code) ${company_code}`);
 
-          const loginData = {
-            user_name: user_name,
-            password: password,
-            company_code: company_code,
-            ip_address: ip_address,
-          };
-
-          const loginResult: LoginResultData | null = await login(loginData);
+          const loginResult: LoginResultData | null = await login(parsedCredentials.data as LoginData);
           console.log("[Login] Result :", loginResult);
 
           if (loginResult === null) return null;
@@ -58,10 +55,10 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
           const userInfoResult = await getUserInfo(
             user_name,
-            ip_address,
+            ip_address ?? "",
             loginResult.token
           );
-          console.log("[User Info] Result :", userInfoResult);
+          // console.log("[User Info] Result :", userInfoResult);
 
           if (userInfoResult.ResultCode !== "0") {
             console.log("[User Info] Error :", userInfoResult.ErrorMessage);

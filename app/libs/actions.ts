@@ -46,8 +46,12 @@ export const fetchIp = async (callback:(ip: string) => void) => {
 
 // ----------- Login ----------------------------------------------------------------
 export async function login(data: LoginData) {
+    const apiAddr = !!data.is_init
+        ? `${BASE_PATH}/api/users/login`
+        : `${BASE_PATH}/api/users/login_vericode`;
+        
     try {
-        const resp = await fetch(`${BASE_PATH}/api/users/login`, {
+        const resp = await fetch(apiAddr, {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data),

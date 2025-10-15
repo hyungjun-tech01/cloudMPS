@@ -10,6 +10,7 @@ export const metadata: Metadata = {
 
 interface ILogin {
   userType?: "company" | "person";
+  init?: boolean;
 }
 
 export default async function LoginPage(props: {
@@ -18,6 +19,7 @@ export default async function LoginPage(props: {
 }) {
   const searchParams = await props.searchParams;
   const userType = searchParams?.userType || "company";
+  const isInit = searchParams?.init || false;
   const locale = (await props.params).locale;
   const trans = await getDictionary(locale);
 
@@ -32,7 +34,7 @@ export default async function LoginPage(props: {
           </Link>
         </div>
         <Suspense>
-          <LoginForm userType={userType} trans={trans.login}/>
+          <LoginForm userType={userType} isInit={isInit} trans={trans.login}/>
         </Suspense>
       </div>
     </main>

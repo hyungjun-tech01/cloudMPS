@@ -22,13 +22,18 @@
   },
   "login": {
     "company_code": "Company Code",
-    "id": "ID",
+    "company_login": "login for company member",
+    "id": "ID (Email)",
     "login": "Login",
     "password": "Password",
+    "person_login": "login for personal member",
+    "placeholder_company_code": "Enter your company code",
+    "placeholder_id_code": "Enter your ID(Email adress)",
+    "placeholder_password": "Enter your password",
+    "placeholder_verfication_code": "Enter your received verification code",
     "title": "Login",
     "userId": "User ID",
-    "company_login": "login for company member",
-    "person_login": "login for personal member"
+    "verification_code": "Verification Code"
   },
   "register": {
     "agreement": "Agreement",

@@ -42,7 +42,9 @@ export interface RegisterData {
 export interface LoginData {
   user_name: string;
   password: string;
-  company_code?: string | null;
+  company_code?: string;
+  verification_code?: string;
+  is_init: boolean;
   ip_address: string | null;
 }
 

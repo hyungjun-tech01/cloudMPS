@@ -10,9 +10,11 @@ import { fetchIp } from "@/app/libs/actions";
 
 export default function LoginForm({
   userType,
+  isInit,
   trans,
 }: {
   userType: "company" | "person";
+  isInit: boolean;
   trans: Record<string, string>;
 }) {
   const searchParams = useSearchParams();
@@ -39,27 +41,7 @@ export default function LoginForm({
           )}
         </div>
         <div className="w-full">
-          {userType === "company" && (
-            <div className="mb-4">
-              <label
-                className="mb-3 mt-5 block text-xs font-medium text-gray-900"
-                htmlFor="company_code"
-              >
-                {trans.company_code}
-              </label>
-              <div className="relative">
-                <input
-                  className="peer block w-full rounded-md bg-slate-50 border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
-                  id="company_code"
-                  type="company_code"
-                  name="company_code"
-                  placeholder="Enter Company Code"
-                  required
-                />
-              </div>
-            </div>
-          )}
-          <div>
+          <div className="mb-4">
             <label
               className="mb-3 mt-5 block text-xs font-medium text-gray-900"
               htmlFor="user_name"
@@ -72,7 +54,7 @@ export default function LoginForm({
                 id="user_name"
                 type="user_name"
                 name="user_name"
-                placeholder="Enter your ID"
+                placeholder={trans.placeholder_id_code}
                 required
               />
             </div>
@@ -90,7 +72,7 @@ export default function LoginForm({
                 id="user_password"
                 type="password"
                 name="password"
-                placeholder="Enter password"
+                placeholder={trans.placeholder_password}
                 required
                 minLength={6}
               />
@@ -99,9 +81,50 @@ export default function LoginForm({
               </span>
             </div>
           </div>
+          {userType === "company" && (
+            <div className="mt-4">
+              <label
+                className="mb-3 mt-5 block text-xs font-medium text-gray-900"
+                htmlFor="company_code"
+              >
+                {trans.company_code}
+              </label>
+              <div className="relative">
+                <input
+                  className="peer block w-full rounded-md bg-slate-50 border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+                  id="company_code"
+                  type="company_code"
+                  name="company_code"
+                  placeholder={trans.placeholder_company_code}
+                  required
+                />
+              </div>
+            </div>
+          )}
+          {!!isInit && (
+            <div className="mb-4">
+              <label
+                className="mb-3 mt-5 block text-xs font-medium text-gray-900"
+                htmlFor="verification_code"
+              >
+                {trans.verification_code}
+              </label>
+              <div className="relative">
+                <input
+                  className="peer block w-full rounded-md bg-slate-50 border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+                  id="verification_code"
+                  type="verification_code"
+                  name="verification_code"
+                  placeholder={trans.placeholder_verfication_code}
+                  required
+                />
+              </div>
+            </div>
+          )}
         </div>
         <input type="hidden" name="redirectTo" value={callbackUrl} />
         <input type="hidden" name="ip_address" value={ipAddress} />
+        <input type="hidden" name="is_init" value={isInit ? "true" : "false"} />
         <button
           type="submit"
           className="mt-8 w-full bg-slate-500 text-white px-3 py-0.5 rounded-sm flex justify-center items-center"
