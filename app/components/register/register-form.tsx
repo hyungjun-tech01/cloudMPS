@@ -5,10 +5,10 @@ import Link from "next/link";
 import { z } from "zod";
 import { Steps } from "antd";
 
-import { BASE_PATH } from "@/app/libs/constants";
 import RegisterTermsOfService from "./register-use-of-term";
-import RegisterUserInfo, { SearchCompnayDataType } from "./register-user-info";
-import { fetchIp, register } from "@/app/libs/actions";
+import RegisterUserInfo from "./register-user-info";
+import { register } from "@/app/libs/actions";
+
 
 enum RegisterStep {
   AGREEMENT = 0,
@@ -56,6 +56,7 @@ export default function RegisterForm({
 }: {
   userType: "company" | "person";
   trans: {
+    common: Record<string, string>;
     company: Record<string, string>;
     register: Record<string, string>;
     user: Record<string, string>;
@@ -159,15 +160,15 @@ export default function RegisterForm({
       .string()
       .trim()
       .min(1, {
-        message: trans.register.error_miss_input as string,
+        message: trans.common.error_miss_input as string,
       }),
     companyRegistrationNo: z.string().min(1, {
-      message: trans.register.error_miss_input as string,
+      message: trans.common.error_miss_input as string,
     }),
     dealCompanyCode: z.string(),
     ceoName: z
       .string()
-      .min(1, { message: trans.user.error_miss_input as string }),
+      .min(1, { message: trans.common.error_miss_input as string }),
     timeZone: z.string(),
     companyCountry: z.string(),
     language: z.string(),
@@ -176,51 +177,21 @@ export default function RegisterForm({
     companyBusinessType: z.string(),
     userFullName: z
       .string()
-      .min(1, { message: trans.user.error_miss_input as string }),
+      .min(1, { message: trans.common.error_miss_input as string }),
     userEmail: z.email({
       error: trans.register.error_input_type_email as string,
     }),
     userPwdNew: z.string().min(6, {
       error: (issue) =>
         issue.input === undefined
-          ? (trans.register.error_miss_input as string)
-          : (trans.register.error_pwd_min_legnth as string),
+          ? (trans.common.error_miss_input as string)
+          : (trans.common.error_pwd_min_legnth as string),
     }),
     userPwdNewAgain: z.string().min(6, {
       error: (issue) =>
         issue.input === undefined
-          ? (trans.register.error_miss_input as string)
-          : (trans.register.error_pwd_min_legnth as string),
-    }),
-  });
-
-  const CompanyUserFormSchema2 = z.object({
-    companyCode: z
-      .string()
-      .trim()
-      .min(1, { message: trans.user.error_miss_input as string }),
-    companyName: z
-      .string()
-      .trim()
-      .min(1, { message: trans.user.error_miss_input as string }),
-    dealCompanyCode: z.string(),
-    userFullName: z
-      .string()
-      .min(1, { message: trans.user.error_miss_input as string }),
-    userEmail: z.email({
-      error: trans.register.error_input_type_email as string,
-    }),
-    userPwdNew: z.string().min(6, {
-      error: (issue) =>
-        issue.input === undefined
-          ? (trans.register.error_miss_input as string)
-          : (trans.register.error_pwd_min_legnth as string),
-    }),
-    userPwdNewAgain: z.string().min(6, {
-      error: (issue) =>
-        issue.input === undefined
-          ? (trans.register.error_miss_input as string)
-          : (trans.register.error_pwd_min_legnth as string),
+          ? (trans.common.error_miss_input as string)
+          : (trans.common.error_pwd_min_legnth as string),
     }),
   });
 
@@ -254,40 +225,27 @@ export default function RegisterForm({
     // const tempResult = await register(tempTest);
     // console.log("tempResult :", tempResult);
     // return;
-
     //-----TEST : End ----------------------------------------
+
     let validatedFields = null;
     if (userType === "company") {
-      const companyCode = formData.get("companyCode");
-      if (!companyCode) {
-        validatedFields = CompanyUserFormSchema.safeParse({
-          companyType: formData.get("companyType"),
-          companyName: formData.get("companyName"),
-          companyRegistrationNo: formData.get("companyRegistrationNo"),
-          ceoName: formData.get("ceoName"),
-          dealCompanyCode: formData.get("dealCompanyCode"),
-          timeZone: formData.get("timeZone"),
-          companyCountry: formData.get("companyCountry"),
-          language: formData.get("language"),
-          currencyCode: formData.get("currencyCode"),
-          companyBusinessItem: formData.get("companyBusinessItem"),
-          companyBusinessType: formData.get("companyBusinessType"),
-          userFullName: formData.get("userFullName"),
-          userEmail: formData.get("userEmail"),
-          userPwdNew: formData.get("userPwdNew"),
-          userPwdNewAgain: formData.get("userPwdNewAgain"),
-        });
-      } else {
-        validatedFields = CompanyUserFormSchema2.safeParse({
-          companyCode: formData.get("companyCode"),
-          companyName: formData.get("companyName"),
-          dealCompanyCode: formData.get("dealCompanyCode"),
-          userFullName: formData.get("userFullName"),
-          userEmail: formData.get("userEmail"),
-          userPwdNew: formData.get("userPwdNew"),
-          userPwdNewAgain: formData.get("userPwdNewAgain"),
-        });
-      }
+      validatedFields = CompanyUserFormSchema.safeParse({
+        companyType: formData.get("companyType"),
+        companyName: formData.get("companyName"),
+        companyRegistrationNo: formData.get("companyRegistrationNo"),
+        ceoName: formData.get("ceoName"),
+        dealCompanyCode: formData.get("dealCompanyCode"),
+        timeZone: formData.get("timeZone"),
+        companyCountry: formData.get("companyCountry"),
+        language: formData.get("language"),
+        currencyCode: formData.get("currencyCode"),
+        companyBusinessItem: formData.get("companyBusinessItem"),
+        companyBusinessType: formData.get("companyBusinessType"),
+        userFullName: formData.get("userFullName"),
+        userEmail: formData.get("userEmail"),
+        userPwdNew: formData.get("userPwdNew"),
+        userPwdNewAgain: formData.get("userPwdNewAgain"),
+      });
     } else {
       validatedFields = PersonalUserFormSchema.safeParse({
         userFullName: formData.get("userFullName"),
@@ -337,11 +295,12 @@ export default function RegisterForm({
       ip_address: userIp,
     };
 
-    // console.log('Register / data :', registerData);
     const result = await register(registerData);
     if (!!result) {
-      if (result["ResultCode"] === 0) {
+      console.log('Register / result :', result);
+      if (result["ResultCode"] === '0') {
         // Succeeded ---------------------------
+        console.log('Register / Succeeded');
         handleNextStep();
         return;
       } else {
@@ -384,11 +343,17 @@ export default function RegisterForm({
       content: (
         <>
           <div className="p-8 flex justify-center items-center text-2xl">
-            {trans.register.complete}
+            {trans.common.completed}
+          </div>
+          <div className="pt-8 pb-1 flex justify-center items-center text-xl text-slate-500">
+            {trans.register.completed_1}
+          </div>
+          <div className="pt-1 pb-8 flex justify-center items-center text-xl text-slate-500">
+            {trans.register.completed_2}
           </div>
           <Link
             href={loginLink}
-            className="p-4 flex justify-center items-center text-blue-500"
+            className="p-8 flex justify-center items-center text-blue-500"
           >
             {trans.register.go_to_verify}
           </Link>
@@ -403,7 +368,12 @@ export default function RegisterForm({
   }));
 
   useEffect(() => {
-    fetchIp(setUserIp);
+    const fetchIp = async () => {
+      const res = await fetch('/api/get-ip');
+      const data = await res.json();
+      setUserIp(data.ip);
+    }
+    fetchIp();
   }, []);
 
   return (

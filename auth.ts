@@ -25,14 +25,13 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   providers: [
     Credentials({
       async authorize(credentials) {
-        // console.log("authorize :", credentials);
         const parsedCredentials = z
           .object({
             user_name: z.string(),
             password: z.string().min(6),
             company_code: z.string().optional(),
             verification_code: z.string().optional(),
-            is_init: z.boolean(),
+            is_init: z.enum(['Y', 'N']),
             ip_address: z.string().nullish(),
           })
           .safeParse(credentials);
@@ -45,7 +44,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           // console.log(`Credential : (id) ${user_name} / (pwd) ${password} / (company code) ${company_code}`);
 
           const loginResult: LoginResultData | null = await login(parsedCredentials.data as LoginData);
-          console.log("[Login] Result :", loginResult);
+          // console.log("[Login] Result :", loginResult);
 
           if (loginResult === null) return null;
           if (loginResult.ResultCode !== "0") {
@@ -85,6 +84,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           // }
         }
 
+        console.log("authorize /error :", parsedCredentials.error);
         console.log("Invalid credentials");
         return null;
       },

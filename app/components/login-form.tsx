@@ -5,7 +5,6 @@ import Link from "next/link";
 import { authenticate } from "@/app/libs/actions";
 import { useSearchParams } from "next/navigation";
 import "material-icons/iconfont/material-icons.css";
-import { fetchIp } from "@/app/libs/actions";
 
 
 export default function LoginForm({
@@ -26,7 +25,12 @@ export default function LoginForm({
   const [ipAddress, setIpAddress] = useState<string>('');
 
   useEffect(() => {
-    fetchIp(setIpAddress);
+    const fetchIp = async () => {
+      const res = await fetch('/api/get-ip');
+      const data = await res.json();
+      setIpAddress(data.ip);
+    }
+    fetchIp();
   }, []);
 
   return (
@@ -34,11 +38,12 @@ export default function LoginForm({
       <div className="flex-1 rounded-b-lg bg-gray-50 px-6 pb-4 pt-8">
         <div className="flex justify-between items-end">
           <h1 className="mb-3 text-2xl">{trans.title}</h1>
-          {userType === "company" ? (
+          {!isInit && (
+          userType === "company" ? (
             <Link href="/login?userType=person">{trans.person_login} ▶</Link>
           ) : (
             <Link href="/login?userType=company">{trans.company_login} ▶</Link>
-          )}
+          ))}
         </div>
         <div className="w-full">
           <div className="mb-4">
@@ -124,7 +129,7 @@ export default function LoginForm({
         </div>
         <input type="hidden" name="redirectTo" value={callbackUrl} />
         <input type="hidden" name="ip_address" value={ipAddress} />
-        <input type="hidden" name="is_init" value={isInit ? "true" : "false"} />
+        <input type="hidden" name="is_init" value={isInit ? "Y" : "N"} />
         <button
           type="submit"
           className="mt-8 w-full bg-slate-500 text-white px-3 py-0.5 rounded-sm flex justify-center items-center"

@@ -18,6 +18,7 @@ export async function authenticate(
     prevState: string | undefined,
     formData: FormData,
 ) {
+    // console.log('authenticate :', formData);
     try {
         await signIn('credentials', formData);
     } catch (error) {
@@ -33,28 +34,33 @@ export async function authenticate(
     }
 };
 
-export const fetchIp = async (callback:(ip: string) => void) => {
-    try {
-        const res = await fetch('/api/get-ip');
-        const data = await res.json();
-        callback(data.ip);
-    } catch (error) {
-        console.error('IP 가져오기 실패:', error);
-        return null;
-    }
-};
-
 // ----------- Login ----------------------------------------------------------------
 export async function login(data: LoginData) {
-    const apiAddr = !!data.is_init
-        ? `${BASE_PATH}/api/users/login`
-        : `${BASE_PATH}/api/users/login_vericode`;
+    // console.log("Login data:", data);
+    const apiAddr = data.is_init === "Y"
+        ? `${BASE_PATH}/api/users/login_vericode`
+        : `${BASE_PATH}/api/users/login`;
+
+    const checkIP = data.ip_address === "::1" ? "127.0.0.1" : data.ip_address;
+
+    const realData = data.is_init === "Y" ? {
+        user_name: data.user_name,
+        password: data.password,
+        verification_code: data.verification_code,
+        company_code: data.company_code,
+        ip_address: checkIP,
+    } : {
+        user_name: data.user_name,
+        password: data.password,
+        company_code: data.company_code,
+        ip_address: checkIP,
+    }
         
     try {
         const resp = await fetch(apiAddr, {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
+            body: JSON.stringify(realData),
         });
         return resp.json();
 

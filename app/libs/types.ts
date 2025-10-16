@@ -44,7 +44,7 @@ export interface LoginData {
   password: string;
   company_code?: string;
   verification_code?: string;
-  is_init: boolean;
+  is_init: "Y" | "N";
   ip_address: string | null;
 }
 
