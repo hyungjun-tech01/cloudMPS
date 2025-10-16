@@ -1,38 +1,42 @@
 'use client';
 
-import { useActionState, useState, useEffect } from 'react';
 import Link from 'next/link';
 import clsx from 'clsx';
-import type { UserState } from '@/app/libs/actions';
-import { IButtonInfo, IEditItem, ISection } from '@/app/libs/types';
-import { EditItem } from '@/app/components/edit-items';
+import type { UserState } from '@/app/lib/actions';
+import { useActionState, useState, useEffect } from 'react';
+import { IButtonInfo, IEditItem, ISection, EditItem } from '../edit-items';
 
-export function EditForm({
-  id,
+
+export function CreateForm({
   items,
   buttons,
   sessionUserName,
   action,
 }: {
-  id: string;
   items: ISection[];
   buttons?: IButtonInfo;
-  sessionUserName: string;
-  action: (id: string, prevState: void | UserState, formData: FormData)
+  sessionUserName:string;
+  action: (prevState: void | UserState, formData: FormData)
     => Promise<UserState | void>;
 }) {
   const initialState: UserState = { message: null, errors: {} };
-  const updatedAction = action.bind(null, id);
-  const [state, formAction] = useActionState(updatedAction, initialState);
-
-  //const { data: session } = useSession();
-
+  const [state, formAction] = useActionState(action, initialState);
 
   const [ipAddress, setIpAddress] = useState('');
 
   useEffect(() => {
-    fetchIp(setIpAddress);
-  }, []);
+    const fetchIp = async () => {
+    try {
+        const res = await fetch('/api/get-ip');
+        const data = await res.json();
+        setIpAddress(data.ip);
+    } catch (error) {
+        console.error('IP 가져오기 실패:', error);
+    }
+    };
+
+    fetchIp();
+}, []);
 
   return (
     <form action={formAction}>

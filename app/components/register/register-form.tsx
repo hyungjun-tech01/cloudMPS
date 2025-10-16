@@ -297,10 +297,9 @@ export default function RegisterForm({
 
     const result = await register(registerData);
     if (!!result) {
-      console.log('Register / result :', result);
+      // console.log('Register / result :', result);
       if (result["ResultCode"] === '0') {
         // Succeeded ---------------------------
-        console.log('Register / Succeeded');
         handleNextStep();
         return;
       } else {

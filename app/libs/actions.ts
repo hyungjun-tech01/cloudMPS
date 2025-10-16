@@ -102,3 +102,31 @@ export async function register(data: object) {
         return null;
     };
 }
+
+// ----------- User ----------------------------------------------------------------
+export type UserState = {
+  errors?: {
+    userName?: string[];
+    userDisabledPrinting?: string[];
+    userBalanceCurrent?: string[];
+    balanceNew?: string[];
+  };
+  message?: string | null;
+};
+
+export async function fetchData(path:string, data: object, token?:string) {
+    try {
+        const resp = await fetch(`${BASE_PATH}${path}`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'session-token': token?? "",
+            },
+            body: JSON.stringify(data),
+        });
+        return resp.json();
+    } catch (err) {
+        console.error(`\t[ fetchData ] ${path} / Error : ${err}`);
+        return null;
+    };
+}

@@ -6,14 +6,23 @@ import { LoginData, LoginResultData } from "@/app/libs/types";
 
 declare module "next-auth" {
   interface User {
-    role?: string;
-    full_name?: string;
+    id: string;
+    name: string;
+    full_name: string;
+    email: string;
+    role: string;
+    company_code?: number;
+    token?: string;
   }
 
   interface Session {
     user: {
-      role?: string;
+      name: string;
+      email: string;
       full_name?: string;
+      role?: string;
+      company_code?: number;
+      token: string;
     } & DefaultSession["user"];
   }
 }
@@ -39,7 +48,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         if (parsedCredentials.success) {
           const { 
             user_name,
-            ip_address 
+            ip_address,
+            company_code
           } = parsedCredentials.data;
           // console.log(`Credential : (id) ${user_name} / (pwd) ${password} / (company code) ${company_code}`);
 
@@ -69,23 +79,13 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             name: userInfoResult.user.user_name,
             full_name: userInfoResult.user.full_name,
             email: userInfoResult.user.email,
-            role: userInfoResult.user["role"] ?? "admin",
+            role: userInfoResult.user["role"] ?? "SUBSCRIPT_USER",
+            company_code: company_code, 
             token: loginResult.token,
           };
-
-          // } else {
-          //   return {
-          //     id: '0001',
-          //     name: 'admin',
-          //     email: 'hyungsung@sindoh.com',
-          //     role: "admin",
-          //     image: ""
-          //   };
-          // }
         }
 
-        console.log("authorize /error :", parsedCredentials.error);
-        console.log("Invalid credentials");
+        console.log("Invalid credentials" + (parsedCredentials.error ?? ""));
         return null;
       },
     }),
@@ -136,16 +136,22 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     jwt: async ({ token, user }) => {
       if (user) {
         token.id = user.id;
+        token.name = user.name;
         token.role = user.role;
         token.full_name = user.full_name;
+        token.company_code = user.company_code;
+        token.token = user.token;
       }
       return token;
     },
     session: async ({ session, token }) => {
       if (session.user) {
         session.user.id = token.id as string;
+        session.user.name = token.name as string;
         session.user.role = token.role as string | undefined;
         session.user.full_name = token.full_name as string | undefined;
+        session.user.company_code = token.company_code as number | undefined;
+        session.user.token = token.token as string;
       }
       return session;
     },

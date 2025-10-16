@@ -20,6 +20,7 @@ export default function NavLinks({ extended }: { extended: boolean }) {
 
   if(userRole === 'admin') {
     menuList.push('home');
+    menuList.push('user');
     menuList.push('device');
     menuList.push('analysis');
   } else {

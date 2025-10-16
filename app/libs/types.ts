@@ -1,22 +1,47 @@
+export interface UserForAuth {
+  id: string;
+  name: string;
+  full_name: string;
+  email: string;
+  role?: string;
+  company_code?: number;
+  token?: string;
+};
+
 export interface IEditItem {
   name: string;
   title: string | string[];
-  type: "label" | "input" | "currency" | "select" | "checked" | "chart" | "password" | "hidden" | "react-select" | "button" | "status_bar";
+  type:
+    | "label"
+    | "input"
+    | "currency"
+    | "select"
+    | "checked"
+    | "chart"
+    | "password"
+    | "hidden"
+    | "react-select"
+    | "button"
+    | "status_bar";
   defaultValue: string | number;
   placeholder?: string;
-  options?: { title: string | string[]; value: string | number; suffix?: string }[] | null;
+  options?:
+    | { title: string | string[]; value: string | number; suffix?: string }[]
+    | null;
   locale?: string;
   errors?: string[] | null;
-  chartData?: { xlabels: string[], ydata: number[], maxY: number };
+  chartData?: { xlabels: string[]; ydata: number[]; maxY: number };
   other?: React.JSX.Element;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
-};
+  onChange?: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => void;
+}
 
 export interface ISection {
   title: string | string[];
   description: string | object | string[];
   items: IEditItem[];
-};
+}
 
 export interface UserData {
   companyName?: string;
@@ -28,8 +53,8 @@ export interface UserData {
   userFullName?: string;
   userEmail: string;
   userPassword: string;
-  userType: "company" | "person";
-};
+  userType: "COMPANY" | "PERSON";
+}
 
 export interface RegisterData {
   termsOfService: "Y" | "N";
@@ -59,24 +84,37 @@ export interface ISideMenuItem {
   name: string;
   title: string;
   href: string;
-  icon: {name: string, type: string, props?: string};
+  icon: { name: string; type: string; props?: string };
   submenu?: {
     name: string;
     title: string;
     href: string;
-    icon: {name: string, type: string, props?: string};
+    icon: { name: string; type: string; props?: string };
   }[];
 }
 
 export interface IButtonInfo {
-  cancel: { title: string, link: string },
+  cancel: { title: string; link: string };
   go: { title: string };
-  save?: {title:string};
-  delete?: {title:string};
-  add?:{title:string};
-};
+  save?: { title: string };
+  delete?: { title: string };
+  add?: { title: string };
+}
 
 export interface ICardSubItem {
-  first: { title: string, value: string, sub?: { title: string, value: number|string, color?:string }[] };
-  second: { title: string, value: { title: string, value: number|string, color?:string }[] };
-};
+  first: {
+    title: string;
+    value: string;
+    sub?: { title: string; value: number | string; color?: string }[];
+  };
+  second: {
+    title: string;
+    value: { title: string; value: number | string; color?: string }[];
+  };
+}
+
+export interface ISearch {
+  query?: string;
+  itemsPerPage?: string;
+  page?: string;
+}

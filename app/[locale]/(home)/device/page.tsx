@@ -160,33 +160,31 @@ export default async function Page(props: {
   ];
 
   const dataSource = [
-  {
-    key: '1',
-    installed_date: 'Mike',
-    collected_date: 32,
-    status: "정상",
-    customer: '삼성',
-    sales_point:  '강남점',
-    model: 'M247',
-    auto_manual: '자동',
-    location: '사무동2층',
-    refill_ink: 'Y',
-    ink_toner_black: 80,
-    ink_toner_cyan: 65,
-    ink_toner_magenta: 53,
-    ink_toner_yellow: 48,
-    drum_black: 80,
-    drum_cyan: 65,
-    drum_magenta: 53,
-    drum_yellow: 48,
-    paper_size: 'A4',
-    black_white: 146751,
-    color: 80281,
-    sum: 227032
-  },
-];
-
-
+    {
+      key: '1',
+      installed_date: 'Mike',
+      collected_date: 32,
+      status: "정상",
+      customer: '삼성',
+      sales_point:  '강남점',
+      model: 'M247',
+      auto_manual: '자동',
+      location: '사무동2층',
+      refill_ink: 'Y',
+      ink_toner_black: 80,
+      ink_toner_cyan: 65,
+      ink_toner_magenta: 53,
+      ink_toner_yellow: 48,
+      drum_black: 80,
+      drum_cyan: 65,
+      drum_magenta: 53,
+      drum_yellow: 48,
+      paper_size: 'A4',
+      black_white: 146751,
+      color: 80281,
+      sum: 227032
+    },
+  ];
 
   return (
     <main>
