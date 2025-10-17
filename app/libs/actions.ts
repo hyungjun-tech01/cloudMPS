@@ -7,7 +7,7 @@ import { AuthError } from 'next-auth';
 
 import { signIn, signOut } from '@/auth';
 import { BASE_PATH } from './constants';
-import { LoginData } from './types';
+import { LoginData, UserData } from './types';
 
 
 export async function logout() {
@@ -86,6 +86,18 @@ export async function getUserInfo(userName: string, ipAddr:string, token: string
         console.error(`\t[ Login ] Error : ${err}`);
         return null;
     };
+}
+
+export async function modifyUser<DataType>(
+  id: string,
+  prevState: void | DataType,
+  formData: FormData
+) {
+    console.log("NA");
+}
+
+export async function deleteUser(id:string, ipAddr:string, token:string) {
+    console.log("NA");
 }
 
 // ----------- Register ----------------------------------------------------------------

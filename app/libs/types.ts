@@ -73,8 +73,16 @@ export interface UserData {
   privacy_policy: "Y" | "N";
   location_information: "Y" | "N";
   notification_email: "Y" | "N";
+  password?: string;
   user_role: "PARTNER" | "SUBSCRIPTION" | "FREE_USER" | "PARTNER_USER" | "SUBSCRIPT_USER";
 }
+
+export type UserState = {
+  errors?: {
+    userFullName?: string[];
+  };
+  message?: string | null;
+};
 
 // ----------- Components ----------------------------------------------------------------
 export interface IEditItem {

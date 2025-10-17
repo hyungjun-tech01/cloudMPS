@@ -2,15 +2,17 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { auth } from "@/auth";
 import { redirect } from 'next/navigation'; // 적절한 리다이렉트 함수 import
+import MaterialIcon from "@/app/components/materialIcon";
 
 import Search from '@/app/components/search';
 import { CreateButton } from '@/app/components/buttons';
 import { TableSkeleton } from "@/app/components/skeletons";
 import Table from '@/app/components/table';
+import { UpdateButton } from "@/app/components/buttons";
 
 import getDictionary from '@/app/libs/dictionaries';
-import { IColumn, ISearch, UserData } from "@/app/libs/types";
-import { fetchData } from "@/app/libs/actions";
+import { ISearch, UserData } from "@/app/libs/types";
+import { fetchData, modifyUser, deleteUser } from "@/app/libs/actions";
 
 
 export const metadata: Metadata = {
@@ -28,12 +30,12 @@ export default async function Page(props: {
     const currentPage = Number(searchParams?.page) || 1;
 
     const session = await auth();
+    const userName = session?.user.name;
 
-    if (!session?.user.id || !session?.user.name) {
+    if (!userName) {
         redirect('/login'); // '/login'으로 리다이렉트
     };
 
-    const userName = session.user.name;
     const searchData = {
         search_user_name: query,
         search_full_name: query,
@@ -53,6 +55,10 @@ export default async function Page(props: {
     console.log("users :", userListResult);
     const {ResultCode, totalPages, users} = userListResult;
 
+    const handleMenuOpen = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        console.log('handleMenuOpen');
+    };
+
     const columns = [
         {
             title: trans.user.user_id,
@@ -64,14 +70,35 @@ export default async function Page(props: {
             dataIndex: 'full_name',
             key: 'full_name',
         },
+        {
+            title: "",
+            dataIndex: 'actions',
+            key: 'actions',
+        },
     ];
 
     const dataSource = ResultCode === "0" ? users.map( (user : UserData) => {
         return {
             user_name: user.user_name,
             full_name: user.full_name,
+            actions: 
+                <div className='flex justify-center items-center gap-2' key={user.user_id}>
+                    <UpdateButton link={`/user/${user.user_id}/edit`} />
+                    <button
+                        className="rounded-md border p-2 hover:bg-gray-100"
+                        // onClick={handleMenuOpen}
+                    >
+                        <span className="sr-only">{trans.common.delete}</span>
+                        <MaterialIcon name='delete' props="w-5 text-inherit" />
+                    </button>
+                </div>
         }
     }) : [];
+
+    const actions = {
+        modify : modifyUser,
+        delete : deleteUser,
+    }
 
 
     return (
@@ -88,6 +115,7 @@ export default async function Page(props: {
                     dataSource={dataSource}
                     columns={columns}
                     totalPages={totalPages}
+                    actions={actions}
                 />
             </Suspense>
         </div>

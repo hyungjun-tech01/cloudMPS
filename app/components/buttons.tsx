@@ -28,26 +28,3 @@ export function UpdateButton({ link, disabled }: { link: string, disabled?: bool
     </Link>
   );
 }
-
-export function DeleteButtton({
-  id, title, deletedBy, ipAddress, action
-}: {
-  id: string, title: string,
-  deletedBy: string | undefined,
-  ipAddress: string | undefined,
-  action: (id: string, param: string) => Promise<{ message: string } | void>,
-}) {
-  const merged = `${deletedBy ?? 'unknown'},${ipAddress ?? 'unknown'}`;
-  
-  const handleAction = async () => {
-    await action(id, merged);
-  };
-  
-  return (
-    <form action={handleAction}>
-      <button className="rounded-md border px-4 py-1 hover:bg-gray-100">
-        {title}
-      </button>
-    </form>
-  );
-}

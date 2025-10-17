@@ -1,11 +1,12 @@
 'use client';
 
-import { useActionState, useState, useEffect } from 'react';
+import { useActionState, useState } from 'react';
 import Link from 'next/link';
 import clsx from 'clsx';
-import type { UserState } from '@/app/libs/actions';
+import type { UserState } from '@/app/libs/types';
 import { IButtonInfo, IEditItem, ISection } from '@/app/libs/types';
 import { EditItem } from '@/app/components/edit-items';
+
 
 export function EditForm({
   id,
@@ -19,25 +20,16 @@ export function EditForm({
   buttons?: IButtonInfo;
   sessionUserName: string;
   action: (id: string, prevState: void | UserState, formData: FormData)
-    => Promise<UserState | void>;
+    => Promise<UserState | void> | null;
 }) {
   const initialState: UserState = { message: null, errors: {} };
   const updatedAction = action.bind(null, id);
   const [state, formAction] = useActionState(updatedAction, initialState);
 
-  //const { data: session } = useSession();
-
-
-  const [ipAddress, setIpAddress] = useState('');
-
-  useEffect(() => {
-    fetchIp(setIpAddress);
-  }, []);
 
   return (
     <form action={formAction}>
-      <input type="hidden" name="ipAddress" value={ipAddress}/>
-      <input type="hidden" name="updatedBy" value={sessionUserName}/>
+      <input type="hidden" name="updatedBy" value={""}/>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {items.map((sec: ISection, idx) => {
           return (
@@ -101,12 +93,12 @@ export function EditForm({
             </Link>
           }
           {!!buttons.go &&
-            <Button
+            <button
               type="submit"
               className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
             >
               {buttons.go.title}
-            </Button>
+            </button>
           }
         </div>
       }
