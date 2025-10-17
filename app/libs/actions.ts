@@ -7,7 +7,7 @@ import { AuthError } from 'next-auth';
 
 import { signIn, signOut } from '@/auth';
 import { BASE_PATH } from './constants';
-import { UserData, LoginData } from './types';
+import { LoginData } from './types';
 
 
 export async function logout() {
@@ -103,17 +103,7 @@ export async function register(data: object) {
     };
 }
 
-// ----------- User ----------------------------------------------------------------
-export type UserState = {
-  errors?: {
-    userName?: string[];
-    userDisabledPrinting?: string[];
-    userBalanceCurrent?: string[];
-    balanceNew?: string[];
-  };
-  message?: string | null;
-};
-
+// ----------- Common ----------------------------------------------------------------
 export async function fetchData(path:string, data: object, token?:string) {
     try {
         const resp = await fetch(`${BASE_PATH}${path}`, {

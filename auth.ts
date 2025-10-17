@@ -4,8 +4,7 @@ import { z } from "zod";
 import { login, getUserInfo } from "@/app/libs/actions";
 import { LoginData, LoginResultData } from "@/app/libs/types";
 
-declare module "next-auth" {
-  interface User {
+interface UserType {
     id: string;
     name: string;
     full_name: string;
@@ -14,6 +13,9 @@ declare module "next-auth" {
     company_code?: number;
     token?: string;
   }
+
+declare module "next-auth" {
+  interface User extends UserType {}
 
   interface Session {
     user: {
@@ -51,10 +53,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             ip_address,
             company_code
           } = parsedCredentials.data;
-          // console.log(`Credential : (id) ${user_name} / (pwd) ${password} / (company code) ${company_code}`);
 
           const loginResult: LoginResultData | null = await login(parsedCredentials.data as LoginData);
-          // console.log("[Login] Result :", loginResult);
 
           if (loginResult === null) return null;
           if (loginResult.ResultCode !== "0") {
@@ -67,7 +67,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             ip_address ?? "",
             loginResult.token
           );
-          // console.log("[User Info] Result :", userInfoResult);
 
           if (userInfoResult.ResultCode !== "0") {
             console.log("[User Info] Error :", userInfoResult.ErrorMessage);
@@ -79,10 +78,10 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             name: userInfoResult.user.user_name,
             full_name: userInfoResult.user.full_name,
             email: userInfoResult.user.email,
-            role: userInfoResult.user["role"] ?? "SUBSCRIPT_USER",
+            role: userInfoResult.user.user_role,
             company_code: company_code, 
             token: loginResult.token,
-          };
+          } as UserType;
         }
 
         console.log("Invalid credentials" + (parsedCredentials.error ?? ""));
@@ -112,7 +111,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       }
 
       const isAdmin = auth?.user.role === "admin";
-      const isManager = auth?.user.role === "manager";
+      const isManager = auth?.user.role === "SUBSCRIPTION";
       const userMenu = nextUrl.pathname.startsWith("/user");
       const groupMenu = nextUrl.pathname.startsWith("/group");
       const editMenu = nextUrl.pathname.endsWith("/edit");
@@ -148,8 +147,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       if (session.user) {
         session.user.id = token.id as string;
         session.user.name = token.name as string;
-        session.user.role = token.role as string | undefined;
-        session.user.full_name = token.full_name as string | undefined;
+        session.user.role = token.role as string;
+        session.user.full_name = token.full_name as string;
         session.user.company_code = token.company_code as number | undefined;
         session.user.token = token.token as string;
       }

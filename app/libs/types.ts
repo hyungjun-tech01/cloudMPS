@@ -1,13 +1,42 @@
-export interface UserForAuth {
-  id: string;
-  name: string;
-  full_name: string;
-  email: string;
-  role?: string;
-  company_code?: number;
-  token?: string;
-};
+// ----------- Login ----------------------------------------------------------------
+export interface LoginData {
+  user_name: string;
+  password: string;
+  company_code?: string;
+  verification_code?: string;
+  is_init: "Y" | "N";
+  ip_address: string | null;
+}
 
+export interface LoginResultData {
+  ResultCode: string | number;
+  ErrorMessage: string;
+  token: string;
+}
+
+// ----------- Register ----------------------------------------------------------------
+export interface UserData {
+  companyName?: string;
+  ceoName?: string;
+  companyRegistrationNo?: string;
+  business_type?: string;
+  business_item?: string;
+  userName: string;
+  userFullName?: string;
+  userEmail: string;
+  userPassword: string;
+  userType: "COMPANY" | "PERSON";
+}
+
+export interface RegisterData {
+  termsOfService: "Y" | "N";
+  privacyPolicy: "Y" | "N";
+  locationInfoPolicy: "Y" | "N";
+  eventPromotionPolicy: "Y" | "N";
+  userData: UserData;
+}
+
+// ----------- Items ----------------------------------------------------------------
 export interface IEditItem {
   name: string;
   title: string | string[];
@@ -43,43 +72,6 @@ export interface ISection {
   items: IEditItem[];
 }
 
-export interface UserData {
-  companyName?: string;
-  ceoName?: string;
-  companyRegistrationNo?: string;
-  business_type?: string;
-  business_item?: string;
-  userName: string;
-  userFullName?: string;
-  userEmail: string;
-  userPassword: string;
-  userType: "COMPANY" | "PERSON";
-}
-
-export interface RegisterData {
-  termsOfService: "Y" | "N";
-  privacyPolicy: "Y" | "N";
-  locationInfoPolicy: "Y" | "N";
-  eventPromotionPolicy: "Y" | "N";
-  userData: UserData;
-}
-
-export interface LoginData {
-  user_name: string;
-  password: string;
-  company_code?: string;
-  verification_code?: string;
-  is_init: "Y" | "N";
-  ip_address: string | null;
-}
-
-export interface LoginResultData {
-  ResultCode: string | number;
-  ErrorMessage: string;
-  token: string;
-}
-
-// 타입 정의 추가
 export interface ISideMenuItem {
   name: string;
   title: string;

@@ -23,6 +23,10 @@ export default function NavLinks({ extended }: { extended: boolean }) {
     menuList.push('user');
     menuList.push('device');
     menuList.push('analysis');
+  } else if(userRole === 'SUBSCRIPTION') {
+    menuList.push('home');
+    menuList.push('user');
+    menuList.push('device');
   } else {
     menuList.push('home');
     menuList.push('device');
