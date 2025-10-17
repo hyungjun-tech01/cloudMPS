@@ -200,6 +200,7 @@
     "phone":"Phone No.",
     "position":"Position",
     "private_group":"Group",
+    "search_users": "Search users by id, name and email",
     "secTitle_account_details": "Details",
     "secTitle_change_password": "Change Password",
     "secTitle_info": "User Information",

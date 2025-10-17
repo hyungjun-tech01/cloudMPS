@@ -12,10 +12,10 @@ export default function NavLinks({ extended }: { extended: boolean }) {
   const locale = splittedPathname[0] === "" ? 'ko' : splittedPathname[0] as 'ko' | 'en';
   const category = splittedPathname[1] === "" ? 'home' : splittedPathname[1];
   const { data: session } = useSession();
-  const userRole = session?.user?.role ?? "user";
+  const userRole = session?.user?.role ?? "FREE_USER";
   const menuList = [];
 
-  console.log('Path:', pathname);
+  // console.log('Path:', pathname);
   console.log('User Role:', userRole);
 
   if(userRole === 'admin') {

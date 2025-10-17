@@ -11,6 +11,7 @@ interface UserType {
     email: string;
     role: string;
     company_code?: number;
+    ip_address: string;
     token?: string;
   }
 
@@ -24,6 +25,7 @@ declare module "next-auth" {
       full_name?: string;
       role?: string;
       company_code?: number;
+      ip_address: string;
       token: string;
     } & DefaultSession["user"];
   }
@@ -43,7 +45,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             company_code: z.string().optional(),
             verification_code: z.string().optional(),
             is_init: z.enum(['Y', 'N']),
-            ip_address: z.string().nullish(),
+            ip_address: z.string(),
           })
           .safeParse(credentials);
 
@@ -64,7 +66,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
           const userInfoResult = await getUserInfo(
             user_name,
-            ip_address ?? "",
+            ip_address,
             loginResult.token
           );
 
@@ -79,7 +81,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             full_name: userInfoResult.user.full_name,
             email: userInfoResult.user.email,
             role: userInfoResult.user.user_role,
-            company_code: company_code, 
+            company_code: company_code,
+            ip_address: ip_address,
             token: loginResult.token,
           } as UserType;
         }
@@ -139,6 +142,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         token.role = user.role;
         token.full_name = user.full_name;
         token.company_code = user.company_code;
+        token.ip_address = user.ip_address;
         token.token = user.token;
       }
       return token;
@@ -150,6 +154,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         session.user.role = token.role as string;
         session.user.full_name = token.full_name as string;
         session.user.company_code = token.company_code as number | undefined;
+        session.user.ip_address = token.ip_address as string;
         session.user.token = token.token as string;
       }
       return session;

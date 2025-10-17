@@ -110,7 +110,7 @@ export async function fetchData(path:string, data: object, token?:string) {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
-                'session-token': token?? "",
+                'session_token': token?? "",
             },
             body: JSON.stringify(data),
         });

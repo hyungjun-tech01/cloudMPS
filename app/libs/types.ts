@@ -15,48 +15,88 @@ export interface LoginResultData {
 }
 
 // ----------- Register ----------------------------------------------------------------
-export interface UserData {
-  companyName?: string;
-  ceoName?: string;
-  companyRegistrationNo?: string;
-  business_type?: string;
-  business_item?: string;
-  userName: string;
-  userFullName?: string;
-  userEmail: string;
-  userPassword: string;
-  userType: "COMPANY" | "PERSON";
-}
-
 export interface RegisterData {
   termsOfService: "Y" | "N";
   privacyPolicy: "Y" | "N";
   locationInfoPolicy: "Y" | "N";
   eventPromotionPolicy: "Y" | "N";
-  userData: UserData;
+  userData: {
+    companyName?: string;
+    ceoName?: string;
+    companyRegistrationNo?: string;
+    business_type?: string;
+    business_item?: string;
+    userName: string;
+    userFullName?: string;
+    userEmail: string;
+    userPassword: string;
+    userType: "COMPANY" | "PERSON";
+  };
 }
 
-// ----------- Items ----------------------------------------------------------------
+// ----------- Users --------------------------------------------------------------------
+export interface UserData {
+  user_id: string;
+  user_name: string;
+  external_user_name: string | null;
+  full_name: string;
+  email: "newtons2002@naver.com";
+  notes: string | null;
+  total_jobs: number;
+  total_pages: number;
+  reset_by: string | null;
+  reset_date: Date | null;
+  schedule_period: string | null;
+  schedule_amount: number | null;
+  schedule_start: number | null;
+  deleted: "Y" | "N";
+  deleted_date: Date | null;
+  created_date: Date;
+  created_by: string;
+  user_source_type: string | null;
+  modified_date: Date | null;
+  modified_by: string | null;
+  department: string | null;
+  office: string | null;
+  card_number: string | null;
+  card_number2: string | null;
+  disabled_printing: "Y" | "N";
+  disabled_printing_until: Date | null;
+  home_directory: string | null;
+  balance: number;
+  sysadmin: string | null;
+  privilege: string;
+  user_type: "COMPANY" | "PERSON";
+  company_code: number;
+  user_status: string;
+  terms_of_service: "Y" | "N";
+  privacy_policy: "Y" | "N";
+  location_information: "Y" | "N";
+  notification_email: "Y" | "N";
+  user_role: "PARTNER" | "SUBSCRIPTION" | "FREE_USER" | "PARTNER_USER" | "SUBSCRIPT_USER";
+}
+
+// ----------- Components ----------------------------------------------------------------
 export interface IEditItem {
   name: string;
   title: string | string[];
   type:
-    | "label"
-    | "input"
-    | "currency"
-    | "select"
-    | "checked"
-    | "chart"
-    | "password"
-    | "hidden"
-    | "react-select"
-    | "button"
-    | "status_bar";
+  | "label"
+  | "input"
+  | "currency"
+  | "select"
+  | "checked"
+  | "chart"
+  | "password"
+  | "hidden"
+  | "react-select"
+  | "button"
+  | "status_bar";
   defaultValue: string | number;
   placeholder?: string;
   options?:
-    | { title: string | string[]; value: string | number; suffix?: string }[]
-    | null;
+  | { title: string | string[]; value: string | number; suffix?: string }[]
+  | null;
   locale?: string;
   errors?: string[] | null;
   chartData?: { xlabels: string[]; ydata: number[]; maxY: number };
@@ -109,4 +149,10 @@ export interface ISearch {
   query?: string;
   itemsPerPage?: string;
   page?: string;
+}
+
+export interface IColumn {
+  title: string;
+  dataIndex: string;
+  key: string;
 }

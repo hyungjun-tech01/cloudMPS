@@ -200,6 +200,7 @@
     "phone": "전화번호",
     "position": "직급",
     "private_group": "그룹",
+    "search_users": "사용자 아이디, 사용자 이름, 이메일로 검색하세요.",
     "secTitle_account_details": "계정 내역",
     "secTitle_change_password": "비밀번호 변경",
     "secTitle_info": "사용자 정보",
