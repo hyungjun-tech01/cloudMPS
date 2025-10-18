@@ -3,7 +3,7 @@
 // import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { AuthError } from 'next-auth';
-// import { z } from "zod";
+import { z } from "zod";
 
 import { signIn, signOut } from '@/auth';
 import { BASE_PATH, REQ_INIT_ACCOUNT_PATH } from './constants';
@@ -64,10 +64,11 @@ export async function requestInitializeAccount(
             redirect(`/login?user_type=${res.user_type}&init=true`);
         } else {
             console.log(`\t [ Request to initialize accout ] error : ${res.ErrorMessage}`)
+            return res.ErrorMessage;
         }
     } catch (err) {
         console.error(`\t[ requestInitializeAccount ] Error : ${err}`);
-        throw err;
+        return err;
     }
 };
 
@@ -75,7 +76,31 @@ export async function changePassword(
     prevState: string | undefined,
     formData: FormData,
 ) {
-    console.log('changePassword :', formData);
+    const data = {
+        user_id: formData.get('user_id'),
+        user_name: formData.get('user_name'),
+        old_password: formData.get('old_password'),
+        new_password: formData.get('new_password'),
+        ip_address: formData.get('ip_address'),
+    };
+
+    try {
+        const resp = await fetch(`${BASE_PATH}/api/users/change_pass`, {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        const res = await resp.json();
+        if(res.ResultCode === '0') {
+            redirect(`/login?user_type=${res.user_type}&init=true`);
+        } else {
+            console.log(`\t [ Request to initialize accout ] error : ${res.ErrorMessage}`)
+            return res.ErrorMessage;
+        }
+    } catch (err) {
+        console.error(`\t[ requestInitializeAccount ] Error : ${err}`);
+        return err;
+    }
 };
 
 // ----------- Login ----------------------------------------------------------------

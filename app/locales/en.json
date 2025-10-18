@@ -27,6 +27,7 @@
     "register": "Register"
   },
   "login": {
+    "change_password": "Change Password",
     "company_code": "Company Code",
     "company_login": "login for company member",
     "forgot_password": "Forgot Password?",
@@ -34,13 +35,21 @@
     "initialize_Password": "Initialize Password",
     "login": "Login",
     "password": "Password",
+    "password_new": "New Password",
+    "password_new_again": "Check New Password",
+    "password_old": "Old Password",
     "person_login": "login for personal member",
     "placeholder_company_code": "Enter your company code",
     "placeholder_id_code": "Enter your ID(Email adress)",
+    "placeholder_user_name": "Enter your name",
     "placeholder_password": "Enter your password",
+    "placeholder_old_password": "Enter your current password",
+    "placeholder_new_password": "Enter your new password",
+    "placeholder_new_password_again": "Enter your new password again",
     "placeholder_verfication_code": "Enter your received verification code",
     "title": "Login",
     "userId": "User ID",
+    "user_name": "User Name",
     "verification_code": "Verification Code"
   },
   "register": {

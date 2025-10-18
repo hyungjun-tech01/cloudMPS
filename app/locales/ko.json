@@ -27,6 +27,7 @@
     "register": "회원가입"
   },
   "login": {
+    "change_password": "비밀번호 변경",
     "company_code": "기업코드",
     "company_login": "기업회원 로그인",
     "forgot_password": "비밀번호 초기화",
@@ -34,13 +35,21 @@
     "initialize_Password": "비밀번호 초기화",
     "login": "로그인",
     "password": "비밀번호",
+    "password_new": "새 비밀번호",
+    "password_new_again": "새 비밀번호 확인",
+    "password_old": "이전 비밀번호",
     "person_login": "개인회원 로그인",
     "placeholder_company_code": "기업코드를 입력하세요.",
     "placeholder_id_code": "아이디(이메일주소)를 입력하세요",
+    "placeholder_user_name": "사용자 이름을 입력하세요",
     "placeholder_password": "비밀번호를 입력하세요.",
+    "placeholder_old_password": "이전 비밀번호를 입력하세요.",
+    "placeholder_new_password": "새 비밀번호를 입력하세요.",
+    "placeholder_new_password_again": "새 비밀번호를 다시 입력하세요.",
     "placeholder_verfication_code": "전달 받은 인증코드를 입력하세요.",
     "title": "로그인",
     "userId": "사용자 아이디",
+    "user_name": "사용자 이름",
     "verification_code": "인증코드"
   },
   "register": {

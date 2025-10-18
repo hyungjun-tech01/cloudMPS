@@ -1,9 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useState } from "react";
-import Link from "next/link";
 import { requestInitializeAccount } from "@/app/libs/actions";
-import { useSearchParams } from "next/navigation";
 import MaterialIcon from "@/app/components/materialIcon";
 
 
@@ -12,8 +10,6 @@ export default function ForgotForm({
 }: {
   trans: Record<string, string>;
 }) {
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/login&init=true";
   const [errorMessage, formAction, isPending] = useActionState(
     requestInitializeAccount,
     undefined,
@@ -73,7 +69,6 @@ export default function ForgotForm({
             </div>
           </div>
         </div>
-        <input type="hidden" name="redirectTo" value={callbackUrl} />
         <input type="hidden" name="ip_address" value={ipAddress} />
         <button
           type="submit"
