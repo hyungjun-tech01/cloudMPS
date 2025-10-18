@@ -6,7 +6,7 @@ import { AuthError } from 'next-auth';
 import { z } from "zod";
 
 import { signIn, signOut } from '@/auth';
-import { BASE_PATH, REQ_INIT_ACCOUNT_PATH } from './constants';
+import { BASE_PATH, MIN_PASSWORD_LENGTH } from './constants';
 import { LoginData, UserData } from './types';
 
 
@@ -76,6 +76,29 @@ export async function changePassword(
     prevState: string | undefined,
     formData: FormData,
 ) {
+    console.log(formData);
+    const validateData = z.object({
+        user_id: z.string().min(1),
+        user_name: z.email(),
+        old_password: z.string().min(MIN_PASSWORD_LENGTH),
+        new_password: z.string().min(MIN_PASSWORD_LENGTH),
+        new_password_again: z.string().min(MIN_PASSWORD_LENGTH),
+        ip_address: z.ipv4()
+    }).safeParse(formData);
+
+    if(validateData.error) {
+        return {
+            message: "Erros in inputs",
+            errors: validateData.error.issues,
+        }
+    };
+
+    if(formData.get('new_password') !== formData.get('new_password_again')) {
+        return {
+            message: "New Passwords are not the same."
+        };
+    };
+
     const data = {
         user_id: formData.get('user_id'),
         user_name: formData.get('user_name'),

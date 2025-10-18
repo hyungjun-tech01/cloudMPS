@@ -30,6 +30,7 @@
     "change_password": "비밀번호 변경",
     "company_code": "기업코드",
     "company_login": "기업회원 로그인",
+    "error_not_same_password": "새 비밀번호는가 서로 일치하지 않습니다.",
     "forgot_password": "비밀번호 초기화",
     "id": "아이디 (이메일)",
     "initialize_Password": "비밀번호 초기화",

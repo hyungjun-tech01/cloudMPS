@@ -1,19 +1,17 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useActionState } from "react";
 import { changePassword } from "@/app/libs/actions";
 import MaterialIcon from "@/app/components/materialIcon";
 
 interface IChangePassword {
   user_id: string;
-  user_name: string;
   ip_address: string;
   trans: Record<string, string>;
 };
 
 export default function ChangeForm({
   user_id,
-  user_name,
   ip_address,
   trans,
 }: IChangePassword
@@ -42,26 +40,8 @@ export default function ChangeForm({
                 className="peer block w-full rounded-md bg-slate-50 border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
                 id="user_id"
                 type="text"
-                name="user_id"
-                placeholder={trans.placeholder_id_code}
-                required
-              />
-            </div>
-          </div>
-          <div className="mb-4">
-            <label
-              className="mb-3 mt-5 block text-xs font-medium text-gray-900"
-              htmlFor="user_name"
-            >
-              {trans.user_name}
-            </label>
-            <div className="relative">
-              <input
-                className="peer block w-full rounded-md bg-slate-50 border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
-                id="user_name"
-                type="text"
                 name="user_name"
-                placeholder={trans.placeholder_user_name}
+                placeholder={trans.placeholder_id_code}
                 required
               />
             </div>
@@ -78,6 +58,7 @@ export default function ChangeForm({
                 className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
                 id="user_old_password"
                 name="old_password"
+                type="password"
                 placeholder={trans.placeholder_old_password}
                 required
               />
@@ -95,6 +76,7 @@ export default function ChangeForm({
                 className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
                 id="user_new_password"
                 name="new_password"
+                type="password"
                 placeholder={trans.placeholder_new_password}
                 required
               />
@@ -112,6 +94,7 @@ export default function ChangeForm({
                 className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
                 id="user_new_password_again"
                 name="new_password_again"
+                type="password"
                 placeholder={trans.placeholder_new_password_again}
                 required
               />

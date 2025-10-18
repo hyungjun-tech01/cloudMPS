@@ -24,13 +24,8 @@ export default async function ForgotPasswordPage(props: {
   const searchParams = await props.searchParams;
   const locale = (await props.params).locale;
   const session = await auth();
-  // if(!session?.user.name) {
-  //   redirect('/login');
-  // };
-  const temData = {
-    user_id: session?.user.id ?? 'test',
-    user_name: session?.user.name ?? "test",
-    ip_address: session?.user.ip_address ?? "127.0.0.1",
+  if(!session?.user.name) {
+    redirect('/login');
   };
 
   const trans = await getDictionary(locale);
@@ -48,9 +43,8 @@ export default async function ForgotPasswordPage(props: {
         </div>
         <Suspense>
           <ChangeForm
-            user_id={temData.user_id}
-            user_name={temData.user_name}
-            ip_address={temData.ip_address}
+            user_id={session.user.id}
+            ip_address={session.user.ip_address}
             trans={someTrans}
           />
         </Suspense>
