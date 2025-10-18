@@ -12,6 +12,7 @@
     "previous": "이전",
     "language": "언어",
     "search": "찾기",
+    "submit": "제출하기",
     "time_zone": "시간대"
   },
   "home": {
@@ -28,7 +29,9 @@
   "login": {
     "company_code": "기업코드",
     "company_login": "기업회원 로그인",
+    "forgot_password": "비밀번호 초기화",
     "id": "아이디 (이메일)",
+    "initialize_Password": "비밀번호 초기화",
     "login": "로그인",
     "password": "비밀번호",
     "person_login": "개인회원 로그인",

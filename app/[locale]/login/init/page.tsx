@@ -1,11 +1,11 @@
 import { Suspense } from 'react';
-import LoginForm from '@/app/components/login/login-form';
+import ForgotForm from '@/app/components/login/forgot-form';
 import getDictionary from '@/app/libs/dictionaries';
 import type { Metadata } from "next";
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Login',
+  title: 'Forgot Password',
 }
 
 interface ILogin {
@@ -13,15 +13,15 @@ interface ILogin {
   init?: boolean;
 }
 
-export default async function LoginPage(props: {
+export default async function ForgotPasswordPage(props: {
   searchParams?: Promise<ILogin>;
   params: Promise<{ locale: "ko" | "en" }>;
 }) {
   const searchParams = await props.searchParams;
-  const userType = searchParams?.userType || "company";
-  const isInit = searchParams?.init || false;
   const locale = (await props.params).locale;
   const trans = await getDictionary(locale);
+
+  const someTrans = {...trans.common, ...trans.login, ...trans.user}
 
   return (
     <main className="flex items-center justify-center md:h-screen">
@@ -34,7 +34,7 @@ export default async function LoginPage(props: {
           </Link>
         </div>
         <Suspense>
-          <LoginForm userType={userType} isInit={isInit} trans={trans.login}/>
+          <ForgotForm trans={someTrans}/>
         </Suspense>
       </div>
     </main>

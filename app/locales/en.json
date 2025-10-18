@@ -12,6 +12,7 @@
     "previous": "Previous",
     "language": "Language",
     "search": "Search",
+    "submit": "Submit",
     "time_zone": "Time Zone"
   },
   "home": {
@@ -28,7 +29,9 @@
   "login": {
     "company_code": "Company Code",
     "company_login": "login for company member",
+    "forgot_password": "Forgot Password?",
     "id": "ID (Email)",
+    "initialize_Password": "Initialize Password",
     "login": "Login",
     "password": "Password",
     "person_login": "login for personal member",

@@ -207,3 +207,5 @@ export const SideMenuList : {
 };
 
 export const BASE_PATH = "http://localhost:38005";
+
+export const REQ_INIT_ACCOUNT_PATH = "/login/init";

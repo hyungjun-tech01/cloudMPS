@@ -1,12 +1,12 @@
 'use server';
 
 // import { revalidatePath } from "next/cache";
-// import { redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { AuthError } from 'next-auth';
 // import { z } from "zod";
 
 import { signIn, signOut } from '@/auth';
-import { BASE_PATH } from './constants';
+import { BASE_PATH, REQ_INIT_ACCOUNT_PATH } from './constants';
 import { LoginData, UserData } from './types';
 
 
@@ -32,6 +32,50 @@ export async function authenticate(
         }
         throw error;
     }
+};
+
+export type ReqInitAccountState = {
+  errors?: {
+    userEmail?: string[];
+    userFullName?: string[];
+  };
+  message?: string | null;
+};
+
+export async function requestInitializeAccount(
+    prevState: string | undefined,
+    formData: FormData,
+) {
+    console.log('requestInitializeAccount :', formData);
+    const data = {
+        user_email: formData.get('user_email'),
+        user_full_name: formData.get('user_full_name'),
+        ip_address: formData.get('ip_address'),
+    };
+
+    try {
+        const resp = await fetch(`${BASE_PATH}/api/users/init_account`, {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        const res = await resp.json();
+        if(res.ResultCode === '0') {
+            redirect(`/login?user_type=${res.user_type}&init=true`);
+        } else {
+            console.log(`\t [ Request to initialize accout ] error : ${res.ErrorMessage}`)
+        }
+    } catch (err) {
+        console.error(`\t[ requestInitializeAccount ] Error : ${err}`);
+        throw err;
+    }
+};
+
+export async function changePassword(
+    prevState: string | undefined,
+    formData: FormData,
+) {
+    console.log('changePassword :', formData);
 };
 
 // ----------- Login ----------------------------------------------------------------
