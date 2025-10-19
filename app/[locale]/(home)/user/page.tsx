@@ -43,8 +43,8 @@ export default async function Page(props: {
         items_per_page: itemsPerPage,
         current_page: currentPage,
         user_name: userName,
-        company_code: session.user.company_code,
-        ip_address: session.user.ip_address,
+        company_code: session.user.companyCode,
+        ip_address: session.user.ipAddress,
     }
 
     const [trans, userListResult] = await Promise.all([

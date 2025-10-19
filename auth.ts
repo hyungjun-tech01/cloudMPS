@@ -7,11 +7,12 @@ import { LoginData, LoginResultData } from "@/app/libs/types";
 interface UserType {
     id: string;
     name: string;
-    full_name: string;
+    fullName: string;
     email: string;
     role: string;
-    company_code?: number;
-    ip_address: string;
+    companyCode?: number;
+    ipAddress: string;
+    authType?: "USER_SIGN_UP" | "USER_TEMP_PASS";
     token?: string;
   }
 
@@ -23,10 +24,11 @@ declare module "next-auth" {
       id: string;
       name: string;
       email: string;
-      full_name?: string;
+      fullName?: string;
       role?: string;
-      company_code?: number;
-      ip_address: string;
+      companyCode?: number;
+      ipAddress: string;
+      authType?: "USER_SIGN_UP" | "USER_TEMP_PASS";
       token: string;
     } & DefaultSession["user"];
   }
@@ -77,13 +79,14 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           }
 
           return {
+            authType: loginResult.authType || "USER_SIGN_UP",
             id: userInfoResult.user.user_id,
             name: userInfoResult.user.user_name,
-            full_name: userInfoResult.user.full_name,
+            fullName: userInfoResult.user.full_name,
             email: userInfoResult.user.email,
             role: userInfoResult.user.user_role,
-            company_code: company_code,
-            ip_address: ip_address,
+            companyCode: company_code,
+            ipAddress: ip_address,
             token: loginResult.token,
           } as UserType;
         }
@@ -123,7 +126,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       if (userMenu) {
         if (isAdmin) return true;
         return Response.redirect(new URL("/", nextUrl));
-      }
+      };
+
       if (groupMenu) {
         if (editMenu) {
           if (isAdmin) return true;
@@ -132,7 +136,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           if (isAdmin || isManager) return true;
           return Response.redirect(new URL("/", nextUrl));
         }
-      }
+      };
 
       return true;
     },
@@ -141,9 +145,10 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         token.id = user.id;
         token.name = user.name;
         token.role = user.role;
-        token.full_name = user.full_name;
-        token.company_code = user.company_code;
-        token.ip_address = user.ip_address;
+        token.fullName = user.fullName;
+        token.companyCode = user.companyCode;
+        token.ipAddress = user.ipAddress;
+        token.authType = user.authType;
         token.token = user.token;
       }
       return token;
@@ -153,9 +158,10 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         session.user.id = token.id as string;
         session.user.name = token.name as string;
         session.user.role = token.role as string;
-        session.user.full_name = token.full_name as string;
-        session.user.company_code = token.company_code as number | undefined;
-        session.user.ip_address = token.ip_address as string;
+        session.user.fullName = token.fullName as string;
+        session.user.companyCode = token.companyCode as number | undefined;
+        session.user.ipAddress = token.ipAddress as string;
+        session.user.authType = token.authType as "USER_SIGN_UP" | "USER_TEMP_PASS" | undefined;
         session.user.token = token.token as string;
       }
       return session;

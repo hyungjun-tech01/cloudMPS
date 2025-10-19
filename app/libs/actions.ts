@@ -90,7 +90,7 @@ export async function changePassword(
     prevState: string | undefined,
     formData: FormData,
 ) {
-    console.log('changePassword :', formData);
+    // console.log('changePassword :', formData);
     const validateData = z.object({
         userName: z.email(),
         oldPassword: z.string().min(MIN_PASSWORD_LENGTH),
@@ -104,12 +104,12 @@ export async function changePassword(
         newPasswordAgain: formData.get('newPasswordAgain')
     });
 
-    console.log('changePassword :', validateData);
+    // console.log('changePassword :', validateData);
     if(validateData.error) {
         const tree = z.treeifyError(validateData.error);
         return {
-        errors: tree.properties,
-        message: "Erros in inputs",
+            errors: tree.properties,
+            message: "Erros in inputs",
         };
     };
 
@@ -150,7 +150,6 @@ export async function changePassword(
     const userType = formData.get('userType') || "company";
     if(result.ResultCode === '0') {
         const tempPath = `/login?userType=${userType}`;
-        console.log('[ requestInitializeAccount ] path', tempPath);
         revalidatePath(tempPath);
         redirect(tempPath);
     } else {
@@ -179,7 +178,7 @@ export async function login(data: LoginData) {
         password: data.password,
         company_code: data.company_code,
         ip_address: checkIP,
-    }
+    };
         
     try {
         const resp = await fetch(apiAddr, {

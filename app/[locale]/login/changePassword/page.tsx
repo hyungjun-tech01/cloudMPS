@@ -9,14 +9,14 @@ import ChangeForm from '@/app/components/login/change-form';
 
 
 export const metadata: Metadata = {
-  title: 'Forgot Password',
-}
+  title: 'Change Password',
+};
 
 interface IChangePassword {
   userType?: "company" | "person";
 }
 
-export default async function ForgotPasswordPage(props: {
+export default async function ChangePasswordPage(props: {
   searchParams?: Promise<IChangePassword>;
   params: Promise<{ locale: "ko" | "en" }>;
 }) {
@@ -24,6 +24,7 @@ export default async function ForgotPasswordPage(props: {
   const userType = searchParams?.userType || "company";
   const locale = (await props.params).locale;
   const session = await auth();
+
   if(!session?.user.name) {
     redirect('/login');
   };
@@ -45,7 +46,7 @@ export default async function ForgotPasswordPage(props: {
           <ChangeForm
             userId={session.user.id}
             userType={userType}
-            ipAddress={session.user.ip_address}
+            ipAddress={session.user.ipAddress}
             token={session.user.token}
             trans={someTrans}
           />

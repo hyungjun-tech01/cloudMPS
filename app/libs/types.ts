@@ -11,6 +11,7 @@ export interface LoginData {
 export interface LoginResultData {
   ResultCode: string | number;
   ErrorMessage: string;
+  authType?: "USER_SIGN_UP" | "USER_TEMP_PASS";
   token: string;
 }
 

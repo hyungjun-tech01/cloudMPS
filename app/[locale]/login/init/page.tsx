@@ -8,10 +8,6 @@ export const metadata: Metadata = {
   title: 'Forgot Password',
 }
 
-interface ILogin {
-  userType?: "company" | "person";
-  init?: boolean;
-}
 
 export default async function ForgotPasswordPage(props: {
   params: Promise<{ locale: "ko" | "en" }>;

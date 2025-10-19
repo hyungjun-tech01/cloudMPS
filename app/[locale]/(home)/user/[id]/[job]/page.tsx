@@ -46,7 +46,7 @@ export default async function Page(props: {
                 title: trans.user.secTitle_details, description: trans.user.description_edit_details,
                 items: [
                     { name: 'userName', title: 'ID', type: 'label', defaultValue: userName },
-                    { name: 'userFullName', title: trans.user.full_name, type: 'input', defaultValue: session.user.full_name, placeholder: trans.user.placeholder_full_name },
+                    { name: 'userFullName', title: trans.user.full_name, type: 'input', defaultValue: session.user.fullName, placeholder: trans.user.placeholder_full_name },
                 ]
             },
             {
@@ -72,7 +72,7 @@ export default async function Page(props: {
                 breadcrumbs={[
                     { label: trans.user.user, href: '/user' },
                     {
-                        label: `${trans.user.edit_user} : ${session.user.full_name}(${userName})`,
+                        label: `${trans.user.edit_user} : ${session.user.fullName}(${userName})`,
                         href: `/user/${id}/${job}`,
                         active: true,
                     },
