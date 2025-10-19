@@ -199,34 +199,6 @@ export default function RegisterForm({
     prevState: void | RegisterPersonalUserState | RegisterCompanyUserState,
     formData: FormData
   ) => {
-    //-----TEST : Start --------------------------------------
-    // const tempTest = {
-    //   "user_type": "COMPANY",
-    //   "company_type": "GENERAL",
-    //   "company_name": "(주)형성",
-    //   "business_registration_code": "111-1111111-11111-11",
-    //   "company_code": null,
-    //   "deal_company_code": "",
-    //   "ceo_name": "최형성",
-    //   "language": "ko",
-    //   "time_zone": "Asia/Seoul",
-    //   "currency_code": "KRW",
-    //   "country": "KR",
-    //   "terms_of_service": "Y",
-    //   "privacy_policy": "Y",
-    //   "location_information": "Y",
-    //   "notification_email": "N",
-    //   "full_name": "최형성",
-    //   "e_mail_adress": "newtons2002@gmail.com",
-    //   "password": "test",
-    //   "ip_address": "127.0.0.1"
-    // };
-
-    // const tempResult = await register(tempTest);
-    // console.log("tempResult :", tempResult);
-    // return;
-    //-----TEST : End ----------------------------------------
-
     let validatedFields = null;
     if (userType === "company") {
       validatedFields = CompanyUserFormSchema.safeParse({

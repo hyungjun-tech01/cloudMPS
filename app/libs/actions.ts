@@ -1,6 +1,6 @@
 'use server';
 
-// import { revalidatePath } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { AuthError } from 'next-auth';
 import { z } from "zod";
@@ -46,29 +46,33 @@ export async function requestInitializeAccount(
     prevState: string | undefined,
     formData: FormData,
 ) {
-    console.log('requestInitializeAccount :', formData);
+    console.log('[requestInitializeAccount] formData :', formData);
     const data = {
-        user_email: formData.get('user_email'),
-        user_full_name: formData.get('user_full_name'),
-        ip_address: formData.get('ip_address'),
+        e_mail_address: formData.get('user_email'),
+        full_name: formData.get('user_full_name'),
     };
 
+    let result = null;
+
     try {
-        const resp = await fetch(`${BASE_PATH}/api/users/init_account`, {
+        const resp = await fetch(`${BASE_PATH}/api/users/forgot_pass`, {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
-        const res = await resp.json();
-        if(res.ResultCode === '0') {
-            redirect(`/login?user_type=${res.user_type}&init=true`);
-        } else {
-            console.log(`\t [ Request to initialize accout ] error : ${res.ErrorMessage}`)
-            return res.ErrorMessage;
-        }
+        result = await resp.json();
     } catch (err) {
         console.error(`\t[ requestInitializeAccount ] Error : ${err}`);
         return err;
+    }
+
+    if(result.ResultCode === '0') {
+        const redirectPath = `/login/info?userType=${result.user_type.toLowerCase()}`;
+        revalidatePath(redirectPath);
+        redirect(redirectPath);
+    } else {
+        console.log(`\t [ Request to initialize accout ] error : ${result.ErrorMessage}`)
+        return result.ErrorMessage;
     }
 };
 

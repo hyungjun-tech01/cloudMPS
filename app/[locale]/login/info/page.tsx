@@ -1,29 +1,26 @@
-import { Suspense } from 'react';
-import LoginForm from '@/app/components/login/login-form';
 import getDictionary from '@/app/libs/dictionaries';
 import type { Metadata } from "next";
 import Link from 'next/link';
 
 
 export const metadata: Metadata = {
-  title: 'Login',
+  title: 'Information',
 }
 
-interface ILogin {
+interface IInfo {
   userType?: "company" | "person";
-  init?: boolean;
 }
 
-
-export default async function LoginPage(props: {
-  searchParams?: Promise<ILogin>;
+export default async function ForgotPasswordPage(props: {
+  searchParams?: Promise<IInfo>;
   params: Promise<{ locale: "ko" | "en" }>;
 }) {
   const searchParams = await props.searchParams;
   const userType = searchParams?.userType || "company";
-  const isInit = searchParams?.init || false;
   const locale = (await props.params).locale;
   const trans = await getDictionary(locale);
+
+  const someTrans = {...trans.common, ...trans.login, ...trans.user};
 
   return (
     <main className="flex items-center justify-center md:h-screen">
@@ -35,9 +32,21 @@ export default async function LoginPage(props: {
             {'Cloud MPS'}
           </Link>
         </div>
-        <Suspense>
-          <LoginForm userType={userType} isInit={isInit} trans={trans.login}/>
-        </Suspense>
+          <div className="p-8 flex justify-center items-center text-2xl">
+            {trans.login.initialize_Password_done}
+          </div>
+          <div className="pt-8 pb-1 flex justify-center items-center text-xl text-slate-500">
+            {trans.login.completed_1}
+          </div>
+          <div className="pt-1 pb-8 flex justify-center items-center text-xl text-slate-500">
+            {trans.login.completed_2}
+          </div>
+          <Link
+            href={`/login?userType=${userType}&init=true`}
+            className="p-8 flex justify-center items-center text-blue-500"
+          >
+            {trans.login.login}
+          </Link>
       </div>
     </main>
   );
