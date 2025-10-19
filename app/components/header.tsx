@@ -14,7 +14,7 @@ interface IHeader {
 
 export default function Header({ extendSideNav }: IHeader) {
     const session = useSession();
-    const userFullName = session?.data?.user.full_name ?? "Unknown";
+    const userFullName = session?.data?.user.fullName ?? "Unknown";
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const isMenuOpen = Boolean(anchorEl);
