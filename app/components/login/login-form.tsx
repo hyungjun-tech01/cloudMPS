@@ -150,7 +150,7 @@ export default function LoginForm({
           }
         </div>
         <input type="hidden" name="redirectTo" value={callbackUrl} />
-        <input type="hidden" name="ip_address" value={ipAddress} />
+        <input type="hidden" name="ip_address" value={ipAddress ===  "::1" ? "127.0.0.1" : ipAddress} />
         <input type="hidden" name="is_init" value={isInit ? "Y" : "N"} />
         <button
           type="submit"

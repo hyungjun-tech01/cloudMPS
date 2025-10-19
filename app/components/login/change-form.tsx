@@ -4,17 +4,21 @@ import { useActionState } from "react";
 import { changePassword } from "@/app/libs/actions";
 import MaterialIcon from "@/app/components/materialIcon";
 
-interface IChangePassword {
-  user_id: string;
-  ip_address: string;
+interface IChangePasswordForm {
+  userId: string;
+  userType: "company" | "person";
+  ipAddress: string;
+  token: string;
   trans: Record<string, string>;
 };
 
 export default function ChangeForm({
-  user_id,
-  ip_address,
+  userId,
+  userType,
+  ipAddress,
+  token,
   trans,
-}: IChangePassword
+}: IChangePasswordForm
 ) {
   const [errorMessage, formAction, isPending] = useActionState(
     changePassword,
@@ -40,7 +44,7 @@ export default function ChangeForm({
                 className="peer block w-full rounded-md bg-slate-50 border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
                 id="user_id"
                 type="text"
-                name="user_name"
+                name="userName"
                 placeholder={trans.placeholder_id_code}
                 required
               />
@@ -57,7 +61,7 @@ export default function ChangeForm({
               <input
                 className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
                 id="user_old_password"
-                name="old_password"
+                name="oldPassword"
                 type="password"
                 placeholder={trans.placeholder_old_password}
                 required
@@ -75,7 +79,7 @@ export default function ChangeForm({
               <input
                 className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
                 id="user_new_password"
-                name="new_password"
+                name="newPassword"
                 type="password"
                 placeholder={trans.placeholder_new_password}
                 required
@@ -93,7 +97,7 @@ export default function ChangeForm({
               <input
                 className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
                 id="user_new_password_again"
-                name="new_password_again"
+                name="newPasswordAgain"
                 type="password"
                 placeholder={trans.placeholder_new_password_again}
                 required
@@ -101,8 +105,10 @@ export default function ChangeForm({
             </div>
           </div>
         </div>
-        <input type="hidden" name="user_id" value={user_id} />
-        <input type="hidden" name="ip_address" value={ip_address} />
+        <input type="hidden" name="userId" value={userId} />
+        <input type="hidden" name="ipAddress" value={ipAddress} />
+        <input type="hidden" name="ipAddress" value={userType} />
+        <input type="hidden" name="token" value={token} />
         <button
           type="submit"
           className="mt-8 w-full bg-slate-500 text-white px-3 py-0.5 rounded-sm flex justify-center items-center cusor-pointer"

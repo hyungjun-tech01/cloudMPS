@@ -76,57 +76,86 @@ export async function requestInitializeAccount(
     }
 };
 
+export type ChangePasswordState = {
+  errors?: {
+    userName?: string[];
+    oldPassword?: string[];
+    newPassword?: string[];
+    newPasswordAgain?: string[];
+  };
+  message?: string | null;
+};
+
 export async function changePassword(
     prevState: string | undefined,
     formData: FormData,
 ) {
-    console.log(formData);
+    console.log('changePassword :', formData);
     const validateData = z.object({
-        user_id: z.string().min(1),
-        user_name: z.email(),
-        old_password: z.string().min(MIN_PASSWORD_LENGTH),
-        new_password: z.string().min(MIN_PASSWORD_LENGTH),
-        new_password_again: z.string().min(MIN_PASSWORD_LENGTH),
-        ip_address: z.ipv4()
-    }).safeParse(formData);
+        userName: z.email(),
+        oldPassword: z.string().min(MIN_PASSWORD_LENGTH),
+        newPassword: z.string().min(MIN_PASSWORD_LENGTH),
+        newPasswordAgain: z.string().min(MIN_PASSWORD_LENGTH),
+        // ip_address: z.ipv4()
+    }).safeParse({
+        userName: formData.get('userName'),
+        oldPassword: formData.get('oldPassword'),
+        newPassword: formData.get('newPassword'),
+        newPasswordAgain: formData.get('newPasswordAgain')
+    });
 
+    console.log('changePassword :', validateData);
     if(validateData.error) {
+        const tree = z.treeifyError(validateData.error);
         return {
-            message: "Erros in inputs",
-            errors: validateData.error.issues,
-        }
+        errors: tree.properties,
+        message: "Erros in inputs",
+        };
     };
 
-    if(formData.get('new_password') !== formData.get('new_password_again')) {
+    if(formData.get('newPassword') !== formData.get('newPasswordAgain')) {
         return {
             message: "New Passwords are not the same."
         };
     };
 
+    const checkIP = formData.get('ipAddress') === "::1" ? "127.0.0.1" : formData.get('ipAddress');
+    const checkToken = formData.get('token') ?? "";
+
     const data = {
-        user_id: formData.get('user_id'),
-        user_name: formData.get('user_name'),
-        old_password: formData.get('old_password'),
-        new_password: formData.get('new_password'),
-        ip_address: formData.get('ip_address'),
+        user_id: formData.get('userId'),
+        user_name: formData.get('userName'),
+        old_password: formData.get('oldPassword'),
+        new_password: formData.get('newPassword'),
+        ip_address: checkIP,
     };
+
+    let result = null;
 
     try {
         const resp = await fetch(`${BASE_PATH}/api/users/change_pass`, {
             method: "POST",
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json',
+                'session_token': checkToken as string
+            },
             body: JSON.stringify(data)
         });
-        const res = await resp.json();
-        if(res.ResultCode === '0') {
-            redirect(`/login?user_type=${res.user_type}&init=true`);
-        } else {
-            console.log(`\t [ Request to initialize accout ] error : ${res.ErrorMessage}`)
-            return res.ErrorMessage;
-        }
+        result = await resp.json();
     } catch (err) {
         console.error(`\t[ requestInitializeAccount ] Error : ${err}`);
         return err;
+    };
+
+    // console.log('changePassword :', result);
+    const userType = formData.get('userType') || "company";
+    if(result.ResultCode === '0') {
+        const tempPath = `/login?userType=${userType}`;
+        console.log('[ requestInitializeAccount ] path', tempPath);
+        revalidatePath(tempPath);
+        redirect(tempPath);
+    } else {
+        console.log(`\t [ Request to initialize accout ] error : ${result.ErrorMessage}`)
+        return result.ErrorMessage;
     }
 };
 
@@ -173,7 +202,7 @@ export async function getUserInfo(userName: string, ipAddr:string, token: string
             method: "POST",
             headers: { 'Content-Type': 'application/json',
                 'session_token': token
-             },
+            },
             body: JSON.stringify({user_name: userName, ip_address: ipAddr}),
         });
         return resp.json();

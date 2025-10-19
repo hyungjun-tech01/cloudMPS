@@ -12,16 +12,16 @@ export const metadata: Metadata = {
   title: 'Forgot Password',
 }
 
-interface ILogin {
+interface IChangePassword {
   userType?: "company" | "person";
-  init?: boolean;
 }
 
 export default async function ForgotPasswordPage(props: {
-  searchParams?: Promise<ILogin>;
+  searchParams?: Promise<IChangePassword>;
   params: Promise<{ locale: "ko" | "en" }>;
 }) {
   const searchParams = await props.searchParams;
+  const userType = searchParams?.userType || "company";
   const locale = (await props.params).locale;
   const session = await auth();
   if(!session?.user.name) {
@@ -43,8 +43,10 @@ export default async function ForgotPasswordPage(props: {
         </div>
         <Suspense>
           <ChangeForm
-            user_id={session.user.id}
-            ip_address={session.user.ip_address}
+            userId={session.user.id}
+            userType={userType}
+            ipAddress={session.user.ip_address}
+            token={session.user.token}
             trans={someTrans}
           />
         </Suspense>
