@@ -13,23 +13,17 @@ export default function NavLinks({ extended }: { extended: boolean }) {
   const category = splittedPathname[1] === "" ? 'home' : splittedPathname[1];
   const { data: session } = useSession();
   const userRole = session?.user?.role ?? "FREE_USER";
-  const menuList = [];
+  let menuList = [];
 
   // console.log('Path:', pathname);
   console.log('User Role:', userRole);
 
   if(userRole === 'admin') {
-    menuList.push('home');
-    menuList.push('user');
-    menuList.push('device');
-    menuList.push('analysis');
+    menuList = ['home', 'user', 'device', 'analysis'];
   } else if(userRole === 'SUBSCRIPTION') {
-    menuList.push('home');
-    menuList.push('user');
-    menuList.push('device');
+    menuList = ['home', 'user', 'device'];
   } else {
-    menuList.push('home');
-    menuList.push('device');
+    menuList = ['home', 'device'];
   }
 
   return (

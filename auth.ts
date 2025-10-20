@@ -3,6 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import { z } from "zod";
 import { login, getUserInfo } from "@/app/libs/actions";
 import { LoginData, LoginResultData } from "@/app/libs/types";
+import { request } from "http";
 
 interface UserType {
     id: string;
@@ -12,7 +13,6 @@ interface UserType {
     role: string;
     companyCode?: number;
     ipAddress: string;
-    authType?: "USER_SIGN_UP" | "USER_TEMP_PASS";
     token?: string;
   }
 
@@ -28,7 +28,6 @@ declare module "next-auth" {
       role?: string;
       companyCode?: number;
       ipAddress: string;
-      authType?: "USER_SIGN_UP" | "USER_TEMP_PASS";
       token: string;
     } & DefaultSession["user"];
   }
@@ -98,7 +97,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   ],
   callbacks: {
     authorized: ({ auth, request: { nextUrl } }) => {
-      console.log("authorized called");
+      // console.log("authorized called : ", request);
       // check login --------------------------------------------
       const isLoggedIn = !!auth?.user;
       const isOnIntro = nextUrl.pathname.startsWith("/intro");
@@ -148,7 +147,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         token.fullName = user.fullName;
         token.companyCode = user.companyCode;
         token.ipAddress = user.ipAddress;
-        token.authType = user.authType;
         token.token = user.token;
       }
       return token;
@@ -161,7 +159,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         session.user.fullName = token.fullName as string;
         session.user.companyCode = token.companyCode as number | undefined;
         session.user.ipAddress = token.ipAddress as string;
-        session.user.authType = token.authType as "USER_SIGN_UP" | "USER_TEMP_PASS" | undefined;
         session.user.token = token.token as string;
       }
       return session;

@@ -42,7 +42,7 @@ export default async function ForgotPasswordPage(props: {
             {trans.login.completed_2}
           </div>
           <Link
-            href={`/login?userType=${userType}&init=true`}
+            href={`/login?userType=${userType}&init=true&callbackUrl=/login/changePassword`}
             className="p-8 flex justify-center items-center text-blue-500"
           >
             {trans.login.login}

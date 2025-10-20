@@ -19,12 +19,12 @@ export function UpdateButton({ link, disabled }: { link: string, disabled?: bool
   return (
     <Link
       href={disabled ? "" : link}
-      className={clsx("rounded-md border p-2",
+      className={clsx("rounded-md px-1 pt-1 border",
         { "text-gray-200 cursor-default": disabled },
         { "hover:bg-gray-100": !disabled },
       )}
     >
-      <MaterialIcon name="edit" props="w-5" />
+      <MaterialIcon name="edit" props="w-6" />
     </Link>
   );
 }

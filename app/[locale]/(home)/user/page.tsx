@@ -45,14 +45,14 @@ export default async function Page(props: {
         user_name: userName,
         company_code: session.user.companyCode,
         ip_address: session.user.ipAddress,
-    }
+    };
 
     const [trans, userListResult] = await Promise.all([
         getDictionary(locale),
         fetchData("/api/users/getuserlist", searchData, session.user.token),
     ]);
 
-    console.log("users :", userListResult);
+    // console.log("users :", userListResult);
     const {ResultCode, totalPages, users} = userListResult;
 
     const handleMenuOpen = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -71,6 +71,11 @@ export default async function Page(props: {
             key: 'full_name',
         },
         {
+            title: trans.common.status,
+            dataIndex: 'user_status',
+            key: 'user_status',
+        },
+        {
             title: "",
             dataIndex: 'actions',
             key: 'actions',
@@ -82,14 +87,14 @@ export default async function Page(props: {
             user_name: user.user_name,
             full_name: user.full_name,
             actions: 
-                <div className='flex justify-center items-center gap-2' key={user.user_id}>
+                <div key={user.user_id} className='flex justify-center items-center gap-2'>
                     <UpdateButton link={`/user/${user.user_id}/edit`} />
                     <button
-                        className="rounded-md border p-2 hover:bg-gray-100"
+                        className="rounded-md px-1 pt-1 border hover:bg-gray-100"
                         // onClick={handleMenuOpen}
                     >
                         <span className="sr-only">{trans.common.delete}</span>
-                        <MaterialIcon name='delete' props="w-5 text-inherit" />
+                        <MaterialIcon name='delete' props="w-6 text-inherit" />
                     </button>
                 </div>
         }
@@ -99,7 +104,6 @@ export default async function Page(props: {
         modify : modifyUser,
         delete : deleteUser,
     }
-
 
     return (
         <div className="w-full">

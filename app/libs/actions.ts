@@ -46,7 +46,7 @@ export async function requestInitializeAccount(
     prevState: string | undefined,
     formData: FormData,
 ) {
-    console.log('[requestInitializeAccount] formData :', formData);
+    // console.log('[requestInitializeAccount] formData :', formData);
     const data = {
         e_mail_address: formData.get('user_email'),
         full_name: formData.get('user_full_name'),
