@@ -48,6 +48,7 @@ export default async function ChangePasswordPage(props: {
             userType={userType}
             ipAddress={session.user.ipAddress}
             token={session.user.token}
+            locale={locale}
             trans={someTrans}
           />
         </Suspense>

@@ -19,15 +19,27 @@ export async function authenticate(
     formData: FormData,
 ) {
     // console.log('authenticate :', formData);
+    const resObj : { ko: Record<string, string>, en: Record<string, string> } = {
+        ko: {
+            CredentialsSignin: "ID와 비밀번호가 일치하지 않습니다.",
+            default: "알 수 없는 오류가 발생하였습니다."
+        },
+        en: {
+            CredentialsSignin: "IncorInvalid credentials.",
+            default: "Something went wrong.",
+        }
+    };
+    const locale = formData.get('locale') || "ko";
+
     try {
         await signIn('credentials', formData);
     } catch (error) {
         if (error instanceof AuthError) {
             switch (error.type) {
                 case 'CredentialsSignin':
-                    return 'Invalid credentials.';
+                    return resObj[locale as keyof typeof resObj].CredentialsSignin;
                 default:
-                    return 'Something went wrong.';
+                    return resObj[locale as keyof typeof resObj].default;
             }
         }
         throw error;
@@ -91,6 +103,21 @@ export async function changePassword(
     formData: FormData,
 ) {
     // console.log('changePassword :', formData);
+    const resObj = {
+        ko: {
+            error_in_input: "입력 값에 오류가 있습니다.",
+            error_occurrs: "다음과 같은 오류가 발생했습니다.\n- ",
+            new_passwords_not_same: "새 비밀번호가 서로 일치하지 않습니다.",
+        },
+        en: {
+            error_in_input: "Erros in inputs",
+            error_occurrs: "Error occurs like the following\n- ",
+            new_passwords_not_same: "New passwords are not the same.",
+        }
+    };
+
+    const locale = formData.get('locale') || "ko";
+
     const validateData = z.object({
         userName: z.email(),
         oldPassword: z.string().min(MIN_PASSWORD_LENGTH),
@@ -109,13 +136,13 @@ export async function changePassword(
         const tree = z.treeifyError(validateData.error);
         return {
             errors: tree.properties,
-            message: "Erros in inputs",
+            message: resObj[locale as keyof typeof resObj].error_in_input,
         };
     };
 
     if(formData.get('newPassword') !== formData.get('newPasswordAgain')) {
         return {
-            message: "New Passwords are not the same."
+            message: resObj[locale as keyof typeof resObj].new_passwords_not_same,
         };
     };
 
@@ -147,14 +174,13 @@ export async function changePassword(
     };
 
     // console.log('changePassword :', result);
-    const userType = formData.get('userType') || "company";
     if(result.ResultCode === '0') {
-        const tempPath = `/login?userType=${userType}`;
+        const tempPath = "/";
         revalidatePath(tempPath);
         redirect(tempPath);
     } else {
         console.log(`\t [ Request to initialize accout ] error : ${result.ErrorMessage}`)
-        return result.ErrorMessage;
+        return resObj[locale as keyof typeof resObj].error_occurrs + result.ErrorMessage;
     }
 };
 

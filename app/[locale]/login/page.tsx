@@ -36,7 +36,7 @@ export default async function LoginPage(props: {
           </Link>
         </div>
         <Suspense>
-          <LoginForm userType={userType} isInit={isInit} trans={trans.login}/>
+          <LoginForm userType={userType} isInit={isInit} locale={locale} trans={trans.login}/>
         </Suspense>
       </div>
     </main>

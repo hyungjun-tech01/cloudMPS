@@ -8,14 +8,15 @@ interface IChangePasswordForm {
   userId: string;
   userType: "company" | "person";
   ipAddress: string;
+  locale: "ko" | "en";
   token: string;
   trans: Record<string, string>;
 };
 
 export default function ChangeForm({
   userId,
-  userType,
   ipAddress,
+  locale,
   token,
   trans,
 }: IChangePasswordForm
@@ -107,7 +108,7 @@ export default function ChangeForm({
         </div>
         <input type="hidden" name="userId" value={userId} />
         <input type="hidden" name="ipAddress" value={ipAddress} />
-        <input type="hidden" name="ipAddress" value={userType} />
+        <input type="hidden" name="locale" value={locale} />
         <input type="hidden" name="token" value={token} />
         <button
           type="submit"

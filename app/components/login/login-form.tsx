@@ -11,10 +11,12 @@ import MaterialIcon from "@/app/components/materialIcon";
 export default function LoginForm({
   userType,
   isInit,
+  locale,
   trans,
 }: {
   userType: "company" | "person";
   isInit: boolean;
+  locale: "ko" | "en";
   trans: Record<string, string>;
 }) {
   const searchParams = useSearchParams();
@@ -152,6 +154,7 @@ export default function LoginForm({
         <input type="hidden" name="redirectTo" value={callbackUrl} />
         <input type="hidden" name="ip_address" value={ipAddress ===  "::1" ? "127.0.0.1" : ipAddress} />
         <input type="hidden" name="is_init" value={isInit ? "Y" : "N"} />
+        <input type="hidden" name="locale" value={locale} />
         <button
           type="submit"
           className="mt-8 w-full bg-slate-500 text-white px-3 py-0.5 rounded-sm flex justify-center items-center cursor-pointer"
