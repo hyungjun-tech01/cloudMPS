@@ -32,11 +32,6 @@ export default async function Page(props: {
     redirect('/intro');
   };
   
-  if(session.user.authType === "USER_TEMP_PASS") {
-    session.user.authType = "USER_SIGN_UP";
-    redirect('/login/changePassword');
-  };
-
   const isAdmin = session?.user.role === "admin";
   const trans = await getDictionary(locale);
 

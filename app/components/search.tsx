@@ -1,21 +1,26 @@
 'use client';
 
 import MaterialIcon from './materialIcon';
+import { useState } from 'react';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
+
 
 export default function Search({
   pageName = 'page',
   queryName = 'query',
-  placeholder
+  placeholder,
+  buttonText,
 }: {
   pageName?: string,
   queryName?: string,
-  placeholder: string
+  placeholder: string,
+  buttonText: string,
 }) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
+  const [queryText, setQueryText] = useState("");
 
   const handleSearch = useDebouncedCallback((term: string) => {
     //console.log(`Searching... ${term}`);
@@ -31,7 +36,7 @@ export default function Search({
   }, 300);
 
   return (
-    <div className="relative flex flex-1 flex-shrink-0">
+    <div className="relative flex flex-1 flex-shrink-0 gap-2">
       <label htmlFor="search" className="sr-only">
         Search
       </label>
@@ -39,11 +44,20 @@ export default function Search({
         className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500 focus:outline-lime-600"
         placeholder={placeholder}
         onChange={(e) => {
-          handleSearch(e.target.value);
+          setQueryText(e.target.value);
+        }}
+        onKeyDown={(e)=> {
+          if(e.key === "Enter") {
+            handleSearch(queryText);
+          }
         }}
         defaultValue={searchParams.get(queryName)?.toString()}
       />
       <MaterialIcon name='search' props='absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900' />
+      <button
+        className="block h-10 w-32 items-center rounded-lg bg-slate-600 px-4 text-base font-medium text-white transition-colors hover:bg-slate-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-500"
+        onClick={() => handleSearch(queryText)}
+      >{buttonText}</button>
     </div>
   );
 }

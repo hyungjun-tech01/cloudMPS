@@ -109,10 +109,10 @@ export default async function Page(props: {
         <div className="w-full">
             <div className="flex w-full items-center justify-between">
                 <h1 className="text-2xl">{trans.user.user}</h1>
+                <CreateButton link="/user/create" title={trans.user.create_user} />
             </div>
             <div className="mt-4 mb-2 flex items-center justify-between gap-2 md:mt-8 md:mb-4">
-                <Search placeholder={trans.user.search_users} />
-                <CreateButton link="/user/create" title={trans.user.create_user} />
+                <Search placeholder={trans.user.search_users} buttonText={trans.common.search} />
             </div>
             <Suspense fallback={<TableSkeleton />}>
                 <Table
