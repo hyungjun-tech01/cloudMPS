@@ -3,39 +3,22 @@
 import Link from 'next/link';
 import clsx from 'clsx';
 import { useActionState, useState, useEffect } from 'react';
-import { Table } from 'antd';
+import MaterialIcon from '@/app/components/materialIcon';
 
 
 export function InviteForm({
-  sessionUserName,
+  userName,
+  trans,
   action,
 }: {
-  sessionUserName:string;
+  userName:string;
+  trans: Record<string, string>;
   action: (prevState: void | UserState, formData: FormData)
     => Promise<UserState | void>;
 }) {
   const initialState: UserState = { message: null, errors: {} };
   const [state, formAction] = useActionState(action, initialState);
   const [ipAddress, setIpAddress] = useState('');
-  const [userList, setUserList] = useState([]);
-
-  const columns = [
-        {
-            title: "Email",
-            dataIndex: 'email',
-            key: 'email',
-        },
-        {
-            title: "Name",
-            dataIndex: 'full_name',
-            key: 'full_name',
-        },
-        {
-            title: "Status",
-            dataIndex: 'user_status',
-            key: 'user_status',
-        },
-    ];
 
   useEffect(() => {
     const fetchIp = async () => {
@@ -54,18 +37,25 @@ export function InviteForm({
   return (
     <form action={formAction}>
       <input type="hidden" name="ipAddress" value={ipAddress}/>
-      <input type="hidden" name="updatedBy" value={sessionUserName}/>
-      <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        <div className="mt-4 mb-2 flex items-center justify-between gap-2 md:mt-8 md:mb-4">
-          <label >Email</label>
-          <input />
-          <label >Name</label>
-          <input />
+      <input type="hidden" name="updatedBy" value={userName}/>
+      <div className="my-4 rounded-lg bg-slate-100 p-4 flex justify-between items-center md:p-6">
+        <div className="flex items-center justify-between gap-4">
+          <label className='font-medium' >{trans.name}</label>
+          <input name="user_name" type="text"
+            className='h-10 rounded-md bg-white border-2 border-slate-800'
+          />
+          <label className='font-medium' >{trans.email}</label>
+          <input name="user_email" type="email"
+            className='h-10 rounded-md bg-white border-2 border-slate-800'
+          />
         </div>
-        <Table
-          dataSource={userList}
-          columns={columns}
-        />
+        <button
+          type="submit"
+          className="flex h-10 items-center rounded-lg bg-lime-600 px-4 text-base font-medium text-white transition-colors hover:bg-lime-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-500"
+        >
+          <span className="hidden md:block md:">{trans.invite}</span>{' '}
+          <MaterialIcon name="add" props="h-5 md:ml-4" />
+        </button>
       </div>
     </form>
   );

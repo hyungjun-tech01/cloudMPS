@@ -251,7 +251,7 @@ export async function deleteUser(id:string, ipAddr:string, token:string) {
 }
 
 // ----------- Register ----------------------------------------------------------------
-export async function register(data: object) {
+export async function registerUser(data: object) {
     try {
         const resp = await fetch(`${BASE_PATH}/api/users/signup_request`, {
             method: "POST",

@@ -7,7 +7,7 @@ import { Steps } from "antd";
 
 import RegisterTermsOfService from "./register-use-of-term";
 import RegisterUserInfo from "./register-user-info";
-import { register } from "@/app/libs/actions";
+import { registerUser } from "@/app/libs/actions";
 
 
 enum RegisterStep {
@@ -83,15 +83,15 @@ export default function RegisterForm({
       : "/login?userType=person&init=true";
 
   // control ---------------------------------------------------------------------------
-  const [registerStep, setRegisterStep] = useState<RegisterStep>(
+  const [registerUserStep, setRegisterUserStep] = useState<RegisterStep>(
     RegisterStep.AGREEMENT
   );
 
   const handleNextStep = () => {
-    setRegisterStep(registerStep + 1);
+    setRegisterUserStep(registerUserStep + 1);
   };
   const handlePrevStep = () => {
-    setRegisterStep(registerStep - 1);
+    setRegisterUserStep(registerUserStep - 1);
   };
 
   // use of terms --------------------------------------------------------------------
@@ -245,7 +245,7 @@ export default function RegisterForm({
       } as RegisterPersonalUserState | RegisterCompanyUserState;
     }
 
-    const registerData = {
+    const registerUserData = {
       user_type: userType.toUpperCase(),
       company_type: formData.get("companyType"),
       company_name: formData.get("companyName"),
@@ -267,7 +267,7 @@ export default function RegisterForm({
       ip_address: userIp,
     };
 
-    const result = await register(registerData);
+    const result = await registerUser(registerUserData);
     if (!!result) {
       // console.log('Register / result :', result);
       if (result["ResultCode"] === '0') {

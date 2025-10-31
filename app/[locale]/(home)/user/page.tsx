@@ -5,14 +5,14 @@ import { redirect } from 'next/navigation'; // 적절한 리다이렉트 함수 
 import MaterialIcon from "@/app/components/materialIcon";
 
 import Search from '@/app/components/search';
-import { CreateButton } from '@/app/components/buttons';
+import { InviteForm } from "@/app/components/user/invite-form";
 import { TableSkeleton } from "@/app/components/skeletons";
 import Table from '@/app/components/table';
 import { UpdateButton } from "@/app/components/buttons";
 
 import getDictionary from '@/app/libs/dictionaries';
 import { ISearch, UserData } from "@/app/libs/types";
-import { fetchData, modifyUser, deleteUser } from "@/app/libs/actions";
+import { fetchData, modifyUser, deleteUser, registerUser } from "@/app/libs/actions";
 
 
 export const metadata: Metadata = {
@@ -54,6 +54,12 @@ export default async function Page(props: {
 
     // console.log("users :", userListResult);
     const {ResultCode, totalPages, users} = userListResult;
+
+    const transDataInInviteForm = {
+        email: trans.user.user + ' ' + trans.common.email,
+        invite: trans.user.invite_user,
+        name: trans.user.user_name,
+    }
 
     const handleMenuOpen = async (e: React.MouseEvent<HTMLButtonElement>) => {
         console.log('handleMenuOpen');
@@ -109,11 +115,11 @@ export default async function Page(props: {
         <div className="w-full">
             <div className="flex w-full items-center justify-between">
                 <h1 className="text-2xl">{trans.user.user}</h1>
-                <CreateButton link="/user/invite" title={trans.user.invite_user} />
             </div>
-            <div className="mt-4 mb-2 flex items-center justify-between gap-2 md:mt-8 md:mb-4">
+            <div className="mt-4 mb-2 flex items-center justify-between gap-4 md:mt-8 md:mb-4">
                 <Search placeholder={trans.user.search_users} buttonText={trans.common.search} />
             </div>
+            <InviteForm userName={userName} trans={transDataInInviteForm} action={registerUser} />
             <Suspense fallback={<TableSkeleton />}>
                 <Table
                     dataSource={dataSource}
