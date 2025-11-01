@@ -12,7 +12,7 @@ import { UpdateButton } from "@/app/components/buttons";
 
 import getDictionary from '@/app/libs/dictionaries';
 import { ISearch, UserData } from "@/app/libs/types";
-import { fetchData, modifyUser, deleteUser, registerUser } from "@/app/libs/actions";
+import { fetchData, modifyUser, deleteUser, registerMember } from "@/app/libs/actions";
 
 
 export const metadata: Metadata = {
@@ -36,6 +36,10 @@ export default async function Page(props: {
         redirect('/login'); // '/login'으로 리다이렉트
     };
 
+    if (session.user.role !== 'SUBSCRIPTION' && session.user.role !== 'PARTNER') {
+        redirect('/'); // '/login'으로 리다이렉트
+    };
+
     const searchData = {
         search_user_name: query,
         search_full_name: query,
@@ -52,14 +56,27 @@ export default async function Page(props: {
         fetchData("/api/users/getuserlist", searchData, session.user.token),
     ]);
 
-    // console.log("users :", userListResult);
+    console.log("users :", userListResult);
     const {ResultCode, totalPages, users} = userListResult;
 
-    const transDataInInviteForm = {
-        email: trans.user.user + ' ' + trans.common.email,
+    const userDataForInviteForm = {
+        userName: userName,
+        companyCode: session.user.companyCode,
+        companyType:  session.user.role === 'PARTNER' ? 'PARTNER' :  "GENERAL",
+        ipAddress: session.user.ipAddress
+    };
+
+    const transDataForInviteForm = {
         invite: trans.user.invite_user,
-        name: trans.user.user_name,
-    }
+        errors_in_inputs: trans.register.errors_in_inputs,
+        error_input_type_email: trans.register.error_input_type_email,
+        error_input_type_ipv4: trans.register.error_input_type_ipv4,
+        error_input_type_string: trans.register.error_input_type_string,
+        error_miss_input: trans.common.error_miss_input,
+        fail_parsing:  trans.common.fail_parsing,
+        userEmail: trans.user.user + ' ' + trans.common.email,
+        userName: trans.user.user_name,
+    };
 
     const handleMenuOpen = async (e: React.MouseEvent<HTMLButtonElement>) => {
         console.log('handleMenuOpen');
@@ -92,6 +109,7 @@ export default async function Page(props: {
         return {
             user_name: user.user_name,
             full_name: user.full_name,
+            user_status: user.user_status,
             actions: 
                 <div key={user.user_id} className='flex justify-center items-center gap-2'>
                     <UpdateButton link={`/user/${user.user_id}/edit`} />
@@ -119,7 +137,13 @@ export default async function Page(props: {
             <div className="mt-4 mb-2 flex items-center justify-between gap-4 md:mt-8 md:mb-4">
                 <Search placeholder={trans.user.search_users} buttonText={trans.common.search} />
             </div>
-            <InviteForm userName={userName} trans={transDataInInviteForm} action={registerUser} />
+            {!!userDataForInviteForm.companyCode &&
+                <InviteForm
+                    userData={userDataForInviteForm}
+                    trans={transDataForInviteForm}
+                    action={registerMember}
+                />
+            }
             <Suspense fallback={<TableSkeleton />}>
                 <Table
                     dataSource={dataSource}

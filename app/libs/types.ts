@@ -85,6 +85,18 @@ export type UserState = {
   message?: string | null;
 };
 
+// ----------- Members --------------------------------------------------------------------
+export type MemberState = {
+  errors?: {
+    userName?: string[];
+    userEmail?: string[];
+    companyCode?: string[];
+    ipAddress?: string[];
+    updatedBy?: string[];
+  };
+  message?: string | null;
+}
+
 // ----------- Components ----------------------------------------------------------------
 export interface IEditItem {
   name: string;

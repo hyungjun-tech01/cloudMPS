@@ -7,7 +7,7 @@ import { z } from "zod";
 
 import { signIn, signOut } from '@/auth';
 import { BASE_PATH, MIN_PASSWORD_LENGTH } from './constants';
-import { LoginData, UserData } from './types';
+import { LoginData, MemberState } from './types';
 
 
 export async function logout() {
@@ -263,6 +263,56 @@ export async function registerUser(data: object) {
         console.error(`\t[ Register ] Error : ${err}`);
         return null;
     };
+}
+
+// ----------- Member ----------------------------------------------------------------
+const registerMemberScheme = z.object({
+    userName:  z.string().min(1, { message : 'error_miss_input' }),
+    userEmail: z.email({ message : 'error_input_type_email' }),
+    companyCode: z.string().min(6,{ message : 'error_miss_input' }),
+    companyType: z.enum(['PATNER', 'GENERAL']),
+    ipAddress: z.ipv4({ message : 'error_input_type_ipv4' }),
+    updatedBy: z.string().min(1, { message : 'error_miss_input' }),
+});
+
+export async function registerMember(prevState: void | MemberState, formData: FormData) {
+    const validatedFields = registerMemberScheme.safeParse({
+        userName: formData.get('userName'),
+        userEmail: formData.get('userEmail'),
+        companyType: formData.get('companyType'),
+        companyCode: formData.get('companyCode'),
+        ipAddress: formData.get('ipAddress'),
+        updatedBy:  formData.get('updatedBy'),
+    });
+
+    if (!validatedFields.success) {
+        const tree = z.treeifyError(validatedFields.error);
+        console.log('registerMember :', tree.properties);
+        return {
+            errors: tree.properties,
+            message: 'errors_in_inputs',
+        };
+    }
+
+    const inputData = {
+        user_type: "COMPANY",
+        full_name: validatedFields.data.userName,
+        e_mail_adress: validatedFields.data.userEmail,
+        company_type: validatedFields.data.companyType,
+        company_code: validatedFields.data.companyCode,
+        ip_address: validatedFields.data.ipAddress,
+    }
+
+    const resp = await registerUser(inputData);
+    console.log('registerMember :', resp);
+
+    if(resp.ResultCode !== 0) {
+        return {
+            message: resp.ErrorMessage,
+        };
+    }
+
+    return;
 }
 
 // ----------- Common ----------------------------------------------------------------
