@@ -49,6 +49,12 @@ export const SideMenuList : {
       href: "/user",
       icon: { name: "person", type: "outlined" },
     },
+    client: {
+      name: 'client',
+      title: '거래처',
+      href: "/client",
+      icon: { name: "group", type: "outlined" },
+    },
     device: {
       name: "device",
       title: "출력장치",
@@ -144,6 +150,12 @@ export const SideMenuList : {
       title: 'User',
       href: "/user",
       icon: { name: "person", type: "outlined" },
+    },
+    client: {
+      name: 'client',
+      title: 'client',
+      href: "/client",
+      icon: { name: "group", type: "outlined" },
     },
     device: {
       name: "device",

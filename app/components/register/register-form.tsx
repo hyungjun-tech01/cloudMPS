@@ -349,8 +349,8 @@ export default function RegisterForm({
 
   return (
     <div className="flex-1 rounded-b-lg bg-gray-50 px-6 pb-4 pt-8">
-      <Steps current={registerStep} items={items} responsive />
-      <div className="mt-8">{registerSteps[registerStep].content}</div>
+      <Steps current={registerUserStep} items={items} responsive />
+      <div className="mt-8">{registerSteps[registerUserStep].content}</div>
     </div>
   );
 }

@@ -15,13 +15,14 @@ export default function NavLinks({ extended }: { extended: boolean }) {
   const userRole = session?.user?.role ?? "FREE_USER";
   let menuList = [];
 
-  // console.log('Path:', pathname);
-  console.log('User Role:', userRole);
+  // console.log('User Role:', userRole);
 
   if(userRole === 'admin') {
     menuList = ['home', 'user', 'device', 'analysis'];
   } else if(userRole === 'SUBSCRIPTION') {
     menuList = ['home', 'user', 'device'];
+  } else if(userRole === 'PARTNER') {
+    menuList = ['home', 'user', 'client', 'device'];
   } else {
     menuList = ['home', 'device'];
   }

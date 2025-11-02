@@ -391,7 +391,7 @@ export default function RegisterUserInfo({
         },
         {
           name: "userEmail",
-          title: trans.user.email,
+          title: trans.common.email,
           type: "input",
           defaultValue: "",
           placeholder: trans.user.placeholder_email,

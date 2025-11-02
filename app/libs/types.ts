@@ -95,7 +95,45 @@ export type MemberState = {
     updatedBy?: string[];
   };
   message?: string | null;
-}
+};
+
+// ----------- Clients --------------------------------------------------------------------
+
+export interface ClientData {
+  client_id: string;
+  client_group: string;
+  client_scale: string;
+  deal_type: string;
+  client_name: string;
+  client_name_en: string;
+  business_registration_code: string;
+  establishment_date: Date;
+  closure_date: Date;
+  ceo_name: string;
+  business_type: string;
+  business_item: string;
+  industry_type: string;
+  client_zip_code: string;
+  client_address: string;
+  client_phone_number: string;
+  client_fax_number: string;
+  homepage: string;
+  client_memo: string;
+  created_by: string;
+  create_date: Date;
+  modify_date: Date;
+  recent_user: string;
+  account_code: string;
+  bank_name: string;
+  account_owner: string;
+  sales_resource: string;
+  application_engineer: string;
+  region: string;
+  status: string;
+  user_name: string;
+  company_code: string;
+  ip_address: string;
+};
 
 // ----------- Components ----------------------------------------------------------------
 export interface IEditItem {

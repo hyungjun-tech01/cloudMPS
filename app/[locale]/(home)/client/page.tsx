@@ -11,7 +11,7 @@ import Table from '@/app/components/table';
 import { UpdateButton } from "@/app/components/buttons";
 
 import getDictionary from '@/app/libs/dictionaries';
-import { ISearch, UserData } from "@/app/libs/types";
+import { ISearch, ClientData } from "@/app/libs/types";
 import { fetchData, modifyUser, deleteUser, registerMember } from "@/app/libs/actions";
 
 
@@ -36,14 +36,15 @@ export default async function Page(props: {
         redirect('/login'); // '/login'으로 리다이렉트
     };
 
-    if (session.user.role !== 'SUBSCRIPTION' && session.user.role !== 'PARTNER') {
+    if (session.user.role !== 'PARTNER') {
         redirect('/'); // '/login'으로 리다이렉트
     };
 
     const searchData = {
-        search_user_name: query,
-        search_full_name: query,
-        search_email: query,
+        search_client_name: query,
+        search_business_registration_code: query,
+        search_client_address: query,
+        search_sales_resource: query,
         items_per_page: itemsPerPage,
         current_page: currentPage,
         user_name: userName,
@@ -51,20 +52,13 @@ export default async function Page(props: {
         ip_address: session.user.ipAddress,
     };
 
-    const [trans, userListResult] = await Promise.all([
+    const [trans, clientListResult] = await Promise.all([
         getDictionary(locale),
-        fetchData("/api/users/getuserlist", searchData, session.user.token),
+        fetchData("/api/clients/getclientlist", searchData, session.user.token),
     ]);
 
-    // console.log("users :", userListResult);
-    const {ResultCode, totalPages, users} = userListResult;
-
-    const userDataForInviteForm = {
-        userName: userName,
-        companyCode: session.user.companyCode,
-        companyType:  session.user.role === 'PARTNER' ? 'PARTNER' :  "GENERAL",
-        ipAddress: session.user.ipAddress
-    };
+    // console.log("clients :", clientListResult);
+    const {ResultCode, totalPages, clients} = clientListResult;
 
     const transDataForInviteForm = {
         invite: trans.user.invite_user,
@@ -84,19 +78,19 @@ export default async function Page(props: {
 
     const columns = [
         {
-            title: trans.user.user_id,
-            dataIndex: 'user_name',
-            key: 'user_name',
+            title: trans.client.client_id,
+            dataIndex: 'client_name',
+            key: 'client_name',
         },
         {
-            title: trans.user.user_name,
-            dataIndex: 'full_name',
-            key: 'full_name',
+            title: trans.company.group,
+            dataIndex: 'client_group',
+            key: 'group',
         },
         {
-            title: trans.common.status,
-            dataIndex: 'user_status',
-            key: 'user_status',
+            title: trans.company.phone_number,
+            dataIndex: 'client_phone_number',
+            key: 'client_phone_number',
         },
         {
             title: "",
@@ -105,14 +99,14 @@ export default async function Page(props: {
         },
     ];
 
-    const dataSource = ResultCode === "0" ? users.map( (user : UserData) => {
+    const dataSource = ResultCode === "0" ? clients.map( (client : ClientData) => {
         return {
-            user_name: user.user_name,
-            full_name: user.full_name,
-            user_status: user.user_status,
+            client_name: client.client_name,
+            group: client.client_group,
+            phone: client.client_phone_number,
             actions: 
-                <div key={user.user_id} className='flex justify-center items-center gap-2'>
-                    <UpdateButton link={`/user/${user.user_id}/edit`} />
+                <div key={client.user_id} className='flex justify-center items-center gap-2'>
+                    <UpdateButton link={`/user/${client.user_id}/edit`} />
                     <button
                         className="rounded-md px-1 pt-1 border hover:bg-gray-100"
                         // onClick={handleMenuOpen}
@@ -132,18 +126,11 @@ export default async function Page(props: {
     return (
         <div className="w-full">
             <div className="flex w-full items-center justify-between">
-                <h1 className="text-2xl">{trans.user.user}</h1>
+                <h1 className="text-2xl">{trans.client.client}</h1>
             </div>
             <div className="mt-4 mb-2 flex items-center justify-between gap-4 md:mt-8 md:mb-4">
-                <Search placeholder={trans.user.search_users} buttonText={trans.common.search} />
+                <Search placeholder={trans.client.search_clients} buttonText={trans.common.search} />
             </div>
-            {!!userDataForInviteForm.companyCode &&
-                <InviteForm
-                    userData={userDataForInviteForm}
-                    trans={transDataForInviteForm}
-                    action={registerMember}
-                />
-            }
             <Suspense fallback={<TableSkeleton />}>
                 <Table
                     dataSource={dataSource}

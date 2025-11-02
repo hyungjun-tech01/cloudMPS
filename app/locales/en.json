@@ -260,5 +260,10 @@
     "transaction_by": "Transaction By",
     "transaction_date": "Transaction Date",
     "transaction_type": "Transaction Type"
+  },
+  "client": {
+    "client": "Client",
+    "client_id": "Client ID",
+    "search_clients": "Search clients by name, business registration no. or sales resource"
   }
 }
