@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import RegisterForm from '@/app/components/register/register-form';
 import getDictionary from '@/app/libs/dictionaries';
 import type { Metadata } from "next";
+import getPolicies from '@/app/libs/policies';
 
 export const metadata: Metadata = {
   title: 'Register',
@@ -19,7 +20,7 @@ export default async function Page(props: {
   const userType = searchParams?.userType || "company";
   const locale = (await props.params).locale;
 
-  const t = await getDictionary(locale);
+  const [t, p] = await Promise.all([getDictionary(locale),  getPolicies(locale)]);
   const trans = {
     common: t.common,
     company: t.company,
@@ -27,10 +28,10 @@ export default async function Page(props: {
     user: t.user
   }
   const terms = {
-    terms_of_service: t.terms_of_service,
-    privacy_policy: t.privacy_policy,
-    location_info_policy: t.location_info_policy,
-    event_promotion_policy: t.event_promotion_policy
+    terms_of_service: p.terms_of_service,
+    privacy_policy: p.privacy_policy,
+    location_info_policy: p.location_info_policy,
+    event_promotion_policy: p.event_promotion_policy
   };
 
   return (
