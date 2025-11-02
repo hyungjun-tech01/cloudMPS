@@ -21,11 +21,11 @@ export async function authenticate(
     // console.log('authenticate :', formData);
     const resObj : { ko: Record<string, string>, en: Record<string, string> } = {
         ko: {
-            CredentialsSignin: "ID와 비밀번호가 일치하지 않습니다.",
+            CredentialsSignin: "ID가 유효하지 않거나 비밀번호가 일치하지 않습니다.",
             default: "알 수 없는 오류가 발생하였습니다."
         },
         en: {
-            CredentialsSignin: "IncorInvalid credentials.",
+            CredentialsSignin: "Invalid credentials.",
             default: "Something went wrong.",
         }
     };

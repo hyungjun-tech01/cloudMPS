@@ -3,33 +3,24 @@ import Credentials from "next-auth/providers/credentials";
 import { z } from "zod";
 import { login, getUserInfo } from "@/app/libs/actions";
 import { LoginData, LoginResultData } from "@/app/libs/types";
-import { request } from "http";
 
-interface UserType {
-    id: string;
-    name: string;
-    fullName: string;
-    email: string;
-    role: string;
-    companyCode?: number;
-    ipAddress: string;
-    token?: string;
-  }
+
+interface ExtendedUser {
+  id: string;
+  name:  string;
+  fullName: string;
+  role: string;
+  companyCode?: number;
+  ipAddress: string;
+  token?: string;
+  expire_at?: number;
+}
 
 declare module "next-auth" {
-  interface User extends UserType {}
+  interface User extends ExtendedUser {}
 
   interface Session {
-    user: {
-      id: string;
-      name: string;
-      email: string;
-      fullName?: string;
-      role?: string;
-      companyCode?: number;
-      ipAddress: string;
-      token: string;
-    } & DefaultSession["user"];
+    user: User & DefaultSession["user"];
   }
 }
 
@@ -42,8 +33,10 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       async authorize(credentials) {
         const parsedCredentials = z
           .object({
-            user_name: z.string(),
-            password: z.string().min(6),
+            user_name: z.email(),
+            password: z.string("Password is required")
+              .min(6, "Password must be more than 6 characters")
+              .max(32, "Password must be less than 32 characters"),
             company_code: z.string().optional(),
             verification_code: z.string().optional(),
             is_init: z.enum(['Y', 'N']),
@@ -78,7 +71,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           }
 
           return {
-            authType: loginResult.authType || "USER_SIGN_UP",
             id: userInfoResult.user.user_id,
             name: userInfoResult.user.user_name,
             fullName: userInfoResult.user.full_name,
@@ -87,10 +79,11 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             companyCode: company_code,
             ipAddress: ip_address,
             token: loginResult.token,
-          } as UserType;
+            expire_at: Date.now()/1000 + 86400,
+          } as ExtendedUser;
         }
 
-        console.log("Invalid credentials" + (parsedCredentials.error ?? ""));
+        // console.log("Invalid credentials" + (parsedCredentials.error ?? ""));
         return null;
       },
     }),
@@ -100,7 +93,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       // console.log("authorized called : ", request);
       // check login --------------------------------------------
       const isLoggedIn = !!auth?.user;
-      const isOnIntro = nextUrl.pathname.startsWith("/intro");
       const isOnProtected = !(
         nextUrl.pathname.startsWith("/login") ||
         nextUrl.pathname.startsWith("/register") ||
@@ -141,27 +133,42 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     },
     jwt: async ({ token, user }) => {
       if (user) {
-        token.id = user.id;
-        token.name = user.name;
-        token.role = user.role;
-        token.fullName = user.fullName;
-        token.companyCode = user.companyCode;
-        token.ipAddress = user.ipAddress;
-        token.token = user.token;
-      }
-      return token;
+        return {
+          ...token,
+          id : user.id,
+          name : user.name,
+          role : user.role,
+          fullName : user.fullName,
+          companyCode : user.companyCode,
+          ipAddress : user.ipAddress,
+          token : user.token,
+          exp : user.expire_at,
+        }
+      } else if (!!token.exp && token.exp > (Date.now()/1000) ) {
+        return token;
+      };
+      throw new TypeError("Missing token")
     },
     session: async ({ session, token }) => {
       if (session.user) {
-        session.user.id = token.id as string;
-        session.user.name = token.name as string;
-        session.user.role = token.role as string;
-        session.user.fullName = token.fullName as string;
-        session.user.companyCode = token.companyCode as number | undefined;
-        session.user.ipAddress = token.ipAddress as string;
-        session.user.token = token.token as string;
+        session.user = {
+          ...session.user,
+          id : token.id as string,
+          role : token.role as string,
+          fullName : token.fullName as string,
+          companyCode : token.companyCode as number | undefined,
+          ipAddress : token.ipAddress as string,
+          token : token.token as string,
+        }
       }
       return session;
     },
+  },
+  session: {
+    strategy: "jwt",  // JWT 전략 사용 (명시적)
+    maxAge: 86400,    // 1일 : 24 * 60 * 60 = 86,400(s)
+  },
+  jwt: {
+    maxAge: 86400,    // 1일
   },
 });
