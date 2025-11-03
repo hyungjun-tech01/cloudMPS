@@ -7,7 +7,7 @@ import { z } from "zod";
 
 import { signIn, signOut } from '@/auth';
 import { BASE_PATH, MIN_PASSWORD_LENGTH } from './constants';
-import { LoginData, MemberState } from './types';
+import { LoginData, MemberState, ClientState } from './types';
 
 
 export async function logout() {
@@ -292,7 +292,7 @@ export async function registerMember(prevState: void | MemberState, formData: Fo
             errors: tree.properties,
             message: 'errors_in_inputs',
         };
-    }
+    };
 
     const inputData = {
         user_type: "COMPANY",
@@ -301,7 +301,7 @@ export async function registerMember(prevState: void | MemberState, formData: Fo
         company_type: validatedFields.data.companyType,
         company_code: validatedFields.data.companyCode,
         ip_address: validatedFields.data.ipAddress,
-    }
+    };
 
     const resp = await registerUser(inputData);
     console.log('registerMember :', resp);
@@ -310,9 +310,132 @@ export async function registerMember(prevState: void | MemberState, formData: Fo
         return {
             message: resp.ErrorMessage,
         };
-    }
+    };
 
     return;
+}
+
+// ----------- Client ----------------------------------------------------------------
+const createClientScheme = z.object({
+    clientName: z.string().min(1),
+    clientGoup: z.string().optional(),
+    clientScale: z.string().optional(),
+    dealType: z.string().optional(),
+    clientNameEn: z.string().optional(),
+    businessRegistrationCode: z.string().optional(),
+    establishmentDate:  z.date().optional(),
+    closureDate: z.date().optional(),
+    ceoName: z.string().optional(),
+    businessType: z.string().optional(),
+    businessItem: z.string().optional(),
+    industryType: z.string().optional(),
+    clientZipCode: z.string().optional(),
+    clientAddress: z.string().optional(),
+    clientPhoneNumber: z.string().optional(),
+    clientFaxNumber: z.string().optional(),
+    homepage: z.string().optional(),
+    clientMemo: z.string().optional(),
+    accountCode: z.string().optional(),
+    bankName: z.string().optional(),
+    accountOwner: z.string().optional(),
+    salesResource: z.string().optional(),
+    applicationEngineer: z.string().optional(),
+    region: z.string().optional(),
+    status: z.string().optional(),
+    companyCode: z.string().optional(),
+    ipAddress: z.string().optional(),
+});
+
+export async function createClient(prevState : void | ClientState, formData: FormData) {
+    const validatedFields = createClientScheme.safeParse({
+        clientName: formData.get("clientName"),
+        clientGoup: formData.get("clientGoup"),
+        clientScale: formData.get("clientScale"),
+        dealType: formData.get("dealType"),
+        clientNameEn: formData.get("clientNameEn"),
+        businessRegistrationCode: formData.get("businessRegistrationCode"),
+        establishmentDate: formData.get("establishmentDate"),
+        closureDate: formData.get("closureDate"),
+        ceoName: formData.get("ceoName"),
+        businessType: formData.get("businessType"),
+        businessItem: formData.get("businessItem"),
+        industryType: formData.get("industryType"),
+        clientZipCode: formData.get("clientZipCode"),
+        clientAddress: formData.get("clientAddress"),
+        clientPhoneNumber: formData.get("clientPhoneNumber"),
+        clientFaxNumber: formData.get("clientFaxNumber"),
+        homepage: formData.get("homepage"),
+        clientMemo: formData.get("clientMemo"),
+        accountCode: formData.get("accountCode"),
+        bankName: formData.get("bankName"),
+        accountOwner: formData.get("accountOwner"),
+        salesResource: formData.get("salesResource"),
+        applicationEngineer: formData.get("applicationEngineer"),
+        region: formData.get("region"),
+        status: formData.get("status"),
+        companyCode: formData.get("companyCode"),
+        ipAddress: formData.get("ipAddress"),
+    });
+
+    if (!validatedFields.success) {
+        const tree = z.treeifyError(validatedFields.error);
+        console.log('createClient :', tree.properties);
+        return {
+            errors: tree.properties,
+            message: 'errors_in_inputs',
+        };
+    };
+
+    const inputData = {
+        client_group : "",
+        client_scale : "",
+        deal_type : "",
+        client_name : "",
+        client_name_en : "",
+        business_registration_code : "",
+        establishment_date : "",
+        closure_date : "",
+        ceo_name : "",
+        business_type : "",
+        business_item : "",
+        industry_type : "",
+        client_zip_code : "",
+        client_address : "",
+        client_phone_number : "",
+        client_fax_number : "",
+        homepage : "",
+        client_memo : "",
+        created_by : "",
+        create_date : "",
+        modify_date : "",
+        recent_user : "",
+        account_code : "",
+        bank_name : "",
+        account_owner : "",
+        sales_resource : "",
+        application_engineer : "",
+        region : "",
+        status : "",
+        user_name : "",
+        company_code : "",
+        ip_address : "",
+    }
+
+    try {
+        const resp = await fetch(`${BASE_PATH}/api/clients/create`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'session_token': formData.get("token") ?? "",
+            },
+            body: JSON.stringify(inputData),
+        });
+        return resp.json();
+    } catch (err) {
+        console.error(`\t[ create client ] Error : ${err}`);
+        return null;
+    };
+
 }
 
 // ----------- Common ----------------------------------------------------------------

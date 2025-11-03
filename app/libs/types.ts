@@ -98,6 +98,16 @@ export type MemberState = {
 };
 
 // ----------- Clients --------------------------------------------------------------------
+export type ClientState = {
+  errors?: {
+    clientName?: string[];
+    businessRegNo?: string[];
+    ceoName?: string[];
+    phoneNo?: string[];
+    ipAddress?: string[];
+  };
+  message?: string | null;
+};
 
 export interface ClientData {
   client_id: string;

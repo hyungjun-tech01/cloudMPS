@@ -29,7 +29,6 @@ export function EditItem({
   options,
   locale,
   errors,
-  chartData,
   other,
   onChange,
 }: IEditItem) {

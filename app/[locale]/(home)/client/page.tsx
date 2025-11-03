@@ -5,18 +5,18 @@ import { redirect } from 'next/navigation'; // 적절한 리다이렉트 함수 
 import MaterialIcon from "@/app/components/materialIcon";
 
 import Search from '@/app/components/search';
-import { InviteForm } from "@/app/components/user/invite-form";
 import { TableSkeleton } from "@/app/components/skeletons";
 import Table from '@/app/components/table';
 import { UpdateButton } from "@/app/components/buttons";
 
 import getDictionary from '@/app/libs/dictionaries';
 import { ISearch, ClientData } from "@/app/libs/types";
-import { fetchData, modifyUser, deleteUser, registerMember } from "@/app/libs/actions";
+import { fetchData, modifyUser, deleteUser } from "@/app/libs/actions";
+import { CreateButton } from "@/app/components/buttons";
 
 
 export const metadata: Metadata = {
-    title: 'Users',
+    title: 'Clients',
 }
 
 export default async function Page(props: {
@@ -105,8 +105,8 @@ export default async function Page(props: {
             group: client.client_group,
             phone: client.client_phone_number,
             actions: 
-                <div key={client.user_id} className='flex justify-center items-center gap-2'>
-                    <UpdateButton link={`/user/${client.user_id}/edit`} />
+                <div key={client.client_id} className='flex justify-center items-center gap-2'>
+                    <UpdateButton link={`/user/${client.client_id}/edit`} />
                     <button
                         className="rounded-md px-1 pt-1 border hover:bg-gray-100"
                         // onClick={handleMenuOpen}
@@ -127,6 +127,7 @@ export default async function Page(props: {
         <div className="w-full">
             <div className="flex w-full items-center justify-between">
                 <h1 className="text-2xl">{trans.client.client}</h1>
+                <CreateButton link="/client/create" title={trans.client.create_client} />
             </div>
             <div className="mt-4 mb-2 flex items-center justify-between gap-4 md:mt-8 md:mb-4">
                 <Search placeholder={trans.client.search_clients} buttonText={trans.common.search} />

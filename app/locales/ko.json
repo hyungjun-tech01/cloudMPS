@@ -266,6 +266,7 @@
   "client": {
     "client": "거래처",
     "client_id": "거래처 ID",
+    "create_client": "거래처 생성",
     "search_clients": "거래처 이름, 사업자 등록 번호, 영업 담당자로 검색하세요."
   }
 }
