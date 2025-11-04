@@ -265,6 +265,7 @@
     "client": "Client",
     "client_id": "Client ID",
     "create_client": "Create Client",
-    "search_clients": "Search clients by name, business registration no. or sales resource"
+    "search_clients": "Search clients by name, business registration no. or sales resource",
+    "secTitle_details": "Details"
   }
 }

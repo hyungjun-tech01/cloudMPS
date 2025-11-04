@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useState, useEffect } from 'react';
+import { useActionState } from 'react';
 import Link from 'next/link';
 import clsx from 'clsx';
 import type { ClientState, IButtonInfo, IEditItem, ISection } from '@/app/libs/types';
@@ -16,7 +16,7 @@ export function CreateForm({
 }: {
   items: ISection[];
   buttons?: IButtonInfo;
-  userName?: string | null ;
+  userName: string ;
   ipAddress: string;
   action: (prevState: void | ClientState, formData: FormData)
     => Promise<ClientState | void>;
