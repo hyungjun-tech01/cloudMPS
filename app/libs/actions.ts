@@ -323,8 +323,8 @@ const createClientScheme = z.object({
     clientGoup: z.string().optional(),
     clientScale: z.string().optional(),
     dealType: z.string().optional(),
-    establishmentDate:  z.string().optional(),
-    closureDate: z.string().optional(),
+    establishmentDate:  z.string().nullable(),
+    closureDate: z.string().nullable(),
     bankName: z.string().optional(),
     accountCode: z.string().optional(),
     accountOwner: z.string().optional(),
@@ -381,6 +381,10 @@ export async function createClient(prevState : void | ClientState, formData: For
     const { name, companyCode, ipAddress, token } = session.user;
     const today = new Date();
     const todayStr = formatTimeYYYYpMMpDD(today);
+    const updatedOpenDate = validatedFields.data.establishmentDate === null ?
+        null : formatTimeYYYYpMMpDD(new Date(validatedFields.data.establishmentDate));
+    const updatedCloseDate = validatedFields.data.closureDate === null ?
+        null : formatTimeYYYYpMMpDD(new Date(validatedFields.data.closureDate));
 
     const inputData = {
         client_group : validatedFields.data.clientGoup,
@@ -389,8 +393,8 @@ export async function createClient(prevState : void | ClientState, formData: For
         client_name : validatedFields.data.clientName,
         client_name_en : validatedFields.data.clientNameEn,
         business_registration_code : validatedFields.data.businessRegistrationCode,
-        establishment_date : validatedFields.data.establishmentDate,
-        closure_date : validatedFields.data.closureDate,
+        establishment_date : updatedOpenDate,
+        closure_date : updatedCloseDate,
         ceo_name : validatedFields.data.ceoName,
         business_type : validatedFields.data.businessType,
         business_item : validatedFields.data.businessItem,
@@ -427,6 +431,7 @@ export async function createClient(prevState : void | ClientState, formData: For
             body: JSON.stringify(inputData),
         });
         const response = await resp.json();
+        console.log('createClient / response :', response);
         if(response.ResultCode !== "0") {
             return {
                 message: response.ErrorMessage

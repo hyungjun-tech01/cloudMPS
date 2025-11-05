@@ -27,7 +27,6 @@ export function EditItem({
   defaultValue,
   placeholder,
   options,
-  locale,
   errors,
   other,
   onChange,
@@ -234,6 +233,33 @@ export function EditItem({
                 <div className='flex-0 w-[5rem] text-sm font-light text-right'>{item.value || 0}%</div>
               </div>
             )}
+          </div>
+        </div>
+      );
+    case "date":
+      return (
+        <div className="mb-4">
+          <label htmlFor={name} className="mb-2 block text-sm font-semibold">
+            {title}
+          </label>
+          <div className="relative mt-2 rounded-md">
+            <div className="relative">
+              <input
+                id={name}
+                name={name}
+                type="date"
+                defaultValue={defaultValue}
+                className="peer block w-full rounded-md border bg-slate-50 border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              />
+            </div>
+            <div id={`${name}-error`} aria-live="polite" aria-atomic="true">
+              {!!errors &&
+                errors.map((error: string) => (
+                  <p className="mt-2 text-sm text-red-500" key={error}>
+                    {error}
+                  </p>
+                ))}
+            </div>
           </div>
         </div>
       );

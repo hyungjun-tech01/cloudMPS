@@ -45,8 +45,8 @@ export default async function Page(props: {
                 { name: "clientGoup", title: trans.client.client_group, type: "input", defaultValue: "", placeholder: trans.client.placeholder_client_group },
                 { name: "clientScale", title: trans.client.client_scale, type: "input", defaultValue: "", placeholder: trans.client.placeholder_client_scale },
                 { name: "dealType", title: trans.client.client_dealtype, type: "input", defaultValue: "", placeholder: trans.client.placeholder_client_dealtype },
-                { name: "establishmentDate", title: trans.client.client_open_date, type: "input", defaultValue: "", placeholder: trans.client.placeholder_client_open_date },
-                { name: "closureDate", title: trans.client.client_close_date, type: "input", defaultValue: "", placeholder: trans.client.placeholder_client_close_date },
+                { name: "establishmentDate", title: trans.client.client_open_date, type: "date", defaultValue: "", placeholder: trans.client.placeholder_client_open_date },
+                { name: "closureDate", title: trans.client.client_close_date, type: "date", defaultValue: "", placeholder: trans.client.placeholder_client_close_date },
             ],
         },
         {

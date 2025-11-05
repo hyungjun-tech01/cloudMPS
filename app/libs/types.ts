@@ -180,13 +180,13 @@ export interface IEditItem {
   | "hidden"
   | "react-select"
   | "button"
-  | "status_bar";
+  | "status_bar"
+  | "date";
   defaultValue: string | number;
   placeholder?: string;
   options?:
   | { title: string | string[]; value: string | number; suffix?: string }[]
   | null;
-  locale?: string;
   errors?: string[] | null;
   chartData?: { xlabels: string[]; ydata: number[]; maxY: number };
   other?: React.JSX.Element;
