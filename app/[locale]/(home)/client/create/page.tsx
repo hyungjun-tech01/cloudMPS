@@ -91,6 +91,7 @@ export default async function Page(props: {
                 items={formItems}
                 buttons={buttonItems}
                 userName={session.user.name?? ""}
+                companyCode={session.user.companyCode?? -1}
                 ipAddress={session.user.ipAddress}
                 action={createClient}
             />

@@ -11,12 +11,14 @@ export function CreateForm({
   items,
   buttons,
   userName,
+  companyCode,
   ipAddress,
   action,
 }: {
   items: ISection[];
   buttons?: IButtonInfo;
   userName: string ;
+  companyCode: number;
   ipAddress: string;
   action: (prevState: void | ClientState, formData: FormData)
     => Promise<ClientState | void>;
@@ -26,6 +28,7 @@ export function CreateForm({
 
   return (
     <form action={formAction}>
+      <input type="hidden" name="companyCode" value={companyCode}/>
       <input type="hidden" name="ipAddress" value={ipAddress}/>
       <input type="hidden" name="updatedBy" value={userName}/>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
