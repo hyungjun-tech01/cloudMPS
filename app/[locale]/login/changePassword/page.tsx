@@ -44,11 +44,6 @@ export default async function ChangePasswordPage(props: {
         </div>
         <Suspense>
           <ChangeForm
-            userId={session.user.id}
-            userType={userType}
-            ipAddress={session.user.ipAddress}
-            token={session.user.token}
-            locale={locale}
             trans={someTrans}
           />
         </Suspense>

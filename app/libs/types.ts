@@ -101,10 +101,30 @@ export type MemberState = {
 export type ClientState = {
   errors?: {
     clientName?: string[];
-    businessRegNo?: string[];
+    clientNameEn?: string[];
     ceoName?: string[];
-    phoneNo?: string[];
-    ipAddress?: string[];
+    clientZipCode?: string[];
+    clientAddress?: string[];
+    clientPhoneNumber?: string[];
+    clientFaxNumber?: string[];
+    homepage?: string[];
+    status?: string[];
+    businessRegistrationCode?: string[];
+    businessType?: string[];
+    businessItem?: string[];
+    industryType?: string[];
+    clientGoup?: string[];
+    clientScale?: string[];
+    dealType?: string[];
+    establishmentDate?: string[];
+    closureDate?: string[];
+    bankName?: string[];
+    accountCode?: string[];
+    accountOwner?: string[];
+    salesResource?: string[];
+    applicationEngineer?: string[];
+    region?: string[];
+    clientMemo?: string[];
   };
   message?: string | null;
 };

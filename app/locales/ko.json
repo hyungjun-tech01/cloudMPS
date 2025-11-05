@@ -325,5 +325,13 @@
     "placeholder_client_sales_source": "거래처 영업 담당자를 입력하세요.",
     "placeholder_client_scale": "거래처 규모를 입력하세요.",
     "placeholder_client_zip_code": "거래처 우편번호를 입력하세요."
+  },
+  "error": {
+    "error_in_input": "입력 값에 오류가 있습니다.",
+    "error_occurrs" :  "다음과 같은 오류가 발생했습니다.\n- ",
+    "new_passwords_not_same": "새 비밀번호가 서로 일치하지 않습니다.",
+    "missing_authentication": "인증 정보가 확인되지 않습니다.",
+    "failed_to_get_data": "값을 가져오지 못했습니다. 다시 시도해 보시기 바랍니다.",
+    "failed_to_save_data": "값을 저장하지 못했습니다. 다시 시도해 보시기 바랍니다."
   }
 }

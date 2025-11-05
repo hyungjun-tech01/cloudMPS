@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation'; // 적절한 리다이렉트 함수 import
 import Breadcrumbs from '@/app/components/breadcrumbs';
 import { CreateForm } from '@/app/components/client/create-form';
-import { createClient } from '@/app/libs/actions';
 import { ISection, IButtonInfo } from '@/app/libs/types';
 import getDictionary from '@/app/libs/dictionaries';
 import { auth } from "@/auth";
@@ -72,7 +71,7 @@ export default async function Page(props: {
     ];
     const buttonItems: IButtonInfo = {
         cancel : { title: trans.common.cancel, link: '/user' },
-        go : { title: trans.user.create_user },
+        go : { title: trans.client.create_client },
     };
 
     return (
@@ -90,10 +89,7 @@ export default async function Page(props: {
             <CreateForm 
                 items={formItems}
                 buttons={buttonItems}
-                userName={session.user.name?? ""}
-                companyCode={session.user.companyCode?? -1}
-                ipAddress={session.user.ipAddress}
-                action={createClient}
+                trans={trans.error}
             />
         </main>
     );

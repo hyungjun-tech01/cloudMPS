@@ -5,9 +5,10 @@ import { redirect } from "next/navigation";
 import { AuthError } from 'next-auth';
 import { z } from "zod";
 
-import { signIn, signOut } from '@/auth';
+import { auth, signIn, signOut } from '@/auth';
 import { BASE_PATH, MIN_PASSWORD_LENGTH } from './constants';
 import { LoginData, MemberState, ClientState } from './types';
+import { formatTimeYYYYpMMpDD } from './utils';
 
 
 export async function logout() {
@@ -102,22 +103,6 @@ export async function changePassword(
     prevState: string | undefined,
     formData: FormData,
 ) {
-    // console.log('changePassword :', formData);
-    const resObj = {
-        ko: {
-            error_in_input: "입력 값에 오류가 있습니다.",
-            error_occurrs: "다음과 같은 오류가 발생했습니다.\n- ",
-            new_passwords_not_same: "새 비밀번호가 서로 일치하지 않습니다.",
-        },
-        en: {
-            error_in_input: "Erros in inputs",
-            error_occurrs: "Error occurs like the following\n- ",
-            new_passwords_not_same: "New passwords are not the same.",
-        }
-    };
-
-    const locale = formData.get('locale') || "ko";
-
     const validateData = z.object({
         userName: z.email(),
         oldPassword: z.string().min(MIN_PASSWORD_LENGTH),
@@ -136,34 +121,39 @@ export async function changePassword(
         const tree = z.treeifyError(validateData.error);
         return {
             errors: tree.properties,
-            message: resObj[locale as keyof typeof resObj].error_in_input,
+            message: "error_in_input",
         };
     };
 
     if(formData.get('newPassword') !== formData.get('newPasswordAgain')) {
         return {
-            message: resObj[locale as keyof typeof resObj].new_passwords_not_same,
+            message: "new_passwords_not_same",
         };
     };
 
-    const checkIP = formData.get('ipAddress') === "::1" ? "127.0.0.1" : formData.get('ipAddress');
-    const checkToken = formData.get('token') ?? "";
+    const session = await auth();
+    if(!session?.user) {
+        return {
+            message: "missing_authentication",
+        }
+    }
 
     const data = {
         user_id: formData.get('userId'),
         user_name: formData.get('userName'),
         old_password: formData.get('oldPassword'),
         new_password: formData.get('newPassword'),
-        ip_address: checkIP,
+        ip_address: session?.user.ipAddress
     };
-
+s
     let result = null;
 
     try {
         const resp = await fetch(`${BASE_PATH}/api/users/change_pass`, {
             method: "POST",
-            headers: { 'Content-Type': 'application/json',
-                'session_token': checkToken as string
+            headers: {
+                'Content-Type': 'application/json',
+                'session_token': session?.user.token ?? ""
             },
             body: JSON.stringify(data)
         });
@@ -180,7 +170,7 @@ export async function changePassword(
         redirect(tempPath);
     } else {
         console.log(`\t [ Request to initialize accout ] error : ${result.ErrorMessage}`)
-        return resObj[locale as keyof typeof resObj].error_occurrs + result.ErrorMessage;
+        return result.ErrorMessage;
     }
 };
 
@@ -333,8 +323,8 @@ const createClientScheme = z.object({
     clientGoup: z.string().optional(),
     clientScale: z.string().optional(),
     dealType: z.string().optional(),
-    establishmentDate:  z.date().optional(),
-    closureDate: z.date().optional(),
+    establishmentDate:  z.string().optional(),
+    closureDate: z.string().optional(),
     bankName: z.string().optional(),
     accountCode: z.string().optional(),
     accountOwner: z.string().optional(),
@@ -342,39 +332,35 @@ const createClientScheme = z.object({
     applicationEngineer: z.string().optional(),
     region: z.string().optional(),
     clientMemo: z.string().optional(),
-    companyCode: z.number().min(0),
-    ipAddress: z.string().optional(),
 });
 
 export async function createClient(prevState : void | ClientState, formData: FormData) {
     const validatedFields = createClientScheme.safeParse({
         clientName: formData.get("clientName"),
-        clientGoup: formData.get("clientGoup"),
-        clientScale: formData.get("clientScale"),
-        dealType: formData.get("dealType"),
         clientNameEn: formData.get("clientNameEn"),
-        businessRegistrationCode: formData.get("businessRegistrationCode"),
-        establishmentDate: formData.get("establishmentDate"),
-        closureDate: formData.get("closureDate"),
         ceoName: formData.get("ceoName"),
-        businessType: formData.get("businessType"),
-        businessItem: formData.get("businessItem"),
-        industryType: formData.get("industryType"),
         clientZipCode: formData.get("clientZipCode"),
         clientAddress: formData.get("clientAddress"),
         clientPhoneNumber: formData.get("clientPhoneNumber"),
         clientFaxNumber: formData.get("clientFaxNumber"),
         homepage: formData.get("homepage"),
-        clientMemo: formData.get("clientMemo"),
-        accountCode: formData.get("accountCode"),
+        status: formData.get("status"),
+        businessRegistrationCode: formData.get("businessRegistrationCode"),
+        businessType: formData.get("businessType"),
+        businessItem: formData.get("businessItem"),
+        industryType: formData.get("industryType"),
+        clientGoup: formData.get("clientGoup"),
+        clientScale: formData.get("clientScale"),
+        dealType: formData.get("dealType"),
+        establishmentDate: formData.get("establishmentDate"),
+        closureDate: formData.get("closureDate"),
         bankName: formData.get("bankName"),
+        accountCode: formData.get("accountCode"),
         accountOwner: formData.get("accountOwner"),
         salesResource: formData.get("salesResource"),
         applicationEngineer: formData.get("applicationEngineer"),
         region: formData.get("region"),
-        status: formData.get("status"),
-        companyCode: formData.get("companyCode"),
-        ipAddress: formData.get("ipAddress"),
+        clientMemo: formData.get("clientMemo"),
     });
 
     if (!validatedFields.success) {
@@ -386,39 +372,49 @@ export async function createClient(prevState : void | ClientState, formData: For
         };
     };
 
+    const session = await auth();
+    if(!session?.user) {
+        return {
+            message: 'missing_authentication'
+        }
+    }
+    const { name, companyCode, ipAddress, token } = session.user;
+    const today = new Date();
+    const todayStr = formatTimeYYYYpMMpDD(today);
+
     const inputData = {
         client_group : validatedFields.data.clientGoup,
         client_scale : validatedFields.data.clientScale,
-        deal_type : "",
-        client_name : "",
-        client_name_en : "",
-        business_registration_code : "",
-        establishment_date : "",
-        closure_date : "",
-        ceo_name : "",
-        business_type : "",
-        business_item : "",
-        industry_type : "",
-        client_zip_code : "",
-        client_address : "",
-        client_phone_number : "",
-        client_fax_number : "",
-        homepage : "",
-        client_memo : "",
-        created_by : "",
-        create_date : "",
-        modify_date : "",
-        recent_user : "",
-        account_code : "",
-        bank_name : "",
-        account_owner : "",
-        sales_resource : "",
-        application_engineer : "",
-        region : "",
-        status : "",
-        user_name : "",
-        company_code : "",
-        ip_address : "",
+        deal_type : validatedFields.data.dealType,
+        client_name : validatedFields.data.clientName,
+        client_name_en : validatedFields.data.clientNameEn,
+        business_registration_code : validatedFields.data.businessRegistrationCode,
+        establishment_date : validatedFields.data.establishmentDate,
+        closure_date : validatedFields.data.closureDate,
+        ceo_name : validatedFields.data.ceoName,
+        business_type : validatedFields.data.businessType,
+        business_item : validatedFields.data.businessItem,
+        industry_type : validatedFields.data.industryType,
+        client_zip_code : validatedFields.data.clientZipCode,
+        client_address : validatedFields.data.clientAddress,
+        client_phone_number : validatedFields.data.clientPhoneNumber,
+        client_fax_number : validatedFields.data.clientFaxNumber,
+        homepage : validatedFields.data.homepage,
+        client_memo : validatedFields.data.clientMemo,
+        created_by : name,
+        create_date : todayStr,
+        modify_date : todayStr,
+        recent_user : name,
+        account_code : validatedFields.data.accountCode,
+        bank_name : validatedFields.data.bankName,
+        account_owner : validatedFields.data.accountOwner,
+        sales_resource : validatedFields.data.salesResource,
+        application_engineer : validatedFields.data.applicationEngineer,
+        region : validatedFields.data.region,
+        status : validatedFields.data.status,
+        user_name : name,
+        company_code : companyCode,
+        ip_address : ipAddress,
     }
 
     try {
@@ -426,16 +422,22 @@ export async function createClient(prevState : void | ClientState, formData: For
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
-                'session_token': formData.get("token") ?? "",
+                'session_token': token ?? "",
             },
             body: JSON.stringify(inputData),
         });
-        return resp.json();
+        const response = await resp.json();
+        if(response.ResultCode !== "0") {
+            return {
+                message: response.ErrorMessage
+            };
+        };
     } catch (err) {
         console.error(`\t[ create client ] Error : ${err}`);
-        return null;
+        return {
+            message: "failed_to_save_data"
+        };
     };
-
 }
 
 // ----------- Common ----------------------------------------------------------------

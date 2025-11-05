@@ -4,22 +4,10 @@ import { useActionState } from "react";
 import { changePassword } from "@/app/libs/actions";
 import MaterialIcon from "@/app/components/materialIcon";
 
-interface IChangePasswordForm {
-  userId: string;
-  userType: "company" | "person";
-  ipAddress: string;
-  locale: "ko" | "en";
-  token: string;
-  trans: Record<string, string>;
-};
 
 export default function ChangeForm({
-  userId,
-  ipAddress,
-  locale,
-  token,
-  trans,
-}: IChangePasswordForm
+  trans
+}: { trans: Record<string, string> }
 ) {
   const [errorMessage, formAction, isPending] = useActionState(
     changePassword,
@@ -106,10 +94,6 @@ export default function ChangeForm({
             </div>
           </div>
         </div>
-        <input type="hidden" name="userId" value={userId} />
-        <input type="hidden" name="ipAddress" value={ipAddress} />
-        <input type="hidden" name="locale" value={locale} />
-        <input type="hidden" name="token" value={token} />
         <button
           type="submit"
           className="mt-8 w-full bg-slate-500 text-white px-3 py-0.5 rounded-sm flex justify-center items-center cusor-pointer"
@@ -119,10 +103,10 @@ export default function ChangeForm({
           <MaterialIcon name="arrow_forward" props="ml-auto h-5 w-5 text-white" />
         </button>
         <div className="flex h-8 items-end space-x-1">
-          {errorMessage && (
+          {!!errorMessage && (
             <>
               <MaterialIcon name="error" type="outlined" props="h-5 w-5 text-red-500" />  
-              <p className="text-sm text-red-500">{errorMessage}</p>
+              <p className="text-sm text-red-500">{errorMessage as string}</p>
             </>
           )}
         </div>

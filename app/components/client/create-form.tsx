@@ -5,32 +5,23 @@ import Link from 'next/link';
 import clsx from 'clsx';
 import type { ClientState, IButtonInfo, IEditItem, ISection } from '@/app/libs/types';
 import { EditItem } from '@/app/components/edit-items';
+import { createClient } from '@/app/libs/actions';
 
 
 export function CreateForm({
   items,
   buttons,
-  userName,
-  companyCode,
-  ipAddress,
-  action,
+  trans,
 }: {
   items: ISection[];
   buttons?: IButtonInfo;
-  userName: string ;
-  companyCode: number;
-  ipAddress: string;
-  action: (prevState: void | ClientState, formData: FormData)
-    => Promise<ClientState | void>;
+  trans: Record<string, string>;
 }) {
   const initialState: ClientState = { message: null, errors: {} };
-  const [state, formAction] = useActionState(action, initialState);
+  const [state, formAction] = useActionState(createClient, initialState);
 
   return (
     <form action={formAction}>
-      <input type="hidden" name="companyCode" value={companyCode}/>
-      <input type="hidden" name="ipAddress" value={ipAddress}/>
-      <input type="hidden" name="updatedBy" value={userName}/>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {items.map((sec: ISection, idx) => {
           return (
@@ -78,14 +69,14 @@ export function CreateForm({
         <div id="input-error" aria-live="polite" aria-atomic="true">
           {!!state?.message &&
             <p className="mt-2 text-sm text-red-500">
-              {state.message}
+              { trans[state.message] }
             </p>
           }
         </div>
       </div>
       {!!buttons &&
         <div className="mt-6 flex justify-end gap-4">
-          {!!buttons.cancel &&
+          {buttons.cancel &&
             <Link
               href={buttons.cancel.link}
               className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
@@ -93,7 +84,7 @@ export function CreateForm({
               {buttons.cancel.title}
             </Link>
           }
-          {!!buttons.go &&
+          {buttons.go &&
             <button
               type="submit"
               className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"

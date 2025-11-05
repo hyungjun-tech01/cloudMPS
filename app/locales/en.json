@@ -9,6 +9,7 @@
     "error_miss_input" :"Some missing input items.",
     "error_min_password_length":"Password must be at least 6 characters long.",
     "fail_parsing": "Missing Input Error",
+    "memo": "Memo",
     "next": "Next",
     "previous": "Previous",
     "language": "Language",
@@ -323,5 +324,13 @@
     "placeholder_client_sales_source": "Input Sales Source of the client",
     "placeholder_client_scale": "Input Scale of the client",
     "placeholder_client_zip_code": "Input Zip Code of the client"
+  },
+  "error": {
+    "error_in_input": "Erros in inputs",
+    "error_occurrs" :  "Error occurs like the following\n- ",
+    "new_passwords_not_same": "New passwords are not the same.",
+    "missing_authentication": "Unauthorized",
+    "failed_to_get_data": "Failed to get data. Please, try again.",
+    "failed_to_save_data": "Failed to save data. Please, try again."
   }
 }
