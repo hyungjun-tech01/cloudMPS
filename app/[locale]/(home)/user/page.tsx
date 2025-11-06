@@ -112,7 +112,7 @@ export default async function Page(props: {
             user_status: user.user_status,
             actions: 
                 <div key={user.user_id} className='flex justify-center items-center gap-2'>
-                    <UpdateButton link={`/user/${user.user_id}/edit`} />
+                    <UpdateButton link={`/user/${user.user_name}/edit`} />
                     <button
                         className="rounded-md px-1 pt-1 border hover:bg-gray-100"
                         // onClick={handleMenuOpen}
