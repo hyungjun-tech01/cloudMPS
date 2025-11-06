@@ -1,22 +1,23 @@
 import { redirect } from 'next/navigation'; // 적절한 리다이렉트 함수 import
 import Breadcrumbs from '@/app/components/breadcrumbs';
-import { CreateForm } from '@/app/components/client/create-form';
+import { EditForm } from '@/app/components/client/edit-form';
 import { ISection, IButtonInfo } from '@/app/libs/types';
 import getDictionary from '@/app/libs/dictionaries';
 import { auth } from "@/auth";
 
 
 export default async function Page(props: {
-    params: Promise<{ id: string, job: string, locale: "ko" | "en" }> }
+    params: Promise<{ id: string, locale: "ko" | "en" }> }
 ) {
     const params = await props.params;
+    const id = params.id;
     const locale = params.locale;
 
-    const trans = await getDictionary(locale);
     const session = await auth();
-
     if(!session?.user) return redirect('/login');
     if(session.user.role !== 'PARTNER') return redirect('/');
+
+    const trans = await getDictionary(locale);
 
     const formItems: ISection[] = [
         {
@@ -69,6 +70,7 @@ export default async function Page(props: {
             ]
         },
     ];
+    
     const buttonItems: IButtonInfo = {
         cancel : { title: trans.common.cancel, link: '/client' },
         go : { title: trans.client.create_client },
@@ -81,12 +83,13 @@ export default async function Page(props: {
                     { label: trans.client.client, href: '/client' },
                     {
                         label: trans.client.create_client,
-                        href: '/client/create',
+                        href: `/client/${id}/edit`,
                         active: true,
                     },
                 ]}
             />
-            <CreateForm 
+            <EditForm
+                id={id}
                 items={formItems}
                 buttons={buttonItems}
                 trans={trans.error}

@@ -13,6 +13,7 @@ import getDictionary from '@/app/libs/dictionaries';
 import { ISearch, ClientData } from "@/app/libs/types";
 import { fetchData, modifyUser, deleteUser } from "@/app/libs/actions";
 import { CreateButton } from "@/app/components/buttons";
+import { record } from "zod";
 
 
 export const metadata: Metadata = {
@@ -57,7 +58,7 @@ export default async function Page(props: {
         fetchData("/api/clients/getclientlist", searchData, session.user.token),
     ]);
 
-    // console.log("clients :", clientListResult);
+    console.log("clients :", clientListResult);
     const {ResultCode, totalPages, clients} = clientListResult;
 
     const transDataForInviteForm = {
@@ -78,18 +79,18 @@ export default async function Page(props: {
 
     const columns = [
         {
-            title: trans.client.client_id,
+            title: trans.client.client_name,
             dataIndex: 'client_name',
             key: 'client_name',
         },
         {
-            title: trans.company.group,
-            dataIndex: 'client_group',
-            key: 'group',
+            title: trans.client.client_ceo,
+            dataIndex: 'ceo_name',
+            key: 'ceo_name',
         },
         {
             title: trans.company.phone_number,
-            dataIndex: 'client_phone_number',
+            dataIndex: 'phone_number',
             key: 'client_phone_number',
         },
         {
@@ -99,29 +100,25 @@ export default async function Page(props: {
         },
     ];
 
-    const dataSource = ResultCode === "0" ? clients.map( (client : ClientData) => {
-        return {
-            client_name: client.client_name,
-            group: client.client_group,
-            phone: client.client_phone_number,
-            actions: 
-                <div key={client.client_id} className='flex justify-center items-center gap-2'>
-                    <UpdateButton link={`/user/${client.client_id}/edit`} />
-                    <button
-                        className="rounded-md px-1 pt-1 border hover:bg-gray-100"
-                        // onClick={handleMenuOpen}
-                    >
-                        <span className="sr-only">{trans.common.delete}</span>
-                        <MaterialIcon name='delete' props="w-6 text-inherit" />
-                    </button>
-                </div>
-        }
+    const dataSource = ResultCode === "0" ?
+        clients.map( (client : ClientData) => {
+            return {
+                client_name: client.client_name,
+                ceo_name: client.ceo_name,
+                phone_number: client.client_phone_number,
+                actions: 
+                    <div key={client.client_id} className='flex justify-center items-center gap-2'>
+                        <UpdateButton link={`/client/${client.client_id}/edit`} />
+                        <button
+                            className="rounded-md px-1 pt-1 border hover:bg-gray-100"
+                            // onClick={handleMenuOpen}
+                        >
+                            <span className="sr-only">{trans.common.delete}</span>
+                            <MaterialIcon name='delete' props="w-6 text-inherit" />
+                        </button>
+                    </div>
+            }
     }) : [];
-
-    const actions = {
-        modify : modifyUser,
-        delete : deleteUser,
-    }
 
     return (
         <div className="w-full">
@@ -137,7 +134,6 @@ export default async function Page(props: {
                     dataSource={dataSource}
                     columns={columns}
                     totalPages={totalPages}
-                    actions={actions}
                 />
             </Suspense>
         </div>

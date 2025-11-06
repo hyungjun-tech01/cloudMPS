@@ -205,6 +205,15 @@ export const formatTimeYYYYpMMpDD = (inputDate: Date) => {
   return `${yyyy}.${mo}.${dd}`;
 };
 
+export const formatTimeYYYYMMDD = (inputDate: Date) => {
+  const yyyy = String(inputDate.getFullYear());
+  const mo = String(inputDate.getMonth() + 1).padStart(2,'0');
+  const dd = String(inputDate.getDate()).padStart(2,'0');
+
+  return `${yyyy}-${mo}-${dd}`;
+};
+
+
 export const formatTimeYYYYpMMpDD_FromDB = (inputValue: number) => {
   const inputStr = String(inputValue);
 

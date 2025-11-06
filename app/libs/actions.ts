@@ -8,7 +8,7 @@ import { z } from "zod";
 import { auth, signIn, signOut } from '@/auth';
 import { BASE_PATH, MIN_PASSWORD_LENGTH } from './constants';
 import { LoginData, MemberState, ClientState } from './types';
-import { formatTimeYYYYpMMpDD } from './utils';
+import { formatTimeYYYYMMDD } from './utils';
 
 
 export async function logout() {
@@ -303,10 +303,14 @@ export async function registerMember(prevState: void | MemberState, formData: Fo
     };
 
     return;
+};
+
+export async function modifyMember(id: string, prevState: void | MemberState, formData: FormData) {
+    console.log("NA");
 }
 
 // ----------- Client ----------------------------------------------------------------
-const createClientScheme = z.object({
+const ClientFormScheme = z.object({
     clientName: z.string().min(1),
     clientNameEn: z.string().optional(),
     ceoName: z.string().optional(),
@@ -335,7 +339,7 @@ const createClientScheme = z.object({
 });
 
 export async function createClient(prevState : void | ClientState, formData: FormData) {
-    const validatedFields = createClientScheme.safeParse({
+    const validatedFields = ClientFormScheme.safeParse({
         clientName: formData.get("clientName"),
         clientNameEn: formData.get("clientNameEn"),
         ceoName: formData.get("ceoName"),
@@ -380,11 +384,9 @@ export async function createClient(prevState : void | ClientState, formData: For
     }
     const { name, companyCode, ipAddress, token } = session.user;
     const today = new Date();
-    const todayStr = formatTimeYYYYpMMpDD(today);
-    const updatedOpenDate = validatedFields.data.establishmentDate === null ?
-        null : formatTimeYYYYpMMpDD(new Date(validatedFields.data.establishmentDate));
-    const updatedCloseDate = validatedFields.data.closureDate === null ?
-        null : formatTimeYYYYpMMpDD(new Date(validatedFields.data.closureDate));
+    const todayStr = formatTimeYYYYMMDD(today);
+    const updatedOpenDate = validatedFields.data.establishmentDate;
+    const updatedCloseDate = validatedFields.data.closureDate;
 
     const inputData = {
         client_group : validatedFields.data.clientGoup,
@@ -443,7 +445,117 @@ export async function createClient(prevState : void | ClientState, formData: For
             message: "failed_to_save_data"
         };
     };
-}
+};
+
+export async function modifyClient(id: string, prevState : void | ClientState, formData: FormData) {
+    const validatedFields = ClientFormScheme.safeParse({
+        clientName: formData.get("clientName"),
+        clientNameEn: formData.get("clientNameEn"),
+        ceoName: formData.get("ceoName"),
+        clientZipCode: formData.get("clientZipCode"),
+        clientAddress: formData.get("clientAddress"),
+        clientPhoneNumber: formData.get("clientPhoneNumber"),
+        clientFaxNumber: formData.get("clientFaxNumber"),
+        homepage: formData.get("homepage"),
+        status: formData.get("status"),
+        businessRegistrationCode: formData.get("businessRegistrationCode"),
+        businessType: formData.get("businessType"),
+        businessItem: formData.get("businessItem"),
+        industryType: formData.get("industryType"),
+        clientGoup: formData.get("clientGoup"),
+        clientScale: formData.get("clientScale"),
+        dealType: formData.get("dealType"),
+        establishmentDate: formData.get("establishmentDate"),
+        closureDate: formData.get("closureDate"),
+        bankName: formData.get("bankName"),
+        accountCode: formData.get("accountCode"),
+        accountOwner: formData.get("accountOwner"),
+        salesResource: formData.get("salesResource"),
+        applicationEngineer: formData.get("applicationEngineer"),
+        region: formData.get("region"),
+        clientMemo: formData.get("clientMemo"),
+    });
+
+    if (!validatedFields.success) {
+        const tree = z.treeifyError(validatedFields.error);
+        console.log('modifyClient :', tree.properties);
+        return {
+            errors: tree.properties,
+            message: 'errors_in_inputs',
+        };
+    };
+
+    const session = await auth();
+    if(!session?.user) {
+        return {
+            message: 'missing_authentication'
+        }
+    }
+    const { name, companyCode, ipAddress, token } = session.user;
+    const today = new Date();
+    const todayStr = formatTimeYYYYMMDD(today);
+    const updatedOpenDate = validatedFields.data.establishmentDate;
+    const updatedCloseDate = validatedFields.data.closureDate;
+
+    const inputData = {
+        client_id : id,
+        client_group : validatedFields.data.clientGoup,
+        client_scale : validatedFields.data.clientScale,
+        deal_type : validatedFields.data.dealType,
+        client_name : validatedFields.data.clientName,
+        client_name_en : validatedFields.data.clientNameEn,
+        business_registration_code : validatedFields.data.businessRegistrationCode,
+        establishment_date : updatedOpenDate,
+        closure_date : updatedCloseDate,
+        ceo_name : validatedFields.data.ceoName,
+        business_type : validatedFields.data.businessType,
+        business_item : validatedFields.data.businessItem,
+        industry_type : validatedFields.data.industryType,
+        client_zip_code : validatedFields.data.clientZipCode,
+        client_address : validatedFields.data.clientAddress,
+        client_phone_number : validatedFields.data.clientPhoneNumber,
+        client_fax_number : validatedFields.data.clientFaxNumber,
+        homepage : validatedFields.data.homepage,
+        client_memo : validatedFields.data.clientMemo,
+        created_by : name,
+        create_date : todayStr,
+        modify_date : todayStr,
+        recent_user : name,
+        account_code : validatedFields.data.accountCode,
+        bank_name : validatedFields.data.bankName,
+        account_owner : validatedFields.data.accountOwner,
+        sales_resource : validatedFields.data.salesResource,
+        application_engineer : validatedFields.data.applicationEngineer,
+        region : validatedFields.data.region,
+        status : validatedFields.data.status,
+        user_name : name,
+        company_code : companyCode,
+        ip_address : ipAddress,
+    }
+
+    try {
+        const resp = await fetch(`${BASE_PATH}/api/clients/modify`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'session_token': token ?? "",
+            },
+            body: JSON.stringify(inputData),
+        });
+        const response = await resp.json();
+        console.log('modifyClient / response :', response);
+        if(response.ResultCode !== "0") {
+            return {
+                message: response.ErrorMessage
+            };
+        };
+    } catch (err) {
+        console.error(`\t[ modify client ] Error : ${err}`);
+        return {
+            message: "failed_to_save_data"
+        };
+    };
+};
 
 // ----------- Common ----------------------------------------------------------------
 export async function fetchData(path:string, data: object, token?:string) {

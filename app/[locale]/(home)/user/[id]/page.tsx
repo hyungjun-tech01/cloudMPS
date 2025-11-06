@@ -1,22 +1,36 @@
-import { redirect } from 'next/navigation'; // 적절한 리다이렉트 함수 import
+import { redirect, notFound } from 'next/navigation'; // 적절한 리다이렉트 함수 import
 import Breadcrumbs from '@/app/components/breadcrumbs';
-import { CreateForm } from '@/app/components/client/create-form';
+import { EditForm } from '@/app/components/user/edit-form';
+import FailGetData from '@/app/components/fail-get-data';
 import { ISection, IButtonInfo } from '@/app/libs/types';
 import getDictionary from '@/app/libs/dictionaries';
+import { fetchData } from '@/app/libs/actions';
 import { auth } from "@/auth";
 
 
 export default async function Page(props: {
-    params: Promise<{ id: string, job: string, locale: "ko" | "en" }> }
+    params: Promise<{ userName: string, locale: "ko" | "en" }> }
 ) {
     const params = await props.params;
+    const userName = params.userName;
     const locale = params.locale;
 
-    const trans = await getDictionary(locale);
     const session = await auth();
-
     if(!session?.user) return redirect('/login');
-    if(session.user.role !== 'PARTNER') return redirect('/');
+    if (session.user.role !== 'SUBSCRIPTION' && session.user.role !== 'PARTNER') {
+        redirect('/');
+    };
+
+    const [ trans, userData] = await Promise.all([
+        getDictionary(locale),
+        fetchData('/api/users/getuserinfo',
+            { user_name: userName, ip_address: session.user.ipAddress},
+            session.user.token 
+        )
+    ]);
+
+    if(!userData) return notFound();
+    if(userData.ResultCode !== '0') return FailGetData("DB에서 Data를 가져오지 못했습니다.", "/user");
 
     const formItems: ISection[] = [
         {
@@ -69,24 +83,26 @@ export default async function Page(props: {
             ]
         },
     ];
+    
     const buttonItems: IButtonInfo = {
-        cancel : { title: trans.common.cancel, link: '/client' },
-        go : { title: trans.client.create_client },
+        cancel : { title: trans.common.cancel, link: '/user' },
+        go : { title: trans.user.create_user },
     };
 
     return (
         <main>
             <Breadcrumbs
                 breadcrumbs={[
-                    { label: trans.client.client, href: '/client' },
+                    { label: trans.user.user, href: '/user' },
                     {
-                        label: trans.client.create_client,
-                        href: '/client/create',
+                        label: trans.user.create_user,
+                        href: `/user/${id}/edit`,
                         active: true,
                     },
                 ]}
             />
-            <CreateForm 
+            <EditForm
+                id={id}
                 items={formItems}
                 buttons={buttonItems}
                 trans={trans.error}

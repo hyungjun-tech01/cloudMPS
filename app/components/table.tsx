@@ -1,5 +1,6 @@
 'use client';
 
+import * as React from 'react';
 import { Table } from 'antd';
 import type { IColumn } from '@/app/libs/types';
 
@@ -14,7 +15,7 @@ interface ITable {
 export default function CustomizedTable({
     columns,
     dataSource,
-    totalPages
+    totalPages,
 }: ITable) {
 
     return (
