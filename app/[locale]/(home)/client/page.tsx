@@ -13,7 +13,6 @@ import getDictionary from '@/app/libs/dictionaries';
 import { ISearch, ClientData } from "@/app/libs/types";
 import { fetchData, modifyUser, deleteUser } from "@/app/libs/actions";
 import { CreateButton } from "@/app/components/buttons";
-import { record } from "zod";
 
 
 export const metadata: Metadata = {
@@ -33,13 +32,10 @@ export default async function Page(props: {
     const session = await auth();
     const userName = session?.user.name;
 
-    if (!userName) {
-        redirect('/login'); // '/login'으로 리다이렉트
-    };
-
-    if (session.user.role !== 'PARTNER') {
-        redirect('/'); // '/login'으로 리다이렉트
-    };
+    if (!userName) redirect('/login');
+    console.log("session expires :", session.expires);
+    if(new Date(session.expires) < new Date()) return redirect('/login');
+    if (session.user.role !== 'PARTNER') redirect('/');
 
     const searchData = {
         search_client_name: query,

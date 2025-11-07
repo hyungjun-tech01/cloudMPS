@@ -9,6 +9,7 @@
     "error_miss_input" :"Some missing input items.",
     "error_min_password_length":"Password must be at least 6 characters long.",
     "fail_parsing": "Missing Input Error",
+    "go_back": "Go Back",
     "memo": "Memo",
     "next": "Next",
     "previous": "Previous",
@@ -289,6 +290,7 @@
     "client_scale": "Scale",
     "client_zip_code": "Client Zip Code",
     "create_client": "Create Client",
+    "edit_client": "Edit Client",
     "homepage": "Homepage",
     "industry_type": "Industry Type",
     "region": "Region",
@@ -328,9 +330,11 @@
   "error": {
     "error_in_input": "Erros in inputs",
     "error_occurrs" :  "Error occurs like the following\n- ",
-    "new_passwords_not_same": "New passwords are not the same.",
-    "missing_authentication": "Unauthorized",
     "failed_to_get_data": "Failed to get data. Please, try again.",
-    "failed_to_save_data": "Failed to save data. Please, try again."
+    "failed_to_save_data": "Failed to save data. Please, try again.",
+    "missing_authentication": "Unauthorized",
+    "new_passwords_not_same": "New passwords are not the same.",
+    "not_found_client": "Could not find the requested client information",
+    "not_found_user": "Could not find the requested user information"
   }
 }

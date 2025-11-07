@@ -16,6 +16,7 @@ export default async function Page(props: {
     const session = await auth();
 
     if(!session?.user) return redirect('/login');
+    if(new Date(session.expires) < new Date()) return redirect('/login');
     if(session.user.role !== 'PARTNER') return redirect('/');
 
     const formItems: ISection[] = [

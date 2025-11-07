@@ -182,7 +182,7 @@ export interface IEditItem {
   | "button"
   | "status_bar"
   | "date";
-  defaultValue: string | number;
+  defaultValue: string | number | Date | null;
   placeholder?: string;
   options?:
   | { title: string | string[]; value: string | number; suffix?: string }[]

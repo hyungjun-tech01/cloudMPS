@@ -9,6 +9,7 @@
     "error_miss_input": "입력항목은 필수 입력 사항입니다.",
     "error_min_password_length": "password 는 6자리 이상이어야 합니다.",
     "fail_parsing": "필수 입력 누락",
+    "go_back": "뒤로가기",
     "memo": "메모",
     "next": "다음",
     "previous": "이전",
@@ -274,7 +275,7 @@
     "ceo": "대표자명",
     "client": "거래처",
     "client_address": "거래처 주소",
-    "client_bank_name": "은행명",
+    "client_bank_name": "거래처 계좌 은행 이름",
     "client_business_item": "거래처 업종",
     "client_ceo": "거래처 대표",
     "client_close_date": "거래처 폐업일",
@@ -290,6 +291,7 @@
     "client_scale": "거래처 규모",
     "client_zip_code": "거래처 우편번호",
     "create_client": "거래처 생성",
+    "edit_client": "거래처 편집",
     "homepage": "홈페이지",
     "industry_type": "산업구분",
     "region": "지역",
@@ -329,9 +331,11 @@
   "error": {
     "error_in_input": "입력 값에 오류가 있습니다.",
     "error_occurrs" :  "다음과 같은 오류가 발생했습니다.\n- ",
-    "new_passwords_not_same": "새 비밀번호가 서로 일치하지 않습니다.",
-    "missing_authentication": "인증 정보가 확인되지 않습니다.",
     "failed_to_get_data": "값을 가져오지 못했습니다. 다시 시도해 보시기 바랍니다.",
-    "failed_to_save_data": "값을 저장하지 못했습니다. 다시 시도해 보시기 바랍니다."
+    "failed_to_save_data": "값을 저장하지 못했습니다. 다시 시도해 보시기 바랍니다.",
+    "missing_authentication": "인증 정보가 확인되지 않습니다.",
+    "new_passwords_not_same": "새 비밀번호가 서로 일치하지 않습니다.",
+    "not_found_client": "요청한 고객 정보를 찾지 못했습니다.",
+    "not_found_user": "요청한 사용자 정보를 찾지 못했습니다."
   }
 }
