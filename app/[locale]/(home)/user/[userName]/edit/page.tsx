@@ -1,7 +1,7 @@
 import { redirect, notFound } from 'next/navigation'; // 적절한 리다이렉트 함수 import
 import Breadcrumbs from '@/app/components/breadcrumbs';
 import { EditForm } from '@/app/components/user/edit-form';
-import FailGetData from '@/app/components/fail-get-data';
+import NotFound from '@/app/components/not-found';
 import { ISection, IButtonInfo } from '@/app/libs/types';
 import getDictionary from '@/app/libs/dictionaries';
 import { fetchData } from '@/app/libs/actions';
@@ -30,7 +30,8 @@ export default async function Page(props: {
     ]);
 
     if(!userData) return notFound();
-    if(userData.ResultCode !== '0') return FailGetData("DB에서 Data를 가져오지 못했습니다.", "/user");
+    if(userData.ResultCode !== '0')
+        return NotFound(trans.error.not_found_user, trans.common.go_back, "/user");
 
     const formItems: ISection[] = [
         {

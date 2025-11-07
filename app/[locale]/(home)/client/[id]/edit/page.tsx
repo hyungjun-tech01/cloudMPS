@@ -5,7 +5,7 @@ import { fetchData } from '@/app/libs/actions';
 import { ISection, IButtonInfo } from '@/app/libs/types';
 import getDictionary from '@/app/libs/dictionaries';
 import { auth } from "@/auth";
-import NotFound from './not-found';
+import NotFound from '@/app/components/not-found';
 
 
 export default async function Page(props: {
@@ -33,7 +33,7 @@ export default async function Page(props: {
     ]);
 
     if(clientInfoResult.ResultCode !== "0")
-        return NotFound(trans.error.not_found_client, trans.common.go_back);
+        return NotFound(trans.error.not_found_client, trans.common.go_back, "/client");
 
     const clientInfo = clientInfoResult.clients;
     console.log("Client Info :", clientInfo);
