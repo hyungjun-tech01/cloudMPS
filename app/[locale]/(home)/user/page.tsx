@@ -12,7 +12,7 @@ import { UpdateButton } from "@/app/components/buttons";
 
 import getDictionary from '@/app/libs/dictionaries';
 import { ISearch, UserData } from "@/app/libs/types";
-import { fetchData, modifyUser, deleteUser, registerMember } from "@/app/libs/actions";
+import { fetchData } from "@/app/libs/actions";
 
 
 export const metadata: Metadata = {
@@ -124,11 +124,6 @@ export default async function Page(props: {
         }
     }) : [];
 
-    const actions = {
-        modify : modifyUser,
-        delete : deleteUser,
-    }
-
     return (
         <div className="w-full">
             <div className="flex w-full items-center justify-between">
@@ -141,7 +136,6 @@ export default async function Page(props: {
                 <InviteForm
                     userData={userDataForInviteForm}
                     trans={transDataForInviteForm}
-                    action={registerMember}
                 />
             }
             <Suspense fallback={<TableSkeleton />}>
@@ -149,7 +143,6 @@ export default async function Page(props: {
                     dataSource={dataSource}
                     columns={columns}
                     totalPages={totalPages}
-                    actions={actions}
                 />
             </Suspense>
         </div>

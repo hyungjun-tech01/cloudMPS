@@ -197,6 +197,23 @@ export const formatTimeSimple = (dateStr: string) => {
   }
 };
 
+export const formatDateSimple = (dateStr: string) => {
+  try {
+    const date = new Date(dateStr);
+
+    const yyyy = date.getFullYear();
+    const MM = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+
+    return `${yyyy}-${MM}-${dd}`;
+  } catch(e){
+    console.log('[Error] message: ', e);
+    console.log(' - formatDate / input :', dateStr);
+    console.log(' - converted :', dateStr);
+    return "";
+  }
+};
+
 export const formatTimeYYYYpMMpDD = (inputDate: Date) => {
   const yyyy = String(inputDate.getFullYear());
   const mo = String(inputDate.getMonth() + 1).padStart(2,'0');

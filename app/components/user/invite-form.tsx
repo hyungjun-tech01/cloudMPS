@@ -2,21 +2,19 @@
 
 import { useActionState } from 'react';
 import { MemberState } from '@/app/libs/types';
+import { registerMember } from '@/app/libs/actions';
 import MaterialIcon from '@/app/components/materialIcon';
 
 
 export function InviteForm({
   userData,
   trans,
-  action,
 }: {
   userData: {userName: string, companyType:string, companyCode?: number, ipAddress: string};
   trans: Record<string, string>;
-  action: (prevState: void | MemberState, formData: FormData)
-    => Promise<MemberState | void>;
 }) {
   const initialState: MemberState = { message: null, errors: {} };
-  const [state, formAction] = useActionState(action, initialState);
+  const [state, formAction] = useActionState(registerMember, initialState);
   
   return (
     <form action={formAction}>
@@ -40,11 +38,11 @@ export function InviteForm({
             <MaterialIcon name="add" props="h-5 md:ml-4" />
           </button>
         </div>
-        {!!state?.errors && 
+        {!!state?.errors && state.errors.length > 0 &&
           Object.keys(state.errors).map(item =>
-            state.errors[item].errors.map(err =>
+            state.errors[item].errors.map((err : typeof keyof MemberState) =>
               <p className="ml-4 text-sm text-red-500" key={item} >
-                {trans[item] + ":" + trans[err]}
+                {(trans[item] ?? item) + ":" + (trans[err] ?? err)}
               </p>
           ))
         }

@@ -61,7 +61,7 @@ export function EditForm({
                     options={item.options}
                     chartData={item.chartData}
                     other={item.other}
-                    error={(!!state?.errors && !!state?.errors[item.name as keyof UserState['errors']])
+                    errors={(!!state?.errors && !!state?.errors[item.name as keyof UserState['errors']])
                       ? state?.errors[item.name as keyof UserState['errors']]
                       : null
                     }

@@ -281,7 +281,7 @@ export async function registerMember(prevState: void | MemberState, formData: Fo
         return {
             errors: tree.properties,
             message: 'errors_in_inputs',
-        };
+        } as MemberState;
     };
 
     const inputData = {
@@ -299,10 +299,8 @@ export async function registerMember(prevState: void | MemberState, formData: Fo
     if(resp.ResultCode !== 0) {
         return {
             message: resp.ErrorMessage,
-        };
+        } as MemberState;
     };
-
-    return;
 };
 
 export async function modifyMember(id: string, prevState: void | MemberState, formData: FormData) {
@@ -482,14 +480,14 @@ export async function modifyClient(id: string, prevState : void | ClientState, f
         return {
             errors: tree.properties,
             message: 'errors_in_inputs',
-        };
+        } as ClientState;
     };
 
     const session = await auth();
     if(!session?.user) {
         return {
             message: 'missing_authentication'
-        }
+        } as ClientState;
     }
     const { name, companyCode, ipAddress, token } = session.user;
     const today = new Date();
@@ -547,8 +545,10 @@ export async function modifyClient(id: string, prevState : void | ClientState, f
         if(response.ResultCode !== "0") {
             return {
                 message: response.ErrorMessage
-            };
+            } as ClientState;
         };
+        revalidatePath("/client");
+        redirect("/client");
     } catch (err) {
         console.error(`\t[ modify client ] Error : ${err}`);
         return {

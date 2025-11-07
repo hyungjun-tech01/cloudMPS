@@ -1,11 +1,12 @@
 import { redirect } from 'next/navigation'; // 적절한 리다이렉트 함수 import
 import Breadcrumbs from '@/app/components/breadcrumbs';
 import { EditForm } from '@/app/components/client/edit-form';
+import NotFound from '@/app/components/not-found';
 import { fetchData } from '@/app/libs/actions';
 import { ISection, IButtonInfo } from '@/app/libs/types';
 import getDictionary from '@/app/libs/dictionaries';
+import { formatDateSimple } from '@/app/libs/utils';
 import { auth } from "@/auth";
-import NotFound from '@/app/components/not-found';
 
 
 export default async function Page(props: {
@@ -36,10 +37,11 @@ export default async function Page(props: {
         return NotFound(trans.error.not_found_client, trans.common.go_back, "/client");
 
     const clientInfo = clientInfoResult.clients;
-    console.log("Client Info :", clientInfo);
+    console.log("Client Info :", clientInfo.establishment_date);
 
-    const openDate = !!clientInfo.establishment_date ? new Date(clientInfo.establishment_date) : null;
-    const closeDate = !!clientInfo.closure_date ? new Date(clientInfo.closure_date) : null;
+    const openDate = !!clientInfo.establishment_date ? formatDateSimple(clientInfo.establishment_date) : null;
+    const closeDate = !!clientInfo.closure_date ? formatDateSimple(clientInfo.closure_date) : null;
+    console.log("Client Info :", openDate);
 
     const formItems: ISection[] = [
         {
