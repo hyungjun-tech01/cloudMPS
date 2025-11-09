@@ -178,6 +178,7 @@
     "placeholder_deal_company_code": "Enter your dealer code if you have"
   },
   "device": {
+    "app_type": "App Type",
     "auto_manual": "Auto/Manual",
     "black_white": "Black&White",
     "collect_date": "Collection",
@@ -195,14 +196,25 @@
     "monitoring": "Monitoring",
     "monthly_printed": "Monthly Printed",
     "paper_size": "Paper",
+    "physical_device_id": "Physical Device ID",
     "refill_ink": "Refill Ink",
     "residual_drum": "Residual Drum",
     "residual_toner": "Residual Toner",
-    "total_printed": "Total Printed Pages",
     "sales_point": "Sales Point",
     "serial": "Serial No.",
+    "secDesc_basic_info":"Input basic information of the device.",
+    "secTitle_basic_info": "The basic information of the device",
     "status": "Status",
-    "sum": "Sum"
+    "sum": "Sum",
+    "total_printed": "Total Printed Pages",
+    "black_toner_percentage": "Black Toner Remained(%)",
+    "cyan_toner_percentage": "Cyan Toner Remained(%)",
+    "magenta_toner_percentage": "Magenta Toner Remained(%)",
+    "yellow_toner_percentage": "Yellow Toner Remained(%)",
+    "black_drum_percentage": "Black Drum Remained(%)",
+    "cyan_drum_percentage": "Cyan Drum Remained(%)",
+    "magenta_drum_percentage": "Magenta Drum Remained(%)",
+    "yellow_drum_percentage": "Yellow Drum Remained(%)"
   },
   "user": {
     "card_number": "Primary Card No.",

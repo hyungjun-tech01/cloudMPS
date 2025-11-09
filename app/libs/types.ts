@@ -212,7 +212,32 @@ export interface DeviceData {
   magenta_drum_percentage: number;
   yellow_drum_percentage: number;
   client_name: string;
-}
+};
+
+export type DeviceState = {
+  errors?: {
+    deviceName?: string[];
+    extDeviceFunction?: string[];
+    physicalDeviceId?: string[];
+    location?: string[];
+    deviceModel?: string[];
+    serialNumber?: string[];
+    deviceStatus?: string[];
+    deviceType?: string[];
+    blackTonerPercentage?: string[];
+    cyanTonerPercentage?: string[];
+    magentaTonerPercentage?: string[];
+    yellowTonerPercentage?: string[];
+    appType?: string[];
+    blackDrumPercentage?: string[];
+    cyanDrumPercentage?: string[];
+    magentaDrumPercentage?: string[];
+    yellowDrumPercentage?: string[];
+    clientId?: string[];
+  };
+  message?: string | null;
+};
+
 
 // ----------- Components ----------------------------------------------------------------
 export interface IEditItem {

@@ -7,8 +7,9 @@ import { z } from "zod";
 
 import { auth, signIn, signOut } from '@/auth';
 import { BASE_PATH, MIN_PASSWORD_LENGTH } from './constants';
-import { LoginData, MemberState, ClientState, UserState } from './types';
+import { ClientState, DeviceState, LoginData, MemberState, UserState } from './types';
 import { formatTimeYYYYMMDD } from './utils';
+import { userAgent } from "next/server";
 
 
 export async function logout() {
@@ -491,8 +492,6 @@ export async function createClient(prevState : void | ClientState, formData: For
         }
     }
     const { name, companyCode, ipAddress, token } = session.user;
-    const today = new Date();
-    const todayStr = formatTimeYYYYMMDD(today);
     const updatedOpenDate = validatedFields.data.establishmentDate;
     const updatedCloseDate = validatedFields.data.closureDate;
 
@@ -515,10 +514,6 @@ export async function createClient(prevState : void | ClientState, formData: For
         client_fax_number : validatedFields.data.clientFaxNumber,
         homepage : validatedFields.data.homepage,
         client_memo : validatedFields.data.clientMemo,
-        created_by : name,
-        create_date : todayStr,
-        modify_date : todayStr,
-        recent_user : name,
         account_code : validatedFields.data.accountCode,
         bank_name : validatedFields.data.bankName,
         account_owner : validatedFields.data.accountOwner,
@@ -666,6 +661,118 @@ export async function modifyClient(id: string, prevState : void | ClientState, f
     
     revalidatePath("/client");
     redirect("/client");
+};
+
+// ----------- Device ----------------------------------------------------------------
+const DeviceFormScheme = z.object({
+    deviceName: z.string(),
+    extDeviceFunction: z.string().nullish(),
+    physicalDeviceId: z.string().nullish(),
+    location: z.string().nullish(),
+    deviceModel: z.string().nullish(),
+    serialNumber: z.string().min(1),
+    deviceStatus: z.string().nullish(),
+    deviceType: z.string().nullish(),
+    blackTonerPercentage: z.coerce.number().min(0).max(100),
+    cyanTonerPercentage: z.coerce.number().min(0).max(100),
+    magentaTonerPercentage: z.coerce.number().min(0).max(100),
+    yellowTonerPercentage: z.coerce.number().min(0).max(100),
+    appType: z.string().nullish(),
+    blackDrumPercentage: z.coerce.number().min(0).max(100),
+    cyanDrumPercentage: z.coerce.number().min(0).max(100),
+    magentaDrumPercentage: z.coerce.number().min(0).max(100),
+    yellowDrumPercentage: z.coerce.number().min(0).max(100),
+    clientId: z.string().nullish(),
+});
+
+export async function createDevice(prevState : void | DeviceState, formData: FormData) {
+    const validatedFields = DeviceFormScheme.safeParse({
+        deviceName: formData.get("deviceName"),
+        extDeviceFunction: formData.get("extDeviceFunction"),
+        physicalDeviceId: formData.get("physicalDeviceId"),
+        location: formData.get("location"),
+        deviceModel: formData.get("deviceModel"),
+        serialNumber: formData.get("serialNumber"),
+        deviceStatus: formData.get("deviceStatus"),
+        deviceType: formData.get("deviceType"),
+        blackTonerPercentage: formData.get("blackTonerPercentage"),
+        cyanTonerPercentage: formData.get("cyanTonerPercentage"),
+        magentaTonerPercentage: formData.get("magentaTonerPercentage"),
+        yellowTonerPercentage: formData.get("yellowTonerPercentage"),
+        appType: formData.get("appType"),
+        blackDrumPercentage: formData.get("blackDrumPercentage"),
+        cyanDrumPercentage: formData.get("cyanDrumPercentage"),
+        magentaDrumPercentage: formData.get("magentaDrumPercentage"),
+        yellowDrumPercentage: formData.get("yellowDrumPercentage"),
+        clientId: formData.get("clientId"),
+    });
+
+    if (!validatedFields.success) {
+        const tree = z.treeifyError(validatedFields.error);
+        console.log('createDevice :', tree.properties);
+        return {
+            errors: tree.properties,
+            message: 'errors_in_inputs',
+        } as DeviceState;
+    };
+
+    const session = await auth();
+    if(!session?.user) {
+        return {
+            message: 'missing_authentication'
+        } as DeviceState;
+    };
+
+    const { name, companyCode, ipAddress, token } = session.user;
+    const inputData = {
+        device_name: validatedFields.data.deviceName,
+        ext_device_function: validatedFields.data.extDeviceFunction,
+        physical_device_id: validatedFields.data.physicalDeviceId,
+        location: validatedFields.data.location,
+        device_model: validatedFields.data.deviceModel,
+        serial_number: validatedFields.data.serialNumber,
+        device_status: validatedFields.data.deviceStatus,
+        device_type: validatedFields.data.deviceType,
+        black_toner_percentage: validatedFields.data.blackTonerPercentage,
+        cyan_toner_percentage: validatedFields.data.cyanTonerPercentage,
+        magenta_toner_percentage: validatedFields.data.magentaTonerPercentage,
+        yellow_toner_percentage: validatedFields.data.yellowTonerPercentage,
+        app_type: validatedFields.data.appType,
+        black_drum_percentage: validatedFields.data.blackDrumPercentage,
+        cyan_drum_percentage: validatedFields.data.cyanDrumPercentage,
+        magenta_drum_percentage: validatedFields.data.magentaDrumPercentage,
+        yellow_drum_percentage: validatedFields.data.yellowDrumPercentage,
+        client_name: validatedFields.data.clientId,
+        user_name: name,
+        company_code: companyCode,
+        ip_address: ipAddress,
+    };
+
+    try {
+        const resp = await fetch(`${BASE_PATH}/api/devices/create`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'session_token': token ?? "",
+            },
+            body: JSON.stringify(inputData),
+        });
+        const response = await resp.json();
+        console.log('createDevice / response :', response);
+        if(response.ResultCode !== "0") {
+            return {
+                message: response.ErrorMessage
+            } as DeviceState;
+        };
+    } catch (err) {
+        console.error(`\t[ create device ] Error : ${err}`);
+        return {
+            message: "failed_to_save_data"
+        } as DeviceState;
+    };
+
+    revalidatePath("/device");
+    redirect("/device");
 };
 
 // ----------- Common ----------------------------------------------------------------

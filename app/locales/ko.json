@@ -178,6 +178,7 @@
     "placeholder_deal_company_code": "관리업체코드가 있다면 입력하세요."
   },
   "device": {
+    "app_type": "앱 유형",
     "auto_manual": "자동/수동",
     "black_white": "흑백",
     "collect_date": "수집일",
@@ -195,14 +196,25 @@
     "monthy_printed": "월 출력량",
     "model": "기기 모델명",
     "paper_size": "용지",
+    "physical_device_id": "물리기기ID",
     "refill_ink": "무한잉크",
     "residual_toner": "토너잔량",
     "residual_drum": "드럼잔량",
     "sales_point": "영업점",
     "serial": "시리얼번호",
+    "secDesc_basic_info":"기기에 대한 기본 정보를 입력합니다.",
+    "secTitle_basic_info": "기기 기본 정보",
     "status": "상태",
     "sum": "합계",
-    "total_printed": "전체 인쇄 페이지"
+    "total_printed": "전체 인쇄 페이지",
+    "black_toner_percentage": "Black토너잔량(%)",
+    "cyan_toner_percentage": "Cyan토너잔량(%)",
+    "magenta_toner_percentage": "Magenta토너잔량(%)",
+    "yellow_toner_percentage": "Yellow토너잔량(%)",
+    "black_drum_percentage": "Black드럼잔량(%)",
+    "cyan_drum_percentage": "Cyan드럼잔량(%)",
+    "magenta_drum_percentage": "Magenta드럼잔량(%)",
+    "yellow_drum_percentage": "Yellow드럼잔량(%)"
   },
   "user": {
     "card_number": "카드번호(1)",
@@ -295,6 +307,7 @@
     "bank_name": "은행명",
     "ceo": "대표자명",
     "client": "거래처",
+    "client_id": "거래처 ID",
     "client_address": "거래처 주소",
     "client_bank_name": "거래처 계좌 은행 이름",
     "client_business_item": "거래처 업종",
