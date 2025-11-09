@@ -11,7 +11,7 @@ import { UpdateButton } from "@/app/components/buttons";
 
 import getDictionary from '@/app/libs/dictionaries';
 import { ISearch, ClientData } from "@/app/libs/types";
-import { fetchData, modifyUser, deleteUser } from "@/app/libs/actions";
+import { fetchData  } from "@/app/libs/actions";
 import { CreateButton } from "@/app/components/buttons";
 
 
@@ -104,7 +104,7 @@ export default async function Page(props: {
                 phone_number: client.client_phone_number,
                 actions: 
                     <div key={client.client_id} className='flex justify-center items-center gap-2'>
-                        <UpdateButton link={`/client/${client.client_id}/edit`} />
+                        <UpdateButton link={`/client/edit?id=${client.client_id}`} />
                         <button
                             className="rounded-md px-1 pt-1 border hover:bg-gray-100"
                             // onClick={handleMenuOpen}

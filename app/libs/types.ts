@@ -36,12 +36,41 @@ export interface RegisterData {
 }
 
 // ----------- Users --------------------------------------------------------------------
+export type UserState = {
+  errors?: {
+    userName?: string[];
+    externalUserName?: string[];
+    fullName?: string[];
+    notes?: string[];
+    totalJobs?: string[];
+    totalPages?: string[];
+    schedulePeriod?: string[];
+    scheduleAmount?: string[];
+    scheduleStart?: string[];
+    department?: string[];
+    office?: string[];
+    cardNumber?: string[];
+    cardNumber2?: string[];
+    disabledPrinting?: string[];
+    disabledPrintingUntil?: string[];
+    homeDirectory?: string[];
+    balance?: string[];
+    sysadmin?: string[];
+    privilege?: string[];
+    userType?: string[];
+    companyCode?: string[];
+    userStatus?: string[];
+    userRole?: string[];
+  };
+  message?: string | null;
+};
+
 export interface UserData {
   user_id: string;
   user_name: string;
   external_user_name: string | null;
   full_name: string;
-  email: "newtons2002@naver.com";
+  email: string;
   notes: string | null;
   total_jobs: number;
   total_pages: number;
@@ -77,13 +106,6 @@ export interface UserData {
   password?: string;
   user_role: "PARTNER" | "SUBSCRIPTION" | "FREE_USER" | "PARTNER_USER" | "SUBSCRIPT_USER";
 }
-
-export type UserState = {
-  errors?: {
-    userFullName?: string[];
-  };
-  message?: string | null;
-};
 
 // ----------- Members --------------------------------------------------------------------
 export type MemberState = {
@@ -164,6 +186,33 @@ export interface ClientData {
   company_code: string;
   ip_address: string;
 };
+
+// ----------- Devices -------------------------------------------------------------------
+export interface DeviceData {
+  device_id: string;
+  device_name: string;
+  created_date: string;
+  created_by: string;
+  modified_date: string;
+  modified_by: string;
+  ext_device_function: string;
+  physical_device_id: string;
+  location: string;
+  device_model: string;
+  serial_number: string;
+  device_status: string;
+  device_type: string;
+  black_toner_percentage: number;
+  cyan_toner_percentage: number;
+  magenta_toner_percentage: number;
+  yellow_toner_percentage: number;
+  app_type: string;
+  black_drum_percentage: number;
+  cyan_drum_percentage: number;
+  magenta_drum_percentage: number;
+  yellow_drum_percentage: number;
+  client_name: string;
+}
 
 // ----------- Components ----------------------------------------------------------------
 export interface IEditItem {

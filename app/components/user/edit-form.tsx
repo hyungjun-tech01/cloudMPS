@@ -6,22 +6,22 @@ import clsx from 'clsx';
 import type { UserState } from '@/app/libs/types';
 import { IButtonInfo, IEditItem, ISection } from '@/app/libs/types';
 import { EditItem } from '@/app/components/edit-items';
+import { modifyUser } from '@/app/libs/actions';
 
 
 export function EditForm({
   id,
   items,
   buttons,
-  action,
+  trans
 }: {
   id: string;
   items: ISection[];
   buttons?: IButtonInfo;
-  action: (id: string, prevState: void | UserState, formData: FormData)
-    => Promise<UserState | void> | null;
+  trans: Record<string, string>;
 }) {
   const initialState: UserState = { message: null, errors: {} };
-  const updatedAction = action.bind(null, id);
+  const updatedAction = modifyUser.bind(null, id);
   const [state, formAction] = useActionState(updatedAction, initialState);
 
 

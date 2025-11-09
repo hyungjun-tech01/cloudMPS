@@ -326,3 +326,37 @@ export function generateCreateLog(
   console.log(changes);
   return changes.join(', ');
 }
+
+export function interpretNY(locale: 'ko' | 'en', value: 'N' | 'Y') {
+  if(locale === 'en') {
+    return value === 'Y' ? 'Yes' : 'No';
+  } else {
+    return value === 'Y' ? '예' : '아니오';
+  }
+}
+
+export function interpretPrivilage(locale: 'ko' | 'en', value: string) {
+  if(locale === 'en') {
+    switch(value) {
+      case 'ALL':
+        return 'All';
+      case 'PRINT':
+        return 'Print';
+      case 'SCAN':
+        return 'Scan';
+      default:
+        return 'None';
+    }
+  } else {
+    switch(value) {
+      case 'ALL':
+        return '모든 권한';
+      case 'PRINT':
+        return '출력 가능';
+      case 'SCAN':
+        return '스캔 가능';
+      default:
+        return '없음';
+    }
+  }
+}

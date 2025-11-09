@@ -38,9 +38,9 @@ export function InviteForm({
             <MaterialIcon name="add" props="h-5 md:ml-4" />
           </button>
         </div>
-        {!!state?.errors && state.errors.length > 0 &&
+        {!!state?.errors &&
           Object.keys(state.errors).map(item =>
-            state.errors[item].errors.map((err : typeof keyof MemberState) =>
+            state.errors[item].errors.map((err) =>
               <p className="ml-4 text-sm text-red-500" key={item} >
                 {(trans[item] ?? item) + ":" + (trans[err] ?? err)}
               </p>

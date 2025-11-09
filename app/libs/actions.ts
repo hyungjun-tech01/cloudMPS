@@ -7,7 +7,7 @@ import { z } from "zod";
 
 import { auth, signIn, signOut } from '@/auth';
 import { BASE_PATH, MIN_PASSWORD_LENGTH } from './constants';
-import { LoginData, MemberState, ClientState } from './types';
+import { LoginData, MemberState, ClientState, UserState } from './types';
 import { formatTimeYYYYMMDD } from './utils';
 
 
@@ -145,7 +145,7 @@ export async function changePassword(
         new_password: formData.get('newPassword'),
         ip_address: session?.user.ipAddress
     };
-s
+
     let result = null;
 
     try {
@@ -211,6 +211,32 @@ export async function login(data: LoginData) {
 }
 
 // ----------- User ------------------------------------------------------------------
+const UserFormScheme = z.object({
+    userName: z.string().min(1, { message : 'error_miss_input' }),
+    externalUserName: z.string().nullable(),
+    fullName: z.string().min(1, { message : 'error_miss_input' }),
+    notes: z.string().nullable(),
+    totalJobs: z.coerce.number().min(0, { message : 'error_miss_input' }),
+    totalPages: z.coerce.number().min(0, { message : 'error_miss_input' }),
+    schedulePeriod: z.string().nullable(),
+    scheduleAmount: z.string().nullable(),
+    scheduleStart: z.string().nullable(),
+    deptName: z.string().nullable(),
+    office: z.string().nullable(),
+    cardNumber: z.string().nullable(),
+    cardNumber2: z.string().nullable(),
+    disabledPrinting: z.enum(['Y', 'N']),
+    disabledPrintingUntil: z.string().nullable(),
+    homeDirectory: z.string().nullable(),
+    balance: z.coerce.number().nullable(),
+    sysadmin: z.string().nullable(),
+    privilege: z.enum(['ALL', 'PRINT', 'SCAN', 'NONE']),
+    userType: z.enum(['COMPANY', 'PERSON']),
+    companyCode: z.coerce.number().optional(),
+    userStatus: z.string().nullable(),
+    userRole: z.enum(['PARTNER', 'SUBSCRIPTION', 'FREE_USER', 'PARTNER_USER', 'SUBSCRIPT_USER']),
+});
+
 export async function getUserInfo(userName: string, ipAddr:string, token: string) {
     try {
         const resp = await fetch(`${BASE_PATH}/api/users/getuserinfo`, {
@@ -228,12 +254,100 @@ export async function getUserInfo(userName: string, ipAddr:string, token: string
     };
 }
 
-export async function modifyUser<DataType>(
+const ModifyUser = UserFormScheme.omit({
+    userName: true, cardNumber: true, cardNumber2: true, userType: true, companyCode: true, userRole: true
+});
+
+export async function modifyUser(
   id: string,
-  prevState: void | DataType,
+  prevState: void | UserState,
   formData: FormData
 ) {
-    console.log("NA");
+    const validateData = ModifyUser.safeParse({
+        externalUserName: formData.get('externalUserName'),
+        fullName: formData.get('fullName'),
+        notes: formData.get('notes'),
+        totalJobs: formData.get('totalJobs'),
+        totalPages: formData.get('totalPages'),
+        schedulePeriod: formData.get('schedulePeriod'),
+        scheduleAmount: formData.get('scheduleAmount'),
+        scheduleStart: formData.get('scheduleStart'),
+        deptName: formData.get('deptName'),
+        office: formData.get('office'),
+        disabledPrinting: formData.get('disabledPrinting'),
+        disabledPrintingUntil: formData.get('disabledPrintingUntil'),
+        homeDirectory: formData.get('homeDirectory'),
+        balance: formData.get('balance'),
+        sysadmin: formData.get('sysadmin'),
+        privilege: formData.get('privilege'),
+        userStatus: formData.get('userStatus')
+    });
+
+    if(!validateData.success) {
+        const tree = z.treeifyError(validateData.error);
+        console.log('modifyUser :', tree.properties);
+        return {
+            errors: tree.properties,
+            message: 'errors_in_inputs',
+        } as UserState;
+    };
+
+    const session = await auth();
+    if(!session?.user) {
+        return {
+            message: 'missing_authentication'
+        } as UserState;
+    };
+
+    const { name, ipAddress, token } = session.user;
+    const inputData = {
+        user_id: id,
+        external_user_name: validateData.data.externalUserName,
+        full_name: validateData.data.fullName,
+        notes: validateData.data.notes,
+        total_jobs: validateData.data.totalJobs,
+        total_pages: validateData.data.totalPages,
+        schedule_period: validateData.data.schedulePeriod,
+        schedule_amount: validateData.data.scheduleAmount,
+        schedule_start: validateData.data.scheduleStart,
+        department: validateData.data.deptName,
+        office: validateData.data.office,
+        disabled_printing: validateData.data.disabledPrinting,
+        disabled_pprinting_until: validateData.data.disabledPrintingUntil,
+        home_directory: validateData.data.homeDirectory,
+        balance: validateData.data.balance,
+        sysadmin: validateData.data.sysadmin,
+        privilege: validateData.data.privilege,
+        user_status: validateData.data.userStatus,
+        user_name: name,
+        ip_address: ipAddress
+    };
+
+    try {
+        const resp = await fetch(`${BASE_PATH}/api/users/modify`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'session_token': token ?? ""
+            },
+            body: JSON.stringify(inputData),
+        });
+        const response = await resp.json();
+        console.log('modifyUser / response :', response);
+
+        if(response.ResultCode !== "0") {
+            return {
+                message: response.ErrorMessage
+            } as UserState;
+        }
+    } catch (err) {
+        console.error(`\t[ modify user ] Error : ${err}`);
+        return {
+            message: "failed_to_save_data"
+        };
+    };
+    revalidatePath("/user");
+    redirect("/user");
 }
 
 export async function deleteUser(id:string, ipAddr:string, token:string) {
@@ -302,10 +416,6 @@ export async function registerMember(prevState: void | MemberState, formData: Fo
         } as MemberState;
     };
 };
-
-export async function modifyMember(id: string, prevState: void | MemberState, formData: FormData) {
-    console.log("NA");
-}
 
 // ----------- Client ----------------------------------------------------------------
 const ClientFormScheme = z.object({
@@ -547,14 +657,15 @@ export async function modifyClient(id: string, prevState : void | ClientState, f
                 message: response.ErrorMessage
             } as ClientState;
         };
-        revalidatePath("/client");
-        redirect("/client");
     } catch (err) {
         console.error(`\t[ modify client ] Error : ${err}`);
         return {
             message: "failed_to_save_data"
         };
     };
+    
+    revalidatePath("/client");
+    redirect("/client");
 };
 
 // ----------- Common ----------------------------------------------------------------

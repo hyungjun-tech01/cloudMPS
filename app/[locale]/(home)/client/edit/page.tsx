@@ -9,13 +9,18 @@ import { formatDateSimple } from '@/app/libs/utils';
 import { auth } from "@/auth";
 
 
+interface IEditClient {
+    id: string
+};
+
+
 export default async function Page(props: {
-    params: Promise<{ id: string, locale: "ko" | "en" }>
+    searchParams?: Promise<IEditClient>;
+    params: Promise<{ locale: "ko" | "en" }>
 }
 ) {
-    const params = await props.params;
-    const id = params.id;
-    const locale = params.locale;
+    const locale = (await props.params).locale;
+    const id = (await props.searchParams)?.id;
 
     const session = await auth();
     if (!session?.user) return redirect('/login');
@@ -37,11 +42,9 @@ export default async function Page(props: {
         return NotFound(trans.error.not_found_client, trans.common.go_back, "/client");
 
     const clientInfo = clientInfoResult.clients;
-    console.log("Client Info :", clientInfo.establishment_date);
 
     const openDate = !!clientInfo.establishment_date ? formatDateSimple(clientInfo.establishment_date) : null;
     const closeDate = !!clientInfo.closure_date ? formatDateSimple(clientInfo.closure_date) : null;
-    console.log("Client Info :", openDate);
 
     const formItems: ISection[] = [
         {

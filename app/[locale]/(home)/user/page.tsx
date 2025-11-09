@@ -37,7 +37,7 @@ export default async function Page(props: {
     };
 
     if (session.user.role !== 'SUBSCRIPTION' && session.user.role !== 'PARTNER') {
-        redirect('/'); // '/login'으로 리다이렉트
+        redirect('/'); // '/'으로 리다이렉트
     };
 
     const searchData = {
@@ -112,7 +112,7 @@ export default async function Page(props: {
             user_status: user.user_status,
             actions: 
                 <div key={user.user_id} className='flex justify-center items-center gap-2'>
-                    <UpdateButton link={`/user/${user.user_name}/edit`} />
+                    <UpdateButton link={`/user/edit?userName=${user.user_name}`} />
                     <button
                         className="rounded-md px-1 pt-1 border hover:bg-gray-100"
                         // onClick={handleMenuOpen}
