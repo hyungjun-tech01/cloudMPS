@@ -255,8 +255,12 @@ export interface IEditItem {
   | "react-select"
   | "button"
   | "status_bar"
-  | "date";
+  | "date"
+  | "number";
   defaultValue: string | number | Date | null;
+  min?: number;
+  max?: number;
+  step?: number;
   placeholder?: string;
   options?:
   | { title: string | string[]; value: string | number; suffix?: string }[]

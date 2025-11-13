@@ -25,6 +25,9 @@ export function EditItem({
   title,
   type,
   defaultValue,
+  min,
+  max,
+  step,
   placeholder,
   options,
   errors,
@@ -249,6 +252,37 @@ export function EditItem({
                 name={name}
                 type="date"
                 defaultValue={defaultValue?? null}
+                className="peer block w-full rounded-md border bg-slate-50 border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              />
+            </div>
+            <div id={`${name}-error`} aria-live="polite" aria-atomic="true">
+              {!!errors &&
+                errors.map((error: string) => (
+                  <p className="mt-2 text-sm text-red-500" key={error}>
+                    {error}
+                  </p>
+                ))}
+            </div>
+          </div>
+        </div>
+      );
+    case "number":
+      return (
+        <div className="mb-4">
+          <label htmlFor={name} className="mb-2 block text-sm font-semibold">
+            {title}
+          </label>
+          <div className="relative mt-2 rounded-md">
+            <div className="relative">
+              <input
+                id={name}
+                name={name}
+                type="number"
+                min={min}
+                max={max}
+                step={step ?? 1}
+                defaultValue={defaultValue as string}
+                placeholder={placeholder}
                 className="peer block w-full rounded-md border bg-slate-50 border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               />
             </div>

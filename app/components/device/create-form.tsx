@@ -3,7 +3,7 @@
 import { useActionState } from 'react';
 import Link from 'next/link';
 import clsx from 'clsx';
-import type { ClientState, IButtonInfo, IEditItem, ISection } from '@/app/libs/types';
+import type { DeviceState, IButtonInfo, IEditItem, ISection } from '@/app/libs/types';
 import { EditItem } from '@/app/components/edit-items';
 import { createDevice } from '@/app/libs/actions';
 
@@ -17,7 +17,7 @@ export function CreateForm({
   buttons?: IButtonInfo;
   trans: Record<string, string>;
 }) {
-  const initialState: ClientState = { message: null, errors: {} };
+  const initialState: DeviceState = { message: null, errors: {} };
   const [state, formAction] = useActionState(createDevice, initialState);
 
   return (
@@ -55,8 +55,8 @@ export function CreateForm({
                     options={item.options}
                     chartData={item.chartData}
                     other={item.other}
-                    errors={(!!state?.errors && !!state?.errors[item.name as keyof ClientState['errors']])
-                      ? state?.errors[item.name as keyof ClientState['errors']]
+                    errors={(!!state?.errors && !!state?.errors[item.name as keyof DeviceState['errors']])
+                      ? state?.errors[item.name as keyof DeviceState['errors']]
                       : null
                     }
                   />
