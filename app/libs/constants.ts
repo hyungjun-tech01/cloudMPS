@@ -215,8 +215,8 @@ export const BASE_PATH = "http://localhost:38005";
 export const REQ_INIT_ACCOUNT_PATH = "/login/init";
 
 export const DEVICE_TYPE = {
-  MOMO_PRINTER: "mono_printer",
+  MONO_PRINTER: "mono_printer",
   COLOR_PRINTER: "color_printer",
-  MOMO_MFP: "mono_mfp",
+  MONO_MFP: "mono_mfp",
   COLOR_MFP: "color_mfp"
 }

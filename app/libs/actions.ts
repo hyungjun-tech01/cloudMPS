@@ -119,9 +119,9 @@ export async function changePassword(
 
     // console.log('changePassword :', validateData);
     if(validateData.error) {
-        const tree = z.treeifyError(validateData.error);
+        const flattened = z.flattenError(validateData.error);
         return {
-            errors: tree.properties,
+            errors: flattened.fieldErrors,
             message: "error_in_input",
         };
     };
@@ -285,11 +285,11 @@ export async function modifyUser(
     });
 
     if(!validateData.success) {
-        const tree = z.treeifyError(validateData.error);
-        console.log('modifyUser :', tree.properties);
+        const flattened = z.flattenError(validateData.error);
+        console.log('modifyUser :', flattened.fieldErrors);
         return {
-            errors: tree.properties,
-            message: 'errors_in_inputs',
+            errors: flattened.fieldErrors,
+            message: 'error_in_input',
         } as UserState;
     };
 
@@ -391,11 +391,11 @@ export async function registerMember(prevState: void | MemberState, formData: Fo
     });
 
     if (!validatedFields.success) {
-        const tree = z.treeifyError(validatedFields.error);
-        console.log('registerMember :', tree.properties);
+        const flattened = z.flattenError(validatedFields.error);
+        console.log('registerMember :', flattened.fieldErrors);
         return {
-            errors: tree.properties,
-            message: 'errors_in_inputs',
+            errors: flattened.fieldErrors,
+            message: 'error_in_input',
         } as MemberState;
     };
 
@@ -477,11 +477,11 @@ export async function createClient(prevState : void | ClientState, formData: For
     });
 
     if (!validatedFields.success) {
-        const tree = z.treeifyError(validatedFields.error);
-        console.log('createClient :', tree.properties);
+        const flattened = z.flattenError(validatedFields.error);
+        console.log('createClient :', flattened.fieldErrors);
         return {
-            errors: tree.properties,
-            message: 'errors_in_inputs',
+            errors: flattened.fieldErrors,
+            message: 'error_in_input',
         };
     };
 
@@ -580,11 +580,11 @@ export async function modifyClient(id: string, prevState : void | ClientState, f
     });
 
     if (!validatedFields.success) {
-        const tree = z.treeifyError(validatedFields.error);
-        console.log('modifyClient :', tree.properties);
+        const flattened = z.flattenError(validatedFields.error);
+        console.log('modifyClient :', flattened.fieldErrors);
         return {
-            errors: tree.properties,
-            message: 'errors_in_inputs',
+            errors: flattened.fieldErrors,
+            message: 'error_in_input',
         } as ClientState;
     };
 
@@ -708,11 +708,11 @@ export async function createDevice(prevState : void | DeviceState, formData: For
     });
 
     if (!validatedFields.success) {
-        const tree = z.treeifyError(validatedFields.error);
-        console.log('createDevice :', tree.properties);
+        const flattened = z.flattenError(validatedFields.error);
+        console.log('createDevice :', flattened.fieldErrors);
         return {
-            errors: tree.properties,
-            message: 'errors_in_inputs',
+            errors: flattened.fieldErrors,
+            message: 'error_in_input',
         } as DeviceState;
     };
 
@@ -798,11 +798,11 @@ export async function modifyDevice(id: string, prevState : void | DeviceState, f
     });
 
     if (!validatedFields.success) {
-        const tree = z.treeifyError(validatedFields.error);
-        console.log('modifyDevice :', tree.properties);
+        const flattened = z.flattenError(validatedFields.error);
+        console.log('modifyDevice :', flattened.fieldErrors);
         return {
-            errors: tree.properties,
-            message: 'errors_in_inputs',
+            errors: flattened.fieldErrors,
+            message: 'error_in_input',
         } as DeviceState;
     };
 

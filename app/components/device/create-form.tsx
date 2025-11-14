@@ -56,7 +56,7 @@ export function CreateForm({
                     chartData={item.chartData}
                     other={item.other}
                     errors={(!!state?.errors && !!state?.errors[item.name as keyof DeviceState['errors']])
-                      ? state?.errors[item.name as keyof DeviceState['errors']]
+                      ? state.errors[item.name as keyof DeviceState['errors']]
                       : null
                     }
                   />

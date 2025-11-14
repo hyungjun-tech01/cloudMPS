@@ -54,8 +54,8 @@ export default async function Page(props: {
                 { name: "deviceType", title: trans.device.device_type, type: "select", defaultValue: null, options: [
                     { title: trans.device.device_type_mono_printer, value: DEVICE_TYPE.MONO_PRINTER },
                     { title: trans.device.device_type_color_printer, value: DEVICE_TYPE.COLOR_PRINTER },
-                    { title: trans.device.device_type_mono_mfp, value: DEVICE_TYPE.LASER_PRINTER },
-                    { title: trans.device.device_type_color_mfp, value: DEVICE_TYPE.INKJET_PRINTER }
+                    { title: trans.device.device_type_mono_mfp, value: DEVICE_TYPE.MONO_MFP },
+                    { title: trans.device.device_type_color_mfp, value: DEVICE_TYPE.COLOR_MFP }
                 ]},
                 { name: "deviceModel", title: trans.device.model, type: "input", defaultValue: "", placeholder: trans.device.placeholder_model_name },
                 { name: "serialNumber", title: trans.device.serial, type: "input", defaultValue: "", placeholder: trans.device.placeholder_serial_no },
