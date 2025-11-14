@@ -193,6 +193,7 @@
     "device_type_mono_mfp": "흑백 복합기",
     "device_type_color_mfp": "컬러 복합기",
     "drum": "드럼",
+    "edit_device": "기기 편집",
     "ext_device_function": "기기 기능",
     "ink_toner": "잉크/토너",
     "installed_date": "설치일",

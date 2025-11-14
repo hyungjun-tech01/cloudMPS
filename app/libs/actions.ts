@@ -775,6 +775,98 @@ export async function createDevice(prevState : void | DeviceState, formData: For
     redirect("/device");
 };
 
+export async function modifyDevice(id: string, prevState : void | DeviceState, formData: FormData) {
+    const validatedFields = DeviceFormScheme.safeParse({
+        deviceName: formData.get("deviceName"),
+        extDeviceFunction: formData.get("extDeviceFunction"),
+        physicalDeviceId: formData.get("physicalDeviceId"),
+        location: formData.get("location"),
+        deviceModel: formData.get("deviceModel"),
+        serialNumber: formData.get("serialNumber"),
+        deviceStatus: formData.get("deviceStatus"),
+        deviceType: formData.get("deviceType"),
+        blackTonerPercentage: formData.get("blackTonerPercentage"),
+        cyanTonerPercentage: formData.get("cyanTonerPercentage"),
+        magentaTonerPercentage: formData.get("magentaTonerPercentage"),
+        yellowTonerPercentage: formData.get("yellowTonerPercentage"),
+        appType: formData.get("appType"),
+        blackDrumPercentage: formData.get("blackDrumPercentage"),
+        cyanDrumPercentage: formData.get("cyanDrumPercentage"),
+        magentaDrumPercentage: formData.get("magentaDrumPercentage"),
+        yellowDrumPercentage: formData.get("yellowDrumPercentage"),
+        clientId: formData.get("clientId"),
+    });
+
+    if (!validatedFields.success) {
+        const tree = z.treeifyError(validatedFields.error);
+        console.log('modifyDevice :', tree.properties);
+        return {
+            errors: tree.properties,
+            message: 'errors_in_inputs',
+        } as DeviceState;
+    };
+
+    const session = await auth();
+    if(!session?.user) {
+        return {
+            message: 'missing_authentication'
+        } as DeviceState;
+    };
+
+    const { name, companyCode, ipAddress, token } = session.user;
+    const inputData = {
+        device_id: id,
+        device_name: validatedFields.data.deviceName,
+        ext_device_function: validatedFields.data.extDeviceFunction,
+        physical_device_id: validatedFields.data.physicalDeviceId,
+        location: validatedFields.data.location,
+        device_model: validatedFields.data.deviceModel,
+        serial_number: validatedFields.data.serialNumber,
+        device_status: validatedFields.data.deviceStatus,
+        device_type: validatedFields.data.deviceType,
+        black_toner_percentage: validatedFields.data.blackTonerPercentage,
+        cyan_toner_percentage: validatedFields.data.cyanTonerPercentage,
+        magenta_toner_percentage: validatedFields.data.magentaTonerPercentage,
+        yellow_toner_percentage: validatedFields.data.yellowTonerPercentage,
+        app_type: validatedFields.data.appType,
+        black_drum_percentage: validatedFields.data.blackDrumPercentage,
+        cyan_drum_percentage: validatedFields.data.cyanDrumPercentage,
+        magenta_drum_percentage: validatedFields.data.magentaDrumPercentage,
+        yellow_drum_percentage: validatedFields.data.yellowDrumPercentage,
+        client_name: validatedFields.data.clientId,
+        user_name: name,
+        company_code: companyCode,
+        ip_address: ipAddress,
+    };
+
+    try {
+        const resp = await fetch(`${BASE_PATH}/api/devices/modify`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'session_token': token ?? "",
+            },
+            body: JSON.stringify(inputData),
+        });
+        const response = await resp.json();
+        console.log('modifyDevice / response :', response);
+        if(response.ResultCode !== "0") {
+            return {
+                message: response.ErrorMessage
+            } as DeviceState;
+        };
+    } catch (err) {
+        console.error(`\t[ modify device ] Error : ${err}`);
+        return {
+            message: "failed_to_save_data"
+        } as DeviceState;
+    };
+
+    revalidatePath("/device");
+    redirect("/device");
+};
+
+
 // ----------- Common ----------------------------------------------------------------
 export async function fetchData(path:string, data: object, token?:string) {
     try {

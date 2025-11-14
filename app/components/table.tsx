@@ -22,6 +22,7 @@ export default function CustomizedTable({
         <Table
             columns={columns}
             dataSource={dataSource}
+            scroll={{ x: 'max-content' }}
         />
     );
 }

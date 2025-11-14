@@ -1,3 +1,5 @@
+import React from "react";
+
 // ----------- Login ----------------------------------------------------------------
 export interface LoginData {
   user_name: string;
@@ -319,7 +321,12 @@ export interface ISearch {
 }
 
 export interface IColumn {
-  title: string;
-  dataIndex: string;
-  key: string;
+  title: string | React.ReactNode;
+  dataIndex?: string;
+  key?: string;
+  children?: {
+    title: string | React.ReactNode;
+    dataIndex: string;
+    key: string;
+  }[];
 }

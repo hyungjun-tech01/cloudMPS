@@ -193,6 +193,7 @@
     "device_type_mono_mfp": "Mono MFP",
     "device_type_color_mfp": "Color MFP",
     "drum": "Drum",
+    "edit_device": "Edit Device",
     "ext_device_function": "Deivce Functions",
     "ink_toner": "Ink/Toner",
     "installed_date": "Installed",
