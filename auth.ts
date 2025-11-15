@@ -90,7 +90,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   ],
   callbacks: {
     authorized: ({ auth, request: { nextUrl } }) => {
-      // console.log("authorized called : ", request);
+      // console.log("authorized called : ", nextUrl);
       // check login --------------------------------------------
       const isLoggedIn = !!auth?.user;
       const isOnProtected = !(
@@ -104,6 +104,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           console.log("isOnProtected & not LoggedIn");
           return Response.redirect(new URL("/intro", nextUrl));
         }
+        if (nextUrl.pathname.startsWith("/analysis"))
+          return Response.redirect(new URL("/", nextUrl));
       } else if (isLoggedIn) {
         return Response.redirect(new URL("/", nextUrl));
       }

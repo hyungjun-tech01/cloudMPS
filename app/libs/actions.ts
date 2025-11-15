@@ -9,7 +9,7 @@ import { auth, signIn, signOut } from '@/auth';
 import { BASE_PATH, MIN_PASSWORD_LENGTH } from './constants';
 import { ClientState, DeviceState, LoginData, MemberState, UserState } from './types';
 import { formatTimeYYYYMMDD } from './utils';
-import { userAgent } from "next/server";
+import getDictionary from '@/app/libs/dictionaries';
 
 
 export async function logout() {
@@ -686,6 +686,8 @@ const DeviceFormScheme = z.object({
 });
 
 export async function createDevice(prevState : void | DeviceState, formData: FormData) {
+    const locale = formData.get('locale') ?? "ko";
+    const trans = await getDictionary(locale as "ko" | "en");
     const validatedFields = DeviceFormScheme.safeParse({
         deviceName: formData.get("deviceName"),
         extDeviceFunction: formData.get("extDeviceFunction"),
