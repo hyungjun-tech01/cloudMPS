@@ -214,6 +214,12 @@ export const MIN_PASSWORD_LENGTH = 6;
 export const BASE_PATH = "http://localhost:38005";
 export const REQ_INIT_ACCOUNT_PATH = "/login/init";
 
+export const USER_STATUS_TYPE = {
+  NEED_AUTH: "NEED_AUTH",
+  COMPLETE_AUTH: "COMPLETE_AUTH",
+  PASSWORD_CHANGING: "PASSWORD_CHANGING"
+}
+
 export const DEVICE_TYPE = {
   MONO_PRINTER: "mono_printer",
   COLOR_PRINTER: "color_printer",

@@ -303,7 +303,10 @@
     "placeholder_change_password": "새 비밀번호를 입력하세요",
     "placeholder_change_password_again": "새 비밀번호를 다시 입력하세요",
     "placeholder_password_new": "비밀번호를 입력하세요",
-    "placeholder_password_new_again": "비밀번호를 다시 입력하세요"
+    "placeholder_password_new_again": "비밀번호를 다시 입력하세요",
+    "NEED_AUTH": "인증 필요",
+    "COMPLETE_AUTH": "인증 완료",
+    "PASSWORD_CHANGING": "비밀번호 변경 중"
   },
   "account": {
     "balance": "잔액",

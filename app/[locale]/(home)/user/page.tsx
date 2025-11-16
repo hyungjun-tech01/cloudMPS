@@ -109,7 +109,7 @@ export default async function Page(props: {
         return {
             user_name: user.user_name,
             full_name: user.full_name,
-            user_status: user.user_status,
+            user_status: trans.user['user.user_status'],
             actions: 
                 <div key={user.user_id} className='flex justify-center items-center gap-2'>
                     <UpdateButton link={`/user/edit?userName=${user.user_name}`} />

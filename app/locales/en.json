@@ -302,6 +302,9 @@
     "placeholder_user_name" : "Enter User's ID",
     "placeholder_password_new" : "Enter new password",
     "placeholder_password_new_again" : "Enter new password again",
+    "NEED_AUTH": "Need Authentication",
+    "COMPLETE_AUTH": "Authentication completed",
+    "PASSWORD_CHANGING": "Changing password",
     "import_csv_file": "Import CSV file"
   },
   "account": {

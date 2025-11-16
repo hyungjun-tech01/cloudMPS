@@ -92,7 +92,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     authorized: ({ auth, request: { nextUrl } }) => {
       // console.log("authorized called : ", nextUrl);
       // check login --------------------------------------------
-      const isLoggedIn = !!auth?.user;
+      const isLoggedIn = !!auth?.user && (new Date(auth.expires) > new Date());
       const isOnProtected = !(
         nextUrl.pathname.startsWith("/login") ||
         nextUrl.pathname.startsWith("/register") ||
