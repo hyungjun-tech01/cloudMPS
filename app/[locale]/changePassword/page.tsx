@@ -25,10 +25,6 @@ export default async function ChangePasswordPage(props: {
   const locale = (await props.params).locale;
   const session = await auth();
 
-  if(!session?.user.name) {
-    redirect('/login');
-  };
-
   const trans = await getDictionary(locale);
   const someTrans = {...trans.common, ...trans.login}
 

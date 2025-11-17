@@ -13,11 +13,8 @@ export default async function Page(props: {
     const params = await props.params;
     const locale = params.locale;
 
-    //----- Check session -----------------------------------
     const session = await auth();
     if(!session?.user) return redirect('/login');
-    if(new Date(session.expires) < new Date()) return redirect('/login');
-    if (session.user.role === 'FREE_USER') redirect('/');
 
     //----- Retreive data -----------------------------------
     const trans = await getDictionary(locale);

@@ -30,15 +30,9 @@ export default async function Page(props: {
     const currentPage = Number(searchParams?.page) || 1;
 
     const session = await auth();
-    const userName = session?.user.name;
 
-    if (!userName) {
-        redirect('/login'); // '/login'으로 리다이렉트
-    };
+    if (!session?.user) redirect('/login'); // '/login'으로 리다이렉트
 
-    if (session.user.role !== 'SUBSCRIPTION' && session.user.role !== 'PARTNER') {
-        redirect('/'); // '/'으로 리다이렉트
-    };
 
     const searchData = {
         search_user_name: query,
@@ -46,7 +40,7 @@ export default async function Page(props: {
         search_email: query,
         items_per_page: itemsPerPage,
         current_page: currentPage,
-        user_name: userName,
+        user_name: session.user.name,
         company_code: session.user.companyCode,
         ip_address: session.user.ipAddress,
     };
@@ -60,7 +54,7 @@ export default async function Page(props: {
     const {ResultCode, totalPages, users} = userListResult;
 
     const userDataForInviteForm = {
-        userName: userName,
+        userName: session.user.name,
         companyCode: session.user.companyCode,
         companyType:  session.user.role === 'PARTNER' ? 'PARTNER' :  "GENERAL",
         ipAddress: session.user.ipAddress
@@ -109,7 +103,7 @@ export default async function Page(props: {
         return {
             user_name: user.user_name,
             full_name: user.full_name,
-            user_status: trans.user['user.user_status'],
+            user_status: trans.user[user.user_status],
             actions: 
                 <div key={user.user_id} className='flex justify-center items-center gap-2'>
                     <UpdateButton link={`/user/edit?userName=${user.user_name}`} />

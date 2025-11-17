@@ -3,6 +3,8 @@ import Credentials from "next-auth/providers/credentials";
 import { z } from "zod";
 import { login, getUserInfo } from "@/app/libs/actions";
 import { LoginData, LoginResultData } from "@/app/libs/types";
+import { USER_TYPE } from "@/app/libs/constants";
+
 
 
 interface ExtendedUser {
@@ -92,11 +94,15 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     authorized: ({ auth, request: { nextUrl } }) => {
       // console.log("authorized called : ", nextUrl);
       // check login --------------------------------------------
-      const isLoggedIn = !!auth?.user && (new Date(auth.expires) > new Date());
-      const isOnProtected = !(
-        nextUrl.pathname.startsWith("/login") ||
-        nextUrl.pathname.startsWith("/register") ||
-        nextUrl.pathname.startsWith("/intro")
+      if(!auth) {
+        return Response.redirect(new URL("/login", nextUrl));
+      };
+
+      const isLoggedIn = !!auth.user && (new Date(auth.expires) > new Date());
+      const isOnProtected = !( nextUrl.pathname.startsWith("/login")
+        || nextUrl.pathname.startsWith("/register")
+        || nextUrl.pathname.startsWith("/intro")
+        || nextUrl.pathname.startsWith("/agreement")
       );
 
       if (isOnProtected) {
@@ -104,32 +110,23 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           console.log("isOnProtected & not LoggedIn");
           return Response.redirect(new URL("/intro", nextUrl));
         }
-        if (nextUrl.pathname.startsWith("/analysis"))
-          return Response.redirect(new URL("/", nextUrl));
       } else if (isLoggedIn) {
         return Response.redirect(new URL("/", nextUrl));
       }
 
-      const isAdmin = auth?.user.role === "admin";
-      const isManager = auth?.user.role === "SUBSCRIPTION";
-      const userMenu = nextUrl.pathname.startsWith("/user");
-      const groupMenu = nextUrl.pathname.startsWith("/group");
-      const editMenu = nextUrl.pathname.endsWith("/edit");
-
-      if (userMenu) {
-        if (isAdmin) return true;
-        return Response.redirect(new URL("/", nextUrl));
-      };
-
-      if (groupMenu) {
-        if (editMenu) {
-          if (isAdmin) return true;
+      const isAdmin = auth.user.role === "admin";
+      const isPartner = isAdmin || auth.user.role === USER_TYPE.PARTNER;
+      const isManager = isPartner || auth.user.role === USER_TYPE.SUBSCRIPTION;
+      const isEngineer = isManager || [ USER_TYPE.PARTNER_USER, USER_TYPE.SUBSCRIPT_USER ].includes(auth.user.role);
+      
+      if (nextUrl.pathname.startsWith("/client") && !isPartner)
           return Response.redirect(new URL("/", nextUrl));
-        } else {
-          if (isAdmin || isManager) return true;
+
+      if (nextUrl.pathname.startsWith("/device") && !isEngineer)
           return Response.redirect(new URL("/", nextUrl));
-        }
-      };
+
+      if (nextUrl.pathname.startsWith("/user") && !isManager)
+          return Response.redirect(new URL("/", nextUrl));
 
       return true;
     },

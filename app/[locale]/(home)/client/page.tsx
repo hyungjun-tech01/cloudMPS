@@ -30,12 +30,7 @@ export default async function Page(props: {
     const currentPage = Number(searchParams?.page) || 1;
 
     const session = await auth();
-    const userName = session?.user.name;
-
-    if (!userName) redirect('/login');
-    console.log("session expires :", session.expires);
-    if(new Date(session.expires) < new Date()) return redirect('/login');
-    if (session.user.role !== 'PARTNER') redirect('/');
+    if(!session?.user) redirect('/login');
 
     const searchData = {
         search_client_name: query,
@@ -44,7 +39,7 @@ export default async function Page(props: {
         search_sales_resource: query,
         items_per_page: itemsPerPage,
         current_page: currentPage,
-        user_name: userName,
+        user_name: session.user.name,
         company_code: session.user.companyCode,
         ip_address: session.user.ipAddress,
     };

@@ -28,11 +28,8 @@ export default async function Page(props: {
   const locale = params.locale;
 
   const session = await auth();
-  if(!session?.user) {
-    redirect('/intro');
-  };
+  if(!session?.user) redirect('/login');
   
-  const isAdmin = session?.user.role === "admin";
   const trans = await getDictionary(locale);
 
   return (

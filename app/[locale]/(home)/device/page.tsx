@@ -43,11 +43,7 @@ export default async function Page(props: {
   const currentPage = Number(searchParams?.page) || 1;
 
   const session = await auth();
-  const userName = session?.user.name;
-
-  if (!userName) {
-    redirect("/login"); // '/login'으로 리다이렉트
-  }
+  if (!session?.user) redirect("/login");
 
   const searchData = {
     search_client_name: query,
@@ -58,7 +54,7 @@ export default async function Page(props: {
     search_device_model: query,
     items_per_page: itemsPerPage,
     current_page: currentPage,
-    user_name: userName,
+    user_name: session.user.name,
     company_code: session.user.companyCode,
     ip_address: session.user.ipAddress,
   };
