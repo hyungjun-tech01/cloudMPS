@@ -6,7 +6,6 @@ import { LoginData, LoginResultData } from "@/app/libs/types";
 import { USER_TYPE } from "@/app/libs/constants";
 
 
-
 interface ExtendedUser {
   id: string;
   name:  string;
@@ -14,8 +13,7 @@ interface ExtendedUser {
   role: string;
   companyCode?: number;
   ipAddress: string;
-  token?: string;
-  expire_at?: number;
+  token: string;
 }
 
 declare module "next-auth" {
@@ -25,6 +23,7 @@ declare module "next-auth" {
     user: User & DefaultSession["user"];
   }
 }
+
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   pages: {
@@ -80,8 +79,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             role: userInfoResult.user.user_role,
             companyCode: company_code,
             ipAddress: ip_address,
-            token: loginResult.token,
-            expire_at: Date.now()/1000 + 86400,
+            token: loginResult.token
           } as ExtendedUser;
         }
 
@@ -92,27 +90,25 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   ],
   callbacks: {
     authorized: ({ auth, request: { nextUrl } }) => {
-      // console.log("authorized called : ", nextUrl);
       // check login --------------------------------------------
       if(!auth) {
         return Response.redirect(new URL("/login", nextUrl));
       };
 
+      // console.log(`Check auth :`, auth);
       const isLoggedIn = !!auth.user && (new Date(auth.expires) > new Date());
-      const isOnProtected = !( nextUrl.pathname.startsWith("/login")
-        || nextUrl.pathname.startsWith("/register")
-        || nextUrl.pathname.startsWith("/intro")
-        || nextUrl.pathname.startsWith("/agreement")
-      );
+      const isPublicRoute = nextUrl.pathname.startsWith("/login")
+        || nextUrl.pathname.startsWith("/register") 
+        || nextUrl.pathname.startsWith("/intro") 
+        || nextUrl.pathname.startsWith("/agreement");
 
-      if (isOnProtected) {
-        if (!isLoggedIn) {
-          console.log("isOnProtected & not LoggedIn");
-          return Response.redirect(new URL("/intro", nextUrl));
-        }
-      } else if (isLoggedIn) {
-        return Response.redirect(new URL("/", nextUrl));
+      if (isPublicRoute) {
+        if (isLoggedIn) return Response.redirect(new URL("/", nextUrl));
+        return true;
       }
+      if (!isLoggedIn) {
+        return Response.redirect(new URL("/login", nextUrl));
+      };
 
       const isAdmin = auth.user.role === "admin";
       const isPartner = isAdmin || auth.user.role === USER_TYPE.PARTNER;
@@ -141,7 +137,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           companyCode : user.companyCode,
           ipAddress : user.ipAddress,
           token : user.token,
-          exp : user.expire_at,
         }
       } else if (!!token.exp && token.exp > (Date.now()/1000) ) {
         return token;

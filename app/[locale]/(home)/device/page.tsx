@@ -11,6 +11,7 @@ import { fetchData } from "@/app/libs/actions";
 import getDictionary from "@/app/libs/dictionaries";
 import { DeviceData } from "@/app/libs/types";
 import { auth } from "@/auth";
+import SessionExpiredHandler from "@/app/components/session-expired-handler";
 
 
 export const metadata: Metadata = {
@@ -63,6 +64,10 @@ export default async function Page(props: {
     getDictionary(locale),
     fetchData("/api/devices/getdevicelist", searchData, session.user.token),
   ]);
+
+  if (deviceListResult.ErrorMessage === "Session expired") {
+    return <SessionExpiredHandler />;
+  }
 
   const columns = [
     {
