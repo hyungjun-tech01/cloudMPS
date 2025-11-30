@@ -1,8 +1,10 @@
+'use client';
+
 import { useActionState, useState } from 'react';
 import { AgreementState } from '@/app/libs/actions';
 
 
-export default function RegisterTermsOfService({
+export default function AgreementForm({
     trans, terms, action
 }: {
     trans: Record<string, string>,
@@ -64,13 +66,9 @@ export default function RegisterTermsOfService({
         const updated = event.target.checked ? agreed | 8 : agreed & ~(8);
         handleCheckAgreed(updated);
     };
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        formAction(new FormData(event.currentTarget));
-    };
 
     return (
-        <form onSubmit={handleSubmit} className='flex flex-col'>
+        <form action={formAction} className='flex flex-col'>
             <div className="mt-2 px-2 flex flex-row justify-start items-center">
                 <input type="checkbox" id="agree_all" className='h-4 w-4' onChange={handleAgreeAll} />
                 <label htmlFor="agree_all" className='ml-2'>{trans.agree_all}</label>

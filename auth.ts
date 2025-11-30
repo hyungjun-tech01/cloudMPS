@@ -11,6 +11,7 @@ interface ExtendedUser {
   name: string;
   fullName: string;
   role: string;
+  status: string;
   companyCode?: number;
   ipAddress: string;
   token: string;
@@ -77,6 +78,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             fullName: userInfoResult.user.full_name,
             email: userInfoResult.user.email,
             role: userInfoResult.user.user_role,
+            status: userInfoResult.user.user_status,
             companyCode: company_code,
             ipAddress: ip_address,
             token: loginResult.token
@@ -94,7 +96,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         || nextUrl.pathname.startsWith("/register")
         || nextUrl.pathname.startsWith("/intro")
 
-      // check login --------------------------------------------
+      //----- check login --------------------------------------------
       if (!auth) {
         if (!isPublicRoute) return Response.redirect(new URL("/login", nextUrl));
         return true;
@@ -107,6 +109,19 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       }
 
       if (!isLoggedIn) return Response.redirect(new URL("/login", nextUrl));
+
+      //----- check user status --------------------------------------------
+      if (auth.user.status === 'NEED_AUTH'
+        && nextUrl.pathname.endsWith("/init")
+      ) return Response.redirect(new URL("/login/init", nextUrl));
+
+      if (auth.user.status === 'NEED_AGREEMENT') {
+        return Response.redirect(new URL("/agreement", nextUrl));
+      }
+
+      if (auth.user.status === 'PASSWORD_CHANGING') {
+        return Response.redirect(new URL("/changePassword", nextUrl));
+      };
 
       const isAdmin = auth.user.role === "admin";
       const isPartner = isAdmin || auth.user.role === USER_TYPE.PARTNER;

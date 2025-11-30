@@ -175,6 +175,88 @@ export async function changePassword(
     }
 };
 
+export type AgreementState = {
+    errors?: {
+        agreeTermsOfService?: string;
+        agreePrivacyPolicy?: string;
+        agreeLocationInfoPolicy?: string;
+    };
+    message?: string | null;
+};
+
+export async function addAgreement(prevState: void | AgreementState,
+    formData: FormData
+) {
+    const locale = formData.get('locale') ?? "ko";
+    const trans = await getDictionary(locale as "ko" | "en");
+
+    const agreeTermsOfService = formData.get("agree_terms_of_service");
+    const agreePrivacyPolicy = formData.get("agree_privacy_policy");
+    const agreeLocationInfoPolicy = formData.get("agree_location_info_policy");
+    const agreeEventPromotionPolicy = formData.get(
+        "agree_event_promotion_policy"
+    );
+
+    const session = await auth();
+    if (!session?.user) {
+        return {
+            message: "missing_authentication",
+        } as AgreementState;
+    };
+
+    // check if necessary agreements are done ----------------------------------------
+    const check_errors: Record<string, string> = {};
+    if (!agreeTermsOfService) {
+        check_errors["agreeTermsOfService"] = trans.register.error_need_agree;
+    }
+    if (!agreePrivacyPolicy) {
+        check_errors["agreePrivacyPolicy"] = trans.register.error_need_agree;
+    }
+    if (!agreeLocationInfoPolicy) {
+        check_errors["agreeLocationInfoPolicy"] = trans.register.error_need_agree;
+    }
+    if (Object.keys(check_errors).length > 0) {
+        return {
+            errors: check_errors,
+            message: trans.register.error_omit_required_agreement,
+        } as AgreementState;
+    }
+
+    const updatedAgreed = {
+        termsOfService: !!agreeTermsOfService,
+        privacyPolicy: !!agreePrivacyPolicy,
+        locationInfoPolicy: !!agreeLocationInfoPolicy,
+        eventPromotionPolicy: !!agreeEventPromotionPolicy,
+    };
+
+    let result = null;
+    try {
+        const resp = await fetch(`${BASE_PATH}/api/users/agreement`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'session_token': session?.user.token ?? ""
+            },
+            body: JSON.stringify(updatedAgreed)
+        });
+        result = await resp.json();
+    } catch (err) {
+        console.error(`\t[ requestInitializeAccount ] Error : ${err}`);
+        return err;
+    };
+
+    if (result.ResultCode === '0') {
+        const tempPath = "/";
+        revalidatePath(tempPath);
+        redirect(tempPath);
+    } else {
+        console.log(`\t [ Request to initialize accout ] error : ${result.ErrorMessage}`)
+        return {
+            message: result.ErrorMessage,
+        } as AgreementState;
+    }
+}
+
 // ----------- Login ----------------------------------------------------------------
 export async function login(data: LoginData) {
     // console.log("Login data:", data);

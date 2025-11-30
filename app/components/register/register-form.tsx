@@ -7,7 +7,7 @@ import { Steps } from "antd";
 
 import RegisterTermsOfService from "./register-use-of-term";
 import RegisterUserInfo from "./register-user-info";
-import { registerUser } from "@/app/libs/actions";
+import { registerUser, AgreementState } from "@/app/libs/actions";
 
 
 enum RegisterStep {
@@ -15,15 +15,6 @@ enum RegisterStep {
   INFORMATION = 1,
   COMPLETE = 2,
 }
-
-export type AgreementState = {
-  errors?: {
-    agreeTermsOfService?: string;
-    agreePrivacyPolicy?: string;
-    agreeLocationInfoPolicy?: string;
-  };
-  message?: string | null;
-};
 
 export type RegisterPersonalUserState = {
   errors?: {
@@ -293,7 +284,6 @@ export default function RegisterForm({
         <RegisterTermsOfService
           trans={trans.register}
           terms={terms}
-          userType={userType}
           action={actionAgreement}
         />
       ),
