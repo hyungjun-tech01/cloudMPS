@@ -8,7 +8,7 @@ import { USER_TYPE } from "@/app/libs/constants";
 
 interface ExtendedUser {
   id: string;
-  name:  string;
+  name: string;
   fullName: string;
   role: string;
   companyCode?: number;
@@ -17,7 +17,7 @@ interface ExtendedUser {
 }
 
 declare module "next-auth" {
-  interface User extends ExtendedUser {}
+  interface User extends ExtendedUser { }
 
   interface Session {
     user: User & DefaultSession["user"];
@@ -46,7 +46,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           .safeParse(credentials);
 
         if (parsedCredentials.success) {
-          const { 
+          const {
             user_name,
             ip_address,
             company_code
@@ -90,39 +90,37 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   ],
   callbacks: {
     authorized: ({ auth, request: { nextUrl } }) => {
+      const isPublicRoute = nextUrl.pathname.startsWith("/login")
+        || nextUrl.pathname.startsWith("/register")
+        || nextUrl.pathname.startsWith("/intro")
+
       // check login --------------------------------------------
-      if(!auth) {
-        return Response.redirect(new URL("/login", nextUrl));
+      if (!auth) {
+        if (!isPublicRoute) return Response.redirect(new URL("/login", nextUrl));
+        return true;
       };
 
-      // console.log(`Check auth :`, auth);
       const isLoggedIn = !!auth.user && (new Date(auth.expires) > new Date());
-      const isPublicRoute = nextUrl.pathname.startsWith("/login")
-        || nextUrl.pathname.startsWith("/register") 
-        || nextUrl.pathname.startsWith("/intro") 
-        || nextUrl.pathname.startsWith("/agreement");
-
       if (isPublicRoute) {
         if (isLoggedIn) return Response.redirect(new URL("/", nextUrl));
         return true;
       }
-      if (!isLoggedIn) {
-        return Response.redirect(new URL("/login", nextUrl));
-      };
+
+      if (!isLoggedIn) return Response.redirect(new URL("/login", nextUrl));
 
       const isAdmin = auth.user.role === "admin";
       const isPartner = isAdmin || auth.user.role === USER_TYPE.PARTNER;
       const isManager = isPartner || auth.user.role === USER_TYPE.SUBSCRIPTION;
-      const isEngineer = isManager || [ USER_TYPE.PARTNER_USER, USER_TYPE.SUBSCRIPT_USER ].includes(auth.user.role);
-      
+      const isEngineer = isManager || [USER_TYPE.PARTNER_USER, USER_TYPE.SUBSCRIPT_USER].includes(auth.user.role);
+
       if (nextUrl.pathname.startsWith("/client") && !isPartner)
-          return Response.redirect(new URL("/", nextUrl));
+        return Response.redirect(new URL("/", nextUrl));
 
       if (nextUrl.pathname.startsWith("/device") && !isEngineer)
-          return Response.redirect(new URL("/", nextUrl));
+        return Response.redirect(new URL("/", nextUrl));
 
       if (nextUrl.pathname.startsWith("/user") && !isManager)
-          return Response.redirect(new URL("/", nextUrl));
+        return Response.redirect(new URL("/", nextUrl));
 
       return true;
     },
@@ -130,15 +128,15 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       if (user) {
         return {
           ...token,
-          id : user.id,
-          name : user.name,
-          role : user.role,
-          fullName : user.fullName,
-          companyCode : user.companyCode,
-          ipAddress : user.ipAddress,
-          token : user.token,
+          id: user.id,
+          name: user.name,
+          role: user.role,
+          fullName: user.fullName,
+          companyCode: user.companyCode,
+          ipAddress: user.ipAddress,
+          token: user.token,
         }
-      } else if (!!token.exp && token.exp > (Date.now()/1000) ) {
+      } else if (!!token.exp && token.exp > (Date.now() / 1000)) {
         return token;
       };
       throw new TypeError("Missing token")
@@ -147,12 +145,12 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       if (session.user) {
         session.user = {
           ...session.user,
-          id : token.id as string,
-          role : token.role as string,
-          fullName : token.fullName as string,
-          companyCode : token.companyCode as number | undefined,
-          ipAddress : token.ipAddress as string,
-          token : token.token as string,
+          id: token.id as string,
+          role: token.role as string,
+          fullName: token.fullName as string,
+          companyCode: token.companyCode as number | undefined,
+          ipAddress: token.ipAddress as string,
+          token: token.token as string,
         }
       }
       return session;

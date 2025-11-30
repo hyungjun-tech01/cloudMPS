@@ -21,7 +21,7 @@ export async function authenticate(
     formData: FormData,
 ) {
     // console.log('authenticate :', formData);
-    const resObj : { ko: Record<string, string>, en: Record<string, string> } = {
+    const resObj: { ko: Record<string, string>, en: Record<string, string> } = {
         ko: {
             CredentialsSignin: "ID가 유효하지 않거나 비밀번호가 일치하지 않습니다.",
             default: "알 수 없는 오류가 발생하였습니다."
@@ -49,11 +49,11 @@ export async function authenticate(
 };
 
 export type ReqInitAccountState = {
-  errors?: {
-    userEmail?: string[];
-    userFullName?: string[];
-  };
-  message?: string | null;
+    errors?: {
+        userEmail?: string[];
+        userFullName?: string[];
+    };
+    message?: string | null;
 };
 
 export async function requestInitializeAccount(
@@ -80,7 +80,7 @@ export async function requestInitializeAccount(
         return err;
     }
 
-    if(result.ResultCode === '0') {
+    if (result.ResultCode === '0') {
         const redirectPath = `/login/info?userType=${result.user_type.toLowerCase()}`;
         revalidatePath(redirectPath);
         redirect(redirectPath);
@@ -91,13 +91,13 @@ export async function requestInitializeAccount(
 };
 
 export type ChangePasswordState = {
-  errors?: {
-    userName?: string[];
-    oldPassword?: string[];
-    newPassword?: string[];
-    newPasswordAgain?: string[];
-  };
-  message?: string | null;
+    errors?: {
+        userName?: string[];
+        oldPassword?: string[];
+        newPassword?: string[];
+        newPasswordAgain?: string[];
+    };
+    message?: string | null;
 };
 
 export async function changePassword(
@@ -118,7 +118,7 @@ export async function changePassword(
     });
 
     // console.log('changePassword :', validateData);
-    if(validateData.error) {
+    if (validateData.error) {
         const flattened = z.flattenError(validateData.error);
         return {
             errors: flattened.fieldErrors,
@@ -126,21 +126,21 @@ export async function changePassword(
         };
     };
 
-    if(formData.get('newPassword') !== formData.get('newPasswordAgain')) {
+    if (formData.get('newPassword') !== formData.get('newPasswordAgain')) {
         return {
             message: "new_passwords_not_same",
         };
     };
 
     const session = await auth();
-    if(!session?.user) {
+    if (!session?.user) {
         return {
             message: "missing_authentication",
         }
     }
 
     const data = {
-        user_id: formData.get('userId'),
+        user_id: session.user.id,
         user_name: formData.get('userName'),
         old_password: formData.get('oldPassword'),
         new_password: formData.get('newPassword'),
@@ -165,7 +165,7 @@ export async function changePassword(
     };
 
     // console.log('changePassword :', result);
-    if(result.ResultCode === '0') {
+    if (result.ResultCode === '0') {
         const tempPath = "/";
         revalidatePath(tempPath);
         redirect(tempPath);
@@ -196,7 +196,7 @@ export async function login(data: LoginData) {
         company_code: data.company_code,
         ip_address: checkIP,
     };
-        
+
     try {
         const resp = await fetch(apiAddr, {
             method: "POST",
@@ -213,12 +213,12 @@ export async function login(data: LoginData) {
 
 // ----------- User ------------------------------------------------------------------
 const UserFormScheme = z.object({
-    userName: z.string().min(1, { message : 'error_miss_input' }),
+    userName: z.string().min(1, { message: 'error_miss_input' }),
     externalUserName: z.string().nullable(),
-    fullName: z.string().min(1, { message : 'error_miss_input' }),
+    fullName: z.string().min(1, { message: 'error_miss_input' }),
     notes: z.string().nullable(),
-    totalJobs: z.coerce.number().min(0, { message : 'error_miss_input' }),
-    totalPages: z.coerce.number().min(0, { message : 'error_miss_input' }),
+    totalJobs: z.coerce.number().min(0, { message: 'error_miss_input' }),
+    totalPages: z.coerce.number().min(0, { message: 'error_miss_input' }),
     schedulePeriod: z.string().nullable(),
     scheduleAmount: z.string().nullable(),
     scheduleStart: z.string().nullable(),
@@ -238,14 +238,15 @@ const UserFormScheme = z.object({
     userRole: z.enum(['PARTNER', 'SUBSCRIPTION', 'FREE_USER', 'PARTNER_USER', 'SUBSCRIPT_USER']),
 });
 
-export async function getUserInfo(userName: string, ipAddr:string, token: string) {
+export async function getUserInfo(userName: string, ipAddr: string, token: string) {
     try {
         const resp = await fetch(`${BASE_PATH}/api/users/getuserinfo`, {
             method: "POST",
-            headers: { 'Content-Type': 'application/json',
+            headers: {
+                'Content-Type': 'application/json',
                 'session_token': token
             },
-            body: JSON.stringify({user_name: userName, ip_address: ipAddr}),
+            body: JSON.stringify({ user_name: userName, ip_address: ipAddr }),
         });
         return resp.json();
 
@@ -260,9 +261,9 @@ const ModifyUser = UserFormScheme.omit({
 });
 
 export async function modifyUser(
-  id: string,
-  prevState: void | UserState,
-  formData: FormData
+    id: string,
+    prevState: void | UserState,
+    formData: FormData
 ) {
     const validateData = ModifyUser.safeParse({
         externalUserName: formData.get('externalUserName'),
@@ -284,7 +285,7 @@ export async function modifyUser(
         userStatus: formData.get('userStatus')
     });
 
-    if(!validateData.success) {
+    if (!validateData.success) {
         const flattened = z.flattenError(validateData.error);
         console.log('modifyUser :', flattened.fieldErrors);
         return {
@@ -294,7 +295,7 @@ export async function modifyUser(
     };
 
     const session = await auth();
-    if(!session?.user) {
+    if (!session?.user) {
         return {
             message: 'missing_authentication'
         } as UserState;
@@ -336,7 +337,7 @@ export async function modifyUser(
         const response = await resp.json();
         console.log('modifyUser / response :', response);
 
-        if(response.ResultCode !== "0") {
+        if (response.ResultCode !== "0") {
             return {
                 message: response.ErrorMessage
             } as UserState;
@@ -351,7 +352,7 @@ export async function modifyUser(
     redirect("/user");
 }
 
-export async function deleteUser(id:string, ipAddr:string, token:string) {
+export async function deleteUser(id: string, ipAddr: string, token: string) {
     console.log("NA");
 }
 
@@ -372,12 +373,12 @@ export async function registerUser(data: object) {
 
 // ----------- Member ----------------------------------------------------------------
 const registerMemberScheme = z.object({
-    userName:  z.string().min(1, { message : 'error_miss_input' }),
-    userEmail: z.email({ message : 'error_input_type_email' }),
-    companyCode: z.string().min(6,{ message : 'error_miss_input' }),
+    userName: z.string().min(1, { message: 'error_miss_input' }),
+    userEmail: z.email({ message: 'error_input_type_email' }),
+    companyCode: z.string().min(6, { message: 'error_miss_input' }),
     companyType: z.enum(['PATNER', 'GENERAL']),
-    ipAddress: z.ipv4({ message : 'error_input_type_ipv4' }),
-    updatedBy: z.string().min(1, { message : 'error_miss_input' }),
+    ipAddress: z.ipv4({ message: 'error_input_type_ipv4' }),
+    updatedBy: z.string().min(1, { message: 'error_miss_input' }),
 });
 
 export async function registerMember(prevState: void | MemberState, formData: FormData) {
@@ -387,7 +388,7 @@ export async function registerMember(prevState: void | MemberState, formData: Fo
         companyType: formData.get('companyType'),
         companyCode: formData.get('companyCode'),
         ipAddress: formData.get('ipAddress'),
-        updatedBy:  formData.get('updatedBy'),
+        updatedBy: formData.get('updatedBy'),
     });
 
     if (!validatedFields.success) {
@@ -411,7 +412,7 @@ export async function registerMember(prevState: void | MemberState, formData: Fo
     const resp = await registerUser(inputData);
     console.log('registerMember :', resp);
 
-    if(resp.ResultCode !== 0) {
+    if (resp.ResultCode !== 0) {
         return {
             message: resp.ErrorMessage,
         } as MemberState;
@@ -436,7 +437,7 @@ const ClientFormScheme = z.object({
     clientGoup: z.string().nullish(),
     clientScale: z.string().nullish(),
     dealType: z.string().nullish(),
-    establishmentDate:  z.string().nullable(),
+    establishmentDate: z.string().nullable(),
     closureDate: z.string().nullable(),
     bankName: z.string().nullish(),
     accountCode: z.string().nullish(),
@@ -447,7 +448,7 @@ const ClientFormScheme = z.object({
     clientMemo: z.string().nullish(),
 });
 
-export async function createClient(prevState : void | ClientState, formData: FormData) {
+export async function createClient(prevState: void | ClientState, formData: FormData) {
     const validatedFields = ClientFormScheme.safeParse({
         clientName: formData.get("clientName"),
         clientNameEn: formData.get("clientNameEn"),
@@ -486,7 +487,7 @@ export async function createClient(prevState : void | ClientState, formData: For
     };
 
     const session = await auth();
-    if(!session?.user) {
+    if (!session?.user) {
         return {
             message: 'missing_authentication'
         }
@@ -496,34 +497,34 @@ export async function createClient(prevState : void | ClientState, formData: For
     const updatedCloseDate = validatedFields.data.closureDate;
 
     const inputData = {
-        client_group : validatedFields.data.clientGoup,
-        client_scale : validatedFields.data.clientScale,
-        deal_type : validatedFields.data.dealType,
-        client_name : validatedFields.data.clientName,
-        client_name_en : validatedFields.data.clientNameEn,
-        business_registration_code : validatedFields.data.businessRegistrationCode,
-        establishment_date : updatedOpenDate,
-        closure_date : updatedCloseDate,
-        ceo_name : validatedFields.data.ceoName,
-        business_type : validatedFields.data.businessType,
-        business_item : validatedFields.data.businessItem,
-        industry_type : validatedFields.data.industryType,
-        client_zip_code : validatedFields.data.clientZipCode,
-        client_address : validatedFields.data.clientAddress,
-        client_phone_number : validatedFields.data.clientPhoneNumber,
-        client_fax_number : validatedFields.data.clientFaxNumber,
-        homepage : validatedFields.data.homepage,
-        client_memo : validatedFields.data.clientMemo,
-        account_code : validatedFields.data.accountCode,
-        bank_name : validatedFields.data.bankName,
-        account_owner : validatedFields.data.accountOwner,
-        sales_resource : validatedFields.data.salesResource,
-        application_engineer : validatedFields.data.applicationEngineer,
-        region : validatedFields.data.region,
-        status : validatedFields.data.status,
-        user_name : name,
-        company_code : companyCode,
-        ip_address : ipAddress,
+        client_group: validatedFields.data.clientGoup,
+        client_scale: validatedFields.data.clientScale,
+        deal_type: validatedFields.data.dealType,
+        client_name: validatedFields.data.clientName,
+        client_name_en: validatedFields.data.clientNameEn,
+        business_registration_code: validatedFields.data.businessRegistrationCode,
+        establishment_date: updatedOpenDate,
+        closure_date: updatedCloseDate,
+        ceo_name: validatedFields.data.ceoName,
+        business_type: validatedFields.data.businessType,
+        business_item: validatedFields.data.businessItem,
+        industry_type: validatedFields.data.industryType,
+        client_zip_code: validatedFields.data.clientZipCode,
+        client_address: validatedFields.data.clientAddress,
+        client_phone_number: validatedFields.data.clientPhoneNumber,
+        client_fax_number: validatedFields.data.clientFaxNumber,
+        homepage: validatedFields.data.homepage,
+        client_memo: validatedFields.data.clientMemo,
+        account_code: validatedFields.data.accountCode,
+        bank_name: validatedFields.data.bankName,
+        account_owner: validatedFields.data.accountOwner,
+        sales_resource: validatedFields.data.salesResource,
+        application_engineer: validatedFields.data.applicationEngineer,
+        region: validatedFields.data.region,
+        status: validatedFields.data.status,
+        user_name: name,
+        company_code: companyCode,
+        ip_address: ipAddress,
     }
 
     try {
@@ -537,7 +538,7 @@ export async function createClient(prevState : void | ClientState, formData: For
         });
         const response = await resp.json();
         console.log('createClient / response :', response);
-        if(response.ResultCode !== "0") {
+        if (response.ResultCode !== "0") {
             return {
                 message: response.ErrorMessage
             };
@@ -550,7 +551,7 @@ export async function createClient(prevState : void | ClientState, formData: For
     };
 };
 
-export async function modifyClient(id: string, prevState : void | ClientState, formData: FormData) {
+export async function modifyClient(id: string, prevState: void | ClientState, formData: FormData) {
     const validatedFields = ClientFormScheme.safeParse({
         clientName: formData.get("clientName"),
         clientNameEn: formData.get("clientNameEn"),
@@ -589,7 +590,7 @@ export async function modifyClient(id: string, prevState : void | ClientState, f
     };
 
     const session = await auth();
-    if(!session?.user) {
+    if (!session?.user) {
         return {
             message: 'missing_authentication'
         } as ClientState;
@@ -601,39 +602,39 @@ export async function modifyClient(id: string, prevState : void | ClientState, f
     const updatedCloseDate = validatedFields.data.closureDate;
 
     const inputData = {
-        client_id : id,
-        client_group : validatedFields.data.clientGoup,
-        client_scale : validatedFields.data.clientScale,
-        deal_type : validatedFields.data.dealType,
-        client_name : validatedFields.data.clientName,
-        client_name_en : validatedFields.data.clientNameEn,
-        business_registration_code : validatedFields.data.businessRegistrationCode,
-        establishment_date : updatedOpenDate,
-        closure_date : updatedCloseDate,
-        ceo_name : validatedFields.data.ceoName,
-        business_type : validatedFields.data.businessType,
-        business_item : validatedFields.data.businessItem,
-        industry_type : validatedFields.data.industryType,
-        client_zip_code : validatedFields.data.clientZipCode,
-        client_address : validatedFields.data.clientAddress,
-        client_phone_number : validatedFields.data.clientPhoneNumber,
-        client_fax_number : validatedFields.data.clientFaxNumber,
-        homepage : validatedFields.data.homepage,
-        client_memo : validatedFields.data.clientMemo,
-        created_by : name,
-        create_date : todayStr,
-        modify_date : todayStr,
-        recent_user : name,
-        account_code : validatedFields.data.accountCode,
-        bank_name : validatedFields.data.bankName,
-        account_owner : validatedFields.data.accountOwner,
-        sales_resource : validatedFields.data.salesResource,
-        application_engineer : validatedFields.data.applicationEngineer,
-        region : validatedFields.data.region,
-        status : validatedFields.data.status,
-        user_name : name,
-        company_code : companyCode,
-        ip_address : ipAddress,
+        client_id: id,
+        client_group: validatedFields.data.clientGoup,
+        client_scale: validatedFields.data.clientScale,
+        deal_type: validatedFields.data.dealType,
+        client_name: validatedFields.data.clientName,
+        client_name_en: validatedFields.data.clientNameEn,
+        business_registration_code: validatedFields.data.businessRegistrationCode,
+        establishment_date: updatedOpenDate,
+        closure_date: updatedCloseDate,
+        ceo_name: validatedFields.data.ceoName,
+        business_type: validatedFields.data.businessType,
+        business_item: validatedFields.data.businessItem,
+        industry_type: validatedFields.data.industryType,
+        client_zip_code: validatedFields.data.clientZipCode,
+        client_address: validatedFields.data.clientAddress,
+        client_phone_number: validatedFields.data.clientPhoneNumber,
+        client_fax_number: validatedFields.data.clientFaxNumber,
+        homepage: validatedFields.data.homepage,
+        client_memo: validatedFields.data.clientMemo,
+        created_by: name,
+        create_date: todayStr,
+        modify_date: todayStr,
+        recent_user: name,
+        account_code: validatedFields.data.accountCode,
+        bank_name: validatedFields.data.bankName,
+        account_owner: validatedFields.data.accountOwner,
+        sales_resource: validatedFields.data.salesResource,
+        application_engineer: validatedFields.data.applicationEngineer,
+        region: validatedFields.data.region,
+        status: validatedFields.data.status,
+        user_name: name,
+        company_code: companyCode,
+        ip_address: ipAddress,
     }
 
     try {
@@ -647,7 +648,7 @@ export async function modifyClient(id: string, prevState : void | ClientState, f
         });
         const response = await resp.json();
         console.log('modifyClient / response :', response);
-        if(response.ResultCode !== "0") {
+        if (response.ResultCode !== "0") {
             return {
                 message: response.ErrorMessage
             } as ClientState;
@@ -658,7 +659,7 @@ export async function modifyClient(id: string, prevState : void | ClientState, f
             message: "failed_to_save_data"
         };
     };
-    
+
     revalidatePath("/client");
     redirect("/client");
 };
@@ -685,7 +686,7 @@ const DeviceFormScheme = z.object({
     deviceStatus: z.string().nullish(),
 });
 
-export async function createDevice(prevState : void | DeviceState, formData: FormData) {
+export async function createDevice(prevState: void | DeviceState, formData: FormData) {
     const locale = formData.get('locale') ?? "ko";
     const trans = await getDictionary(locale as "ko" | "en");
     const validatedFields = DeviceFormScheme.safeParse({
@@ -719,7 +720,7 @@ export async function createDevice(prevState : void | DeviceState, formData: For
     };
 
     const session = await auth();
-    if(!session?.user) {
+    if (!session?.user) {
         return {
             message: 'missing_authentication'
         } as DeviceState;
@@ -761,7 +762,7 @@ export async function createDevice(prevState : void | DeviceState, formData: For
         });
         const response = await resp.json();
         console.log('createDevice / response :', response);
-        if(response.ResultCode !== "0") {
+        if (response.ResultCode !== "0") {
             return {
                 message: response.ErrorMessage
             } as DeviceState;
@@ -777,7 +778,7 @@ export async function createDevice(prevState : void | DeviceState, formData: For
     redirect("/device");
 };
 
-export async function modifyDevice(id: string, prevState : void | DeviceState, formData: FormData) {
+export async function modifyDevice(id: string, prevState: void | DeviceState, formData: FormData) {
     const validatedFields = DeviceFormScheme.safeParse({
         deviceName: formData.get("deviceName"),
         extDeviceFunction: formData.get("extDeviceFunction"),
@@ -809,7 +810,7 @@ export async function modifyDevice(id: string, prevState : void | DeviceState, f
     };
 
     const session = await auth();
-    if(!session?.user) {
+    if (!session?.user) {
         return {
             message: 'missing_authentication'
         } as DeviceState;
@@ -852,7 +853,7 @@ export async function modifyDevice(id: string, prevState : void | DeviceState, f
         });
         const response = await resp.json();
         console.log('modifyDevice / response :', response);
-        if(response.ResultCode !== "0") {
+        if (response.ResultCode !== "0") {
             return {
                 message: response.ErrorMessage
             } as DeviceState;
@@ -870,13 +871,13 @@ export async function modifyDevice(id: string, prevState : void | DeviceState, f
 
 
 // ----------- Common ----------------------------------------------------------------
-export async function fetchData(path:string, data: object, token?:string) {
+export async function fetchData(path: string, data: object, token?: string) {
     try {
         const resp = await fetch(`${BASE_PATH}${path}`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
-                'session_token': token?? "",
+                'session_token': token ?? "",
             },
             body: JSON.stringify(data),
         });

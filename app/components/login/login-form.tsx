@@ -42,11 +42,11 @@ export default function LoginForm({
         <div className="flex justify-between items-end">
           <h1 className="mb-3 text-2xl">{trans.title}</h1>
           {!isInit && (
-          userType === "company" ? (
-            <Link href="/login?userType=person">{trans.person_login} ▶</Link>
-          ) : (
-            <Link href="/login?userType=company">{trans.company_login} ▶</Link>
-          ))}
+            userType === "company" ? (
+              <Link href="/login?userType=person">{trans.person_login} ▶</Link>
+            ) : (
+              <Link href="/login?userType=company">{trans.company_login} ▶</Link>
+            ))}
         </div>
         <div className="w-full">
           {!isInit && userType === "company" && (
@@ -88,7 +88,7 @@ export default function LoginForm({
             </div>
           </div>
           <div className="mt-4">
-            <div className={clsx("mb-3 mt-5 flex font-medium text-gray-900 text-xs items-center", {"justify-between" : !isInit})}>
+            <div className={clsx("mb-3 mt-5 flex font-medium text-gray-900 text-xs items-center", { "justify-between": !isInit })}>
               <label
                 htmlFor="user_password"
               >
@@ -132,27 +132,27 @@ export default function LoginForm({
             </div>
           )}
           {!!isInit && <div className="mb-4">
-              <label
-                className="mb-3 mt-5 block text-xs font-medium text-gray-900"
-                htmlFor="verification_code"
-              >
-                {trans.verification_code}
-              </label>
-              <div className="relative">
-                <input
-                  className="peer block w-full rounded-md bg-slate-50 border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
-                  id="verification_code"
-                  type="verification_code"
-                  name="verification_code"
-                  placeholder={trans.placeholder_verfication_code}
-                  required
-                />
-              </div>
+            <label
+              className="mb-3 mt-5 block text-xs font-medium text-gray-900"
+              htmlFor="verification_code"
+            >
+              {trans.verification_code}
+            </label>
+            <div className="relative">
+              <input
+                className="peer block w-full rounded-md bg-slate-50 border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+                id="verification_code"
+                type="verification_code"
+                name="verification_code"
+                placeholder={trans.placeholder_verfication_code}
+                required
+              />
             </div>
+          </div>
           }
         </div>
         <input type="hidden" name="redirectTo" value={callbackUrl} />
-        <input type="hidden" name="ip_address" value={ipAddress ===  "::1" ? "127.0.0.1" : ipAddress} />
+        <input type="hidden" name="ip_address" value={ipAddress === "::1" ? "127.0.0.1" : ipAddress} />
         <input type="hidden" name="is_init" value={isInit ? "Y" : "N"} />
         <input type="hidden" name="locale" value={locale} />
         <button
@@ -163,7 +163,7 @@ export default function LoginForm({
           {trans.login}
           <MaterialIcon name="arrow_forward" props="ml-auto h-5 w-5 text-white" />
         </button>
-        <div className="flex h-8 items-end space-x-1">
+        <div className="flex h-10 items-start space-x-1">
           {errorMessage && (
             <>
               <MaterialIcon name="error" type="outlined" props="h-5 w-5 text-red-500" />
