@@ -72,10 +72,12 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             return null;
           };
 
-          const needAgreement = (userInfoResult.user.terms_of_service === "N"
-            || userInfoResult.user.privacy_policy === "N"
-            || userInfoResult.user.location_information === "N"
-          ) && userInfoResult.user.user_status === "COMPLETE_AUTH";
+          const userStatus = userInfoResult.user.user_status === 'NEED_AUTH' ? 'NEED_AUTH' : (
+            (userInfoResult.user.terms_of_service === "N"
+              || userInfoResult.user.privacy_policy === "N"
+              || userInfoResult.user.location_information === "N"
+            ) ? "NEED_AGREEMENT" : userInfoResult.user.user_status
+          );
 
           return {
             id: userInfoResult.user.user_id,
@@ -83,7 +85,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             fullName: userInfoResult.user.full_name,
             email: userInfoResult.user.email,
             role: userInfoResult.user.user_role,
-            status: needAgreement ? "NEED_AGREEMENT" : userInfoResult.user.user_status,
+            status: userStatus,
             companyCode: company_code,
             ipAddress: ip_address,
             token: loginResult.token
