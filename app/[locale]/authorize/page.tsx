@@ -1,8 +1,6 @@
 import { Suspense } from 'react';
 import type { Metadata } from "next";
-import AgreementForm from '@/app/components/agreement/agreement-form';
-import { addAgreement } from '@/app/libs/actions';
-import getPolicies from '@/app/libs/policies';
+import AuthorizeForm from '@/app/components/authorize/authorize-form';
 import getDictionary from '@/app/libs/dictionaries';
 
 
@@ -23,31 +21,21 @@ export default async function Page(props: {
   const userType = searchParams?.userType || "company";
   const locale = (await props.params).locale;
 
-  const [t, p] = await Promise.all([getDictionary(locale), getPolicies(locale)]);
+  const t = await getDictionary(locale);
   const trans = {
-    common: t.common,
-    company: t.company,
-    register: t.register,
-    user: t.user
+    ...t.common,
+    ...t.login
   }
-  const terms = {
-    terms_of_service: p.terms_of_service,
-    privacy_policy: p.privacy_policy,
-    location_info_policy: p.location_info_policy,
-    event_promotion_policy: p.event_promotion_policy
-  };
 
   return (
     <main className="flex items-center justify-center">
       <div className="relative mx-auto flex w-full max-w-[960px] flex-col p-4 md:-mt-8">
-        <div className="flex h-20 w-full items-end rounded-t-lg p-3 md:h-36 text-2xl font-medium" >
-          {trans.register.agreement}
+        <div className="flex h-20 w-full items-end justify-center rounded-t-lg p-8 md:h-36 text-2xl font-medium" >
+          {trans.verify_auth_code}
         </div>
         <Suspense>
-          <AgreementForm
-            trans={trans.register}
-            terms={terms}
-            action={addAgreement}
+          <AuthorizeForm
+            trans={trans}
           />
         </Suspense>
       </div>

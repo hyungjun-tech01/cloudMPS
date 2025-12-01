@@ -70,7 +70,12 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           if (userInfoResult.ResultCode !== "0") {
             console.log("[User Info] Error :", userInfoResult.ErrorMessage);
             return null;
-          }
+          };
+
+          const needAgreement = (userInfoResult.user.terms_of_service === "N"
+            || userInfoResult.user.privacy_policy === "N"
+            || userInfoResult.user.location_information === "N"
+          ) && userInfoResult.user.user_status === "COMPLETE_AUTH";
 
           return {
             id: userInfoResult.user.user_id,
@@ -78,7 +83,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             fullName: userInfoResult.user.full_name,
             email: userInfoResult.user.email,
             role: userInfoResult.user.user_role,
-            status: userInfoResult.user.user_status,
+            status: needAgreement ? "NEED_AGREEMENT" : userInfoResult.user.user_status,
             companyCode: company_code,
             ipAddress: ip_address,
             token: loginResult.token
@@ -111,13 +116,13 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       if (!isLoggedIn) return Response.redirect(new URL("/login", nextUrl));
 
       //----- check user status --------------------------------------------
-      if (auth.user.status === 'NEED_AUTH'
-        && nextUrl.pathname.endsWith("/init")
-      ) return Response.redirect(new URL("/login/init", nextUrl));
+      if (auth.user.status === 'NEED_AUTH') {
+        return Response.redirect(new URL("/authorize", nextUrl));
+      };
 
       if (auth.user.status === 'NEED_AGREEMENT') {
         return Response.redirect(new URL("/agreement", nextUrl));
-      }
+      };
 
       if (auth.user.status === 'PASSWORD_CHANGING') {
         return Response.redirect(new URL("/changePassword", nextUrl));

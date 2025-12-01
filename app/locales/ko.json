@@ -60,7 +60,9 @@
     "title": "로그인",
     "userId": "사용자 아이디",
     "user_name": "사용자 이름",
-    "verification_code": "인증코드"
+    "verification_code": "인증코드",
+    "verify_auth_code": "인증 코드 확인",
+    "input_auth_code": "이메일로 전달 받은 인증코드를 입력해주세요."
   },
   "register": {
     "agreement": "약관 동의",
@@ -98,7 +100,7 @@
     "disable_printing_util": "출력 비활성화 종료 시점",
     "error_device": "오류 기기",
     "from": "시작일",
-    "home_directory":"홈 디렉토리",
+    "home_directory": "홈 디렉토리",
     "low_supply_device": "소모품 부족",
     "monitor": "모니터링",
     "monthy_usage": "월별 사용량",
@@ -215,14 +217,13 @@
     "residual_drum": "드럼잔량",
     "sales_point": "영업점",
     "serial": "시리얼번호",
-    "secDesc_basic_info":"기기에 대한 기본 정보를 입력합니다.",
+    "secDesc_basic_info": "기기에 대한 기본 정보를 입력합니다.",
     "secDesc_status_info": "기기에  댛한 상태 정보를 입력합니다.",
     "secTitle_basic_info": "기기 기본 정보",
     "secTitle_status_info": "기기 상태 정보",
     "status": "상태",
     "sum": "합계",
     "total_printed": "전체 인쇄 페이지",
-    
     "black_toner_percentage": "Black 토너잔량(%)",
     "cyan_toner_percentage": "Cyan 토너잔량(%)",
     "magenta_toner_percentage": "Magenta 토너잔량(%)",
@@ -383,7 +384,7 @@
   },
   "error": {
     "error_in_input": "입력 값에 오류가 있습니다.",
-    "error_occurrs" :  "다음과 같은 오류가 발생했습니다.\n- ",
+    "error_occurrs": "다음과 같은 오류가 발생했습니다.\n- ",
     "failed_to_get_data": "값을 가져오지 못했습니다. 다시 시도해 보시기 바랍니다.",
     "failed_to_save_data": "값을 저장하지 못했습니다. 다시 시도해 보시기 바랍니다.",
     "missing_authentication": "인증 정보가 확인되지 않습니다.",

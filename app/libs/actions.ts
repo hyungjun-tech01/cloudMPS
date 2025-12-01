@@ -257,6 +257,10 @@ export async function addAgreement(prevState: void | AgreementState,
     }
 }
 
+export async function getAuthorization() {
+
+}
+
 // ----------- Login ----------------------------------------------------------------
 export async function login(data: LoginData) {
     // console.log("Login data:", data);
