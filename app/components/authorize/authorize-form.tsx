@@ -9,14 +9,8 @@ export default function AuthorizeForm({
 }: {
     trans: Record<string, string>,
 }) {
-    // Action state expects (prevState: any, formData: FormData)
-    const actionWrapper = async (prevState: void | AgreementState, formData: FormData) => {
-        await getAuthorization();
-        return prevState;
-    };
-
     const initialState: AgreementState = { message: null, errors: {} };
-    const [state, formAction] = useActionState(actionWrapper, initialState);
+    const [state, formAction] = useActionState(getAuthorization, initialState);
     const [authCode, setAuthCode] = useState("      ");
 
     const handleAuthCode = (value: string, index: number) => {

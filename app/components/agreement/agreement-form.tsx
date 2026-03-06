@@ -14,7 +14,7 @@ export default function AgreementForm({
         location_info_policy: string[][];
         event_promotion_policy: string[][];
     }
-    action: (prevState: void | AgreementState, formData: FormData) => Promise<void | AgreementState>,
+    action: (prevState: void | AgreementState, formData: FormData) => void | AgreementState,
 }) {
     const initialState: AgreementState = { message: null, errors: {} };
     const [state, formAction] = useActionState(action, initialState);

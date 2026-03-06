@@ -2,39 +2,32 @@
 
 import { SessionProvider } from "next-auth/react";
 import { useState } from 'react';
+import clsx from 'clsx';
 import Header from '@/app/components/header';
 import SideNav from '@/app/components/sidenav/sidenav';
-import { Box } from '@mui/material';
 
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [sideNavExtended, extendSideNav] = useState(true);
 
   return (
-    <Box sx={{ display: 'flex', height: '100vh', flexDirection: 'column', overflow: { md: 'hidden' } }}>
+    <div className="flex h-screen flex-col md:overflow-hidden">
       <SessionProvider>
         <Header extendSideNav={() => extendSideNav(!sideNavExtended)} />
       </SessionProvider>
-      <Box sx={{ display: 'flex', height: '100%', flexDirection: { xs: 'column', md: 'row' }, overflow: { md: 'hidden' } }}>
-        <Box
-          sx={{
-            flexNone: 1,
-            transition: 'width 0.2s',
-            width: { xs: '100%', md: sideNavExtended ? 256 : 64 },
-            borderRight: { md: 1 },
-            borderColor: 'divider',
-            bgcolor: 'background.paper',
-            zIndex: 1 // keeps side nav visually separated
-          }}
-        >
+      <div className="flex h-full flex-col md:flex-row md:overflow-hidden">
+        <div className={clsx("w-full flex-none duration-150", {
+          "md:w-16": !sideNavExtended,
+          "md:w-64": sideNavExtended,
+        })}>
           <SessionProvider>
-            <SideNav extended={sideNavExtended} />
+            <SideNav extended={sideNavExtended}/>
           </SessionProvider>
-        </Box>
-        <Box sx={{ flexGrow: 1, p: { xs: 3, md: 6 }, overflowY: { md: 'auto' }, bgcolor: 'background.default' }}>
+        </div>
+        <div className="flex-grow p-6 md:overflow-y-auto md:p-12">
           {children}
-        </Box>
-      </Box>
-    </Box>
+        </div>
+      </div>
+    </div>
   );
 }

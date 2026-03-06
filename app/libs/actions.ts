@@ -77,7 +77,7 @@ export async function requestInitializeAccount(
         result = await resp.json();
     } catch (err) {
         console.error(`\t[ requestInitializeAccount ] Error : ${err}`);
-        return "Internal Server Error"
+        return err;
     }
 
     if (result.ResultCode === '0') {
@@ -186,7 +186,7 @@ export type AgreementState = {
 
 export async function addAgreement(prevState: void | AgreementState,
     formData: FormData
-): Promise<void | AgreementState> {
+) {
     const locale = formData.get('locale') ?? "ko";
     const trans = await getDictionary(locale as "ko" | "en");
 
@@ -242,7 +242,7 @@ export async function addAgreement(prevState: void | AgreementState,
         result = await resp.json();
     } catch (err) {
         console.error(`\t[ requestInitializeAccount ] Error : ${err}`);
-        return { message: "Internal Server Error" } as AgreementState;
+        return err;
     };
 
     if (result.ResultCode === '0') {
@@ -569,14 +569,14 @@ export async function createClient(prevState: void | ClientState, formData: Form
         return {
             errors: flattened.fieldErrors,
             message: 'error_in_input',
-        } as ClientState;
+        };
     };
 
     const session = await auth();
     if (!session?.user) {
         return {
             message: 'missing_authentication'
-        } as ClientState;
+        }
     }
     const { name, companyCode, ipAddress, token } = session.user;
     const updatedOpenDate = validatedFields.data.establishmentDate;
@@ -627,13 +627,13 @@ export async function createClient(prevState: void | ClientState, formData: Form
         if (response.ResultCode !== "0") {
             return {
                 message: response.ErrorMessage
-            } as ClientState;
+            };
         };
     } catch (err) {
         console.error(`\t[ create client ] Error : ${err}`);
         return {
             message: "failed_to_save_data"
-        } as ClientState;
+        };
     };
 };
 

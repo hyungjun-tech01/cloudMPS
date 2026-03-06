@@ -51,13 +51,13 @@ export default async function Page(props: {
     ]);
 
     // console.log("users :", userListResult);
-    const { ResultCode, totalPages, users } = userListResult;
+    const {ResultCode, totalPages, users} = userListResult;
 
     const userDataForInviteForm = {
-        userName: session.user.name || "",
-        companyCode: session.user.companyCode || undefined,
-        companyType: session.user.role === 'PARTNER' ? 'PARTNER' : "GENERAL",
-        ipAddress: session.user.ipAddress || "0.0.0.0"
+        userName: session.user.name,
+        companyCode: session.user.companyCode,
+        companyType:  session.user.role === 'PARTNER' ? 'PARTNER' :  "GENERAL",
+        ipAddress: session.user.ipAddress
     };
 
     const transDataForInviteForm = {
@@ -67,7 +67,7 @@ export default async function Page(props: {
         error_input_type_ipv4: trans.register.error_input_type_ipv4,
         error_input_type_string: trans.register.error_input_type_string,
         error_miss_input: trans.common.error_miss_input,
-        fail_parsing: trans.common.fail_parsing,
+        fail_parsing:  trans.common.fail_parsing,
         userEmail: trans.user.user + ' ' + trans.common.email,
         userName: trans.user.user_name,
     };
@@ -99,17 +99,17 @@ export default async function Page(props: {
         },
     ];
 
-    const dataSource = ResultCode === "0" ? users.map((user: UserData) => {
+    const dataSource = ResultCode === "0" ? users.map( (user : UserData) => {
         return {
             user_name: user.user_name,
             full_name: user.full_name,
-            user_status: (trans.user as Record<string, string>)[user.user_status] || user.user_status,
-            actions:
+            user_status: trans.user[user.user_status],
+            actions: 
                 <div key={user.user_id} className='flex justify-center items-center gap-2'>
                     <UpdateButton link={`/user/edit?userName=${user.user_name}`} />
                     <button
                         className="rounded-md px-1 pt-1 border hover:bg-gray-100"
-                    // onClick={handleMenuOpen}
+                        // onClick={handleMenuOpen}
                     >
                         <span className="sr-only">{trans.common.delete}</span>
                         <MaterialIcon name='delete' props="w-6 text-inherit" />

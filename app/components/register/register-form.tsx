@@ -219,9 +219,10 @@ export default function RegisterForm({
     }
 
     if (!!validatedFields && validatedFields.error) {
-      const flattened = validatedFields.error.flatten();
+      const tree = z.treeifyError(validatedFields.error);
+      // console.log("actionRegisterUser / error :", tree);
       return {
-        errors: flattened.fieldErrors,
+        errors: tree.properties,
         message: trans.register.errors_in_inputs,
       } as RegisterPersonalUserState | RegisterCompanyUserState;
     }

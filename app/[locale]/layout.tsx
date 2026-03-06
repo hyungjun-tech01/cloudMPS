@@ -3,8 +3,6 @@ import type { Metadata } from "next";
 import { notFound } from 'next/navigation';
 import { Geist, Geist_Mono } from "next/font/google";
 import i18nConfig from '@/i18nConfig';
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
-import ThemeRegistry from '@/app/ThemeRegistry';
 import "@/app/components/globals.css";
 
 const geistSans = Geist({
@@ -43,11 +41,7 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AppRouterCacheProvider options={{ enableCssLayer: true }}>
-          <ThemeRegistry>
-            {children}
-          </ThemeRegistry>
-        </AppRouterCacheProvider>
+        {children}
       </body>
     </html>
   );

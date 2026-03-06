@@ -39,51 +39,51 @@ export default function RegisterUserInfo({
   const initialState: RegisterPersonalUserState | RegisterCompanyUserState = { message: null, errors: {} };
   const [state, formAction, isPending] = useActionState(action, initialState, undefined);
 
-  const TimeZoneList: { title: string, value: string }[] = [];
+  const TimeZoneList:{title:string, value:string}[] = [];
   Object.values(getAllTimezones()).map(timezone => {
-    TimeZoneList.push({ title: timezone.name, value: timezone.name })
+    TimeZoneList.push({title: timezone.name, value: timezone.name})
   });
 
-  const CountryList: { title: string, value: string }[] = [];
-  const CurrencyList: { title: string, value: string }[] = [];
-  for (const [key, data] of Object.entries(countries)) {
-    CountryList.push({ title: data.name, value: key });
+  const CountryList:{title:string, value:string}[] = [];
+  const CurrencyList:{title:string, value:string}[] = [];
+  for(const [key, data] of Object.entries(countries)) {
+    CountryList.push({title:data.name, value: key});
 
-    for (const val of data.currency) {
+    for(const val of data.currency) {
       const foundIdx = CurrencyList.findIndex(item => item.value === val);
-      if (foundIdx === -1) {
-        CurrencyList.push({ title: val, value: val });
+      if(foundIdx === -1) {
+        CurrencyList.push({title: val, value: val});
       }
     };
   };
 
-  const LanguageList: { title: string, value: string }[] = [];
-  for (const [key, data] of Object.entries(languages)) {
-    LanguageList.push({ title: data.native, value: key });
+  const LanguageList:{title:string, value:string}[] = [];
+  for(const [key, data] of Object.entries(languages)) {
+    LanguageList.push({title: data.native, value: key});
   };
 
   const handleSelectTimeZone = (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
-    const tempCountryList: { title: string, value: string }[] = [];
-    const tempLangList: string[] = [];
-    const tempCurrencyList: string[] = [];
+    const tempCountryList:{title:string, value:string}[] = [];
+    const tempLangList:string[] = [];
+    const tempCurrencyList:string[] = [];
 
     const tempCountries = getCountriesForTimezone(event.target.value);
     tempCountries.forEach(country => {
       const foundCountry = countries[country.id];
-      if (!!foundCountry) {
-        tempCountryList.push({ title: foundCountry.name, value: country.id });
+      if(!!foundCountry) {
+        tempCountryList.push({title: foundCountry.name, value: country.id});
       }
-
+      
       foundCountry.languages.forEach(lang => {
         const foundIdx = tempLangList.findIndex(item => item === lang);
-        if (foundIdx === -1) {
+        if(foundIdx === -1) {
           tempLangList.push(lang);
         }
       });
 
       foundCountry.currency.forEach(currency => {
         const foundIdx = tempCurrencyList.findIndex(item => item === currency);
-        if (foundIdx === -1) {
+        if(foundIdx === -1) {
           tempCurrencyList.push(currency);
         }
       });
@@ -93,7 +93,7 @@ export default function RegisterUserInfo({
     const selectCountryElem = document.getElementById('companyCountry') as HTMLSelectElement;
     selectCountryElem.length = 0;
 
-    for (let i = 0; i < tempCountryList.length; i++) {
+    for(let i=0; i<tempCountryList.length; i++) {
       selectCountryElem.options[i] = new Option(tempCountryList[i].title, tempCountryList[i].value);
     };
 
@@ -101,7 +101,7 @@ export default function RegisterUserInfo({
     const selectLanguageElem = document.getElementById('language') as HTMLSelectElement;
     selectLanguageElem.length = 0;
 
-    for (let i = 0; i < tempLangList.length; i++) {
+    for(let i=0; i<tempLangList.length; i++) {
       const tempLang = languages[tempLangList[i] as TLanguageCode];
       selectLanguageElem.options[i] = new Option(tempLang.native, tempLangList[i]);
     };
@@ -110,7 +110,7 @@ export default function RegisterUserInfo({
     const selectCurrencyElem = document.getElementById('currencyCode') as HTMLSelectElement;
     selectCurrencyElem.length = 0;
 
-    for (let i = 0; i < tempCurrencyList.length; i++) {
+    for(let i=0; i<tempCurrencyList.length; i++) {
       selectCurrencyElem.options[i] = new Option(tempCurrencyList[i], tempCurrencyList[i]);
     }
   };
@@ -124,8 +124,8 @@ export default function RegisterUserInfo({
     selectTimeZoneElem.length = 0;
 
     const tempTimeZoneList = getCountry(event.target.value)?.timezones;
-    if (!!tempTimeZoneList) {
-      for (let i = 0; i < tempTimeZoneList.length; i++) {
+    if(!!tempTimeZoneList) {
+      for(let i=0; i<tempTimeZoneList.length; i++) {
         selectTimeZoneElem.options[i] = new Option(tempTimeZoneList[i], tempTimeZoneList[i]);
       }
     };
@@ -134,7 +134,7 @@ export default function RegisterUserInfo({
     const selectLanguageElem = document.getElementById('language') as HTMLSelectElement;
     selectLanguageElem.length = 0;
 
-    for (let i = 0; i < selectedCountryData.languages.length; i++) {
+    for(let i=0; i<selectedCountryData.languages.length; i++) {
       selectLanguageElem.options[i] = new Option(languages[selectedCountryData.languages[i] as TLanguageCode].native, selectedCountryData.languages[i]);
     };
 
@@ -142,14 +142,14 @@ export default function RegisterUserInfo({
     const selectCurrencyElem = document.getElementById('currencyCode') as HTMLSelectElement;
     selectCurrencyElem.length = 0;
 
-    for (let i = 0; i < selectedCountryData.currency.length; i++) {
+    for(let i=0; i<selectedCountryData.currency.length; i++) {
       selectCurrencyElem.options[i] = new Option(selectedCountryData.currency[i], selectedCountryData.currency[i]);
     };
   };
 
   const handleSelectLanguage = (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
     // console.log("handleSelectLanguage :", event.target.value);
-
+    
     // Update options for country selection -------------------------------------------------
     const selectCountryElem = document.getElementById('companyCountry') as HTMLSelectElement;
     selectCountryElem.length = 0;
@@ -163,35 +163,35 @@ export default function RegisterUserInfo({
     selectCurrencyElem.length = 0;
 
     let tempIdx = 0;
-    const tempTimeZoneList: string[] = [];
-    const tempCurrencyList: string[] = [];
-
-    for (const [key, data] of Object.entries(countries)) {
-      if (data.languages.includes(event.target.value as TLanguageCode)) {
+    const tempTimeZoneList:string[] = [];
+    const tempCurrencyList:string[] = [];
+    
+    for(const [key, data] of Object.entries(countries)) {
+      if(data.languages.includes(event.target.value as TLanguageCode)) {
         selectCountryElem.options[tempIdx++] = new Option(data.native, key);
-
+        
         const tempTimeZones = getCountry(key)?.timezones;
-        if (!!tempTimeZones) {
-          for (let i = 0; i < tempTimeZones.length; i++) {
-            if (!tempTimeZoneList.includes(tempTimeZones[i])) {
+        if(!!tempTimeZones) {
+          for(let i=0; i<tempTimeZones.length; i++) {
+            if(!tempTimeZoneList.includes(tempTimeZones[i])) {
               tempTimeZoneList.push(tempTimeZones[i]);
             };
           };
         };
 
-        for (const val of data.currency) {
-          if (!tempCurrencyList.includes(val)) {
+        for(const val of data.currency) {
+          if(!tempCurrencyList.includes(val)) {
             tempCurrencyList.push(val);
           };
         };
       };
     };
 
-    for (let i = 0; i < tempTimeZoneList.length; i++) {
+    for(let i=0; i<tempTimeZoneList.length; i++) {
       selectTimeZoneElem.options[i] = new Option(tempTimeZoneList[i], tempTimeZoneList[i]);
     };
 
-    for (let i = 0; i < tempCurrencyList.length; i++) {
+    for(let i=0; i<tempCurrencyList.length; i++) {
       selectCurrencyElem.options[i] = new Option(tempCurrencyList[i], tempCurrencyList[i]);
     };
   };
@@ -212,35 +212,35 @@ export default function RegisterUserInfo({
     selectLanguageElem.length = 0;
 
     let tempIdx = 0;
-    const tempTimeZoneList: string[] = [];
-    const tempLanguageList: string[] = [];
+    const tempTimeZoneList:string[] = [];
+    const tempLanguageList:string[] = [];
 
-    for (const [key, data] of Object.entries(countries)) {
-      if (data.currency.includes(event.target.value)) {
+    for(const [key, data] of Object.entries(countries)) {
+      if(data.currency.includes(event.target.value)) {
         selectCountryElem.options[tempIdx++] = new Option(data.native, key);
 
         const tempTimeZones = getCountry(key)?.timezones;
-        if (!!tempTimeZones) {
-          for (let i = 0; i < tempTimeZones.length; i++) {
-            if (!tempTimeZoneList.includes(tempTimeZones[i])) {
+        if(!!tempTimeZones) {
+          for(let i=0; i<tempTimeZones.length; i++) {
+            if(!tempTimeZoneList.includes(tempTimeZones[i])) {
               tempTimeZoneList.push(tempTimeZones[i]);
             };
           };
         };
 
-        for (const val of data.languages) {
-          if (!tempLanguageList.includes(val)) {
+        for(const val of data.languages) {
+          if(!tempLanguageList.includes(val)) {
             tempLanguageList.push(val);
           };
         };
       }
     };
 
-    for (let i = 0; i < tempTimeZoneList.length; i++) {
+    for(let i=0; i<tempTimeZoneList.length; i++) {
       selectTimeZoneElem.options[i] = new Option(tempTimeZoneList[i], tempTimeZoneList[i]);
     };
 
-    for (let i = 0; i < tempLanguageList.length; i++) {
+    for(let i=0; i<tempLanguageList.length; i++) {
       const tempLang = languages[tempLanguageList[i] as TLanguageCode];
       selectLanguageElem.options[i] = new Option(tempLang.native, tempLanguageList[i]);
     };
@@ -297,7 +297,7 @@ export default function RegisterUserInfo({
           title: trans.company.company_type,
           type: "select",
           defaultValue: "",
-          options: [
+          options: [ 
             { title: trans.company.general_company, value: 'GENERAL' },
             { title: trans.company.partner_company, value: 'PARTNER' }
           ]
@@ -422,7 +422,7 @@ export default function RegisterUserInfo({
 
   return (
     <form action={formAction} className="rounded-xl bg-slate-100 p-4 md:p-6">
-      {(formItems as ISection[]).map((sec: ISection, idx) => {
+      {formItems.map((sec: ISection, idx) => {
         return (
           <div
             key={idx}
@@ -462,13 +462,14 @@ export default function RegisterUserInfo({
                   defaultValue={item.defaultValue}
                   placeholder={item.placeholder}
                   options={item.options}
+                  locale={item.locale}
                   chartData={item.chartData}
                   other={item.other}
                   onChange={item.onChange}
-                  errors={(!!state?.errors && !!state?.errors[item.name as
+                  errors={(!!state?.errors && !!state?.errors[item.name as 
                     keyof RegisterPersonalUserState['errors'] | keyof RegisterCompanyUserState['errors']])
                     ? state?.errors[item.name as
-                    keyof RegisterPersonalUserState['errors'] | keyof RegisterCompanyUserState['errors']]
+                      keyof RegisterPersonalUserState['errors'] | keyof RegisterCompanyUserState['errors']]["errors"]
                     : null
                   }
                 />
@@ -485,14 +486,14 @@ export default function RegisterUserInfo({
         }
       </div>
       <div className="flex justify-between mt-4">
-        <div
+        <div 
           className="flex h-10 items-center rounded-lg bg-slate-900 px-4 text-sm font-medium text-slate-50 transition-colors hover:bg-slate-600"
           onClick={goback}
         >
           {trans.register.previous}
         </div>
         <button type="submit" className="flex h-10 items-center rounded-lg bg-slate-900 px-4 text-sm font-medium text-slate-50 transition-colors hover:bg-slate-600" aria-disabled={isPending}>
-          {trans.register.next}
+            {trans.register.next}
         </button>
       </div>
     </form>

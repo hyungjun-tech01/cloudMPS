@@ -2,9 +2,9 @@
 
 import Link from 'next/link';
 import clsx from 'clsx';
+import type { UserState } from '@/app/lib/actions';
 import { useActionState, useState, useEffect } from 'react';
-import { IButtonInfo, IEditItem, ISection, UserState } from '@/app/libs/types';
-import { EditItem } from '../edit-items';
+import { IButtonInfo, IEditItem, ISection, EditItem } from '../edit-items';
 
 
 export function CreateForm({
@@ -15,7 +15,7 @@ export function CreateForm({
 }: {
   items: ISection[];
   buttons?: IButtonInfo;
-  sessionUserName: string;
+  sessionUserName:string;
   action: (prevState: void | UserState, formData: FormData)
     => Promise<UserState | void>;
 }) {
@@ -26,22 +26,22 @@ export function CreateForm({
 
   useEffect(() => {
     const fetchIp = async () => {
-      try {
+    try {
         const res = await fetch('/api/get-ip');
         const data = await res.json();
         setIpAddress(data.ip);
-      } catch (error) {
+    } catch (error) {
         console.error('IP 가져오기 실패:', error);
-      }
+    }
     };
 
     fetchIp();
-  }, []);
+}, []);
 
   return (
     <form action={formAction}>
-      <input type="hidden" name="ipAddress" value={ipAddress} />
-      <input type="hidden" name="updatedBy" value={sessionUserName} />
+      <input type="hidden" name="ipAddress" value={ipAddress}/>
+      <input type="hidden" name="updatedBy" value={sessionUserName}/>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {items.map((sec: ISection, idx) => {
           return (
@@ -54,7 +54,7 @@ export function CreateForm({
                   <div className='text-sm'>{sec.description}</div>
                 }
                 {Array.isArray(sec.description) &&
-                  sec.description.map((item: string, idx: number) => {
+                  sec.description.map((item, idx) => {
                     if (idx !== (sec.description as string[]).length - 1) {
                       return <div key={idx} className='text-sm mb-4'>{item}</div>
                     } else {
@@ -73,9 +73,10 @@ export function CreateForm({
                     defaultValue={item.defaultValue}
                     placeholder={item.placeholder}
                     options={item.options}
+                    locale={item.locale}
                     chartData={item.chartData}
                     other={item.other}
-                    errors={(!!state?.errors && !!state?.errors[item.name as keyof UserState['errors']])
+                    error={(!!state?.errors && !!state?.errors[item.name as keyof UserState['errors']])
                       ? state?.errors[item.name as keyof UserState['errors']]
                       : null
                     }
@@ -104,12 +105,12 @@ export function CreateForm({
             </Link>
           }
           {!!buttons.go &&
-            <button
+            <Button
               type="submit"
               className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
             >
               {buttons.go.title}
-            </button>
+            </Button>
           }
         </div>
       }

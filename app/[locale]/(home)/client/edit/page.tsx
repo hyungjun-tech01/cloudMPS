@@ -37,7 +37,7 @@ export default async function Page(props: {
         fetchData("/api/clients/getclientinfo", dataToGetClientInfo, session.user.token),
     ]);
 
-    if (clientInfoResult.ResultCode !== "0")
+    if(clientInfoResult.ResultCode !== "0")
         return NotFound(trans.error.not_found_client, trans.common.go_back, "/client");
 
     const clientInfo = clientInfoResult.clients;
@@ -92,7 +92,7 @@ export default async function Page(props: {
             title: trans.client.secTitle_etc,
             description: trans.client.secDesc_etc,
             items: [
-                { name: "clientMemo", title: trans.common.memo, type: "input", defaultValue: clientInfo.client_memo || "", placeholder: "" },
+                { name: "clientMemo", title: trans.common.memo, type: "input", defaultValue: clientInfo.client_memo, placeholder: "" },
             ]
         },
     ];
@@ -115,7 +115,7 @@ export default async function Page(props: {
                 ]}
             />
             <EditForm
-                id={id || ""}
+                id={id}
                 items={formItems}
                 buttons={buttonItems}
                 trans={trans.error}
