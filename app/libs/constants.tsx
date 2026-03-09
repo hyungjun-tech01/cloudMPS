@@ -111,6 +111,7 @@ export const SideMenuList: {
       title: '홈',
       href: '/',
       icon: <HomeOutlined className="w-5" />,
+      icon_small: <HomeOutlined className="w-3 h-3" />,
       submenu: [
         {
           name: "home",
@@ -320,7 +321,8 @@ export const USER_TYPE = {
   SUBSCRIPTION: "SUBSCRIPTION",
   FREE_USER: "FREE_USER",
   PARTNER_USER: "PARTNER_USER",
-  SUBSCRIPT_USER: "SUBSCRIPT_USER"
+  SUBSCRIPT_USER: "SUBSCRIPT_USER",
+  ADMIN: "ADMIN"
 }
 
 export const USER_STATUS_TYPE = {
@@ -334,4 +336,13 @@ export const DEVICE_TYPE = {
   COLOR_PRINTER: "color_printer",
   MONO_MFP: "mono_mfp",
   COLOR_MFP: "color_mfp"
+}
+
+export const SIDE_MENUS_BY_USER_TYPE = {
+  [USER_TYPE.PARTNER]: ['home', 'user', 'client', 'device'],
+  [USER_TYPE.SUBSCRIPTION]: ['home', 'user', 'device'],
+  [USER_TYPE.FREE_USER]: ['home', 'device'],
+  [USER_TYPE.PARTNER_USER]: ['home', 'user', 'client', 'device'],
+  [USER_TYPE.SUBSCRIPT_USER]: ['home', 'user', 'device'],
+  [USER_TYPE.ADMIN]: ['home', 'user', 'device', 'analysis']
 }

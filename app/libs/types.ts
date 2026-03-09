@@ -286,6 +286,7 @@ export interface ISideMenuItem {
   title: string;
   href: string;
   icon: React.ReactNode;
+  icon_small?: React.ReactNode;
   submenu?: {
     name: string;
     title: string;
