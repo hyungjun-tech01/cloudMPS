@@ -2,8 +2,7 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { auth } from "@/auth";
 import { redirect } from 'next/navigation'; // 적절한 리다이렉트 함수 import
-import MaterialIcon from "@/app/components/materialIcon";
-
+import { Delete } from "@mui/icons-material";
 import Search from '@/app/components/search';
 import { TableSkeleton } from "@/app/components/skeletons";
 import Table from '@/app/components/table';
@@ -11,7 +10,7 @@ import { UpdateButton } from "@/app/components/buttons";
 
 import getDictionary from '@/app/libs/dictionaries';
 import { ISearch, ClientData } from "@/app/libs/types";
-import { fetchData  } from "@/app/libs/actions";
+import { fetchData } from "@/app/libs/actions";
 import { CreateButton } from "@/app/components/buttons";
 
 
@@ -30,7 +29,7 @@ export default async function Page(props: {
     const currentPage = Number(searchParams?.page) || 1;
 
     const session = await auth();
-    if(!session?.user) redirect('/login');
+    if (!session?.user) redirect('/login');
 
     const searchData = {
         search_client_name: query,
@@ -50,7 +49,7 @@ export default async function Page(props: {
     ]);
 
     console.log("clients :", clientListResult);
-    const {ResultCode, totalPages, clients} = clientListResult;
+    const { ResultCode, totalPages, clients } = clientListResult;
 
     const transDataForInviteForm = {
         invite: trans.user.invite_user,
@@ -59,7 +58,7 @@ export default async function Page(props: {
         error_input_type_ipv4: trans.register.error_input_type_ipv4,
         error_input_type_string: trans.register.error_input_type_string,
         error_miss_input: trans.common.error_miss_input,
-        fail_parsing:  trans.common.fail_parsing,
+        fail_parsing: trans.common.fail_parsing,
         userEmail: trans.user.user + ' ' + trans.common.email,
         userName: trans.user.user_name,
     };
@@ -92,24 +91,24 @@ export default async function Page(props: {
     ];
 
     const dataSource = ResultCode === "0" ?
-        clients.map( (client : ClientData) => {
+        clients.map((client: ClientData) => {
             return {
                 client_name: client.client_name,
                 ceo_name: client.ceo_name,
                 phone_number: client.client_phone_number,
-                actions: 
+                actions:
                     <div key={client.client_id} className='flex justify-center items-center gap-2'>
                         <UpdateButton link={`/client/edit?id=${client.client_id}`} />
                         <button
                             className="rounded-md px-1 pt-1 border hover:bg-gray-100"
-                            // onClick={handleMenuOpen}
+                        // onClick={handleMenuOpen}
                         >
                             <span className="sr-only">{trans.common.delete}</span>
-                            <MaterialIcon name='delete' props="w-6 text-inherit" />
+                            <Delete className="w-6 text-inherit" />
                         </button>
                     </div>
             }
-    }) : [];
+        }) : [];
 
     return (
         <div className="w-full">

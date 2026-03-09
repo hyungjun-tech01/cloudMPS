@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect, useState } from "react";
 import { requestInitializeAccount } from "@/app/libs/actions";
-import MaterialIcon from "@/app/components/materialIcon";
+import { ArrowForward, ErrorOutline } from "@mui/icons-material";
 
 
 export default function ForgotForm({
@@ -76,12 +76,12 @@ export default function ForgotForm({
           aria-disabled={isPending}
         >
           {trans.submit}
-          <MaterialIcon name="arrow_forward" props="ml-auto h-5 w-5 text-white" />
+          <ArrowForward className="ml-auto h-5 w-5 text-white" />
         </button>
         <div className="flex h-8 items-end space-x-1">
           {errorMessage && (
             <>
-              <MaterialIcon name="error" type="outlined" props="h-5 w-5 text-red-500" />  
+              <ErrorOutline className="h-5 w-5 text-red-500" />
               <p className="text-sm text-red-500">{errorMessage}</p>
             </>
           )}

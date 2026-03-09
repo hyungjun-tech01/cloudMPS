@@ -1,10 +1,10 @@
 import Link from 'next/link';
-import MaterialIcons from '@/app/components/materialIcon';
- 
-export default function NotFound(errMsg:string, goBack:string, path:string) {
+import { SentimentDissatisfied } from '@mui/icons-material';
+
+export default function NotFound(errMsg: string, goBack: string, path: string) {
   return (
     <main className="flex h-full flex-col items-center justify-center gap-2">
-      <MaterialIcons name="sentiment_dissatisfied"  props="w-10 text-gray-400" />
+      <SentimentDissatisfied className="w-10 text-gray-400" />
       <h2 className="text-xl font-semibold">404 Not Found</h2>
       <p>{errMsg}</p>
       <Link

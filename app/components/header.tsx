@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { logout } from "@/app/libs/actions";
 import { useSession } from 'next-auth/react';
 import { AppBar, Toolbar, IconButton, Typography, Box, Menu, MenuItem, Avatar } from '@mui/material';
-import MaterialIcon from './materialIcon';
+import { MenuOutlined, MoreVertOutlined } from '@mui/icons-material';
 
 
 interface IHeader {
@@ -37,7 +37,7 @@ export default function Header({ extendSideNav }: IHeader) {
                     sx={{ mr: 2 }}
                     onClick={extendSideNav}
                 >
-                    <MaterialIcon name="menu" type="outlined" props="" />
+                    <MenuOutlined />
                 </IconButton>
                 <Typography variant="h5" component="div" sx={{ flexGrow: 1, fontWeight: 'bold' }}>
                     <Link href="/intro" style={{ color: 'inherit', textDecoration: 'none' }}>
@@ -63,7 +63,7 @@ export default function Header({ extendSideNav }: IHeader) {
                         onClick={handleMenuOpen}
                         color="inherit"
                     >
-                        <MaterialIcon name="more_vert" type="outlined" props="" />
+                        <MoreVertOutlined />
                     </IconButton>
                 </Box>
             </Toolbar>

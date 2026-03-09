@@ -3,7 +3,7 @@
 import { useActionState } from 'react';
 import { MemberState } from '@/app/libs/types';
 import { registerMember } from '@/app/libs/actions';
-import MaterialIcon from '@/app/components/materialIcon';
+import { Add } from '@mui/icons-material';
 
 
 export function InviteForm({
@@ -35,7 +35,7 @@ export function InviteForm({
             className="flex h-10 items-center rounded-lg bg-slate-600 px-4 text-base font-medium text-white transition-colors hover:bg-slate-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-500"
           >
             <span className="hidden md:block">{trans.invite}</span>{' '}
-            <MaterialIcon name="add" props="h-5 md:ml-4" />
+            <Add className="h-5 md:ml-4" />
           </button>
         </div>
         {!!state?.errors &&

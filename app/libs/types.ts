@@ -285,12 +285,12 @@ export interface ISideMenuItem {
   name: string;
   title: string;
   href: string;
-  icon: { name: string; type: string; props?: string };
+  icon: React.ReactNode;
   submenu?: {
     name: string;
     title: string;
     href: string;
-    icon: { name: string; type: string; props?: string };
+    icon: React.ReactNode;
   }[];
 }
 

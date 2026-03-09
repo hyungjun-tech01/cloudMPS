@@ -3,24 +3,26 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import clsx from 'clsx';
-import MaterialIcon from '../materialIcon';
 import { ISideMenuItem } from '@/app/libs/types';
+import { KeyboardArrowUp, KeyboardArrowDown } from "@mui/icons-material";
 
 
 export default function SideMenuItem({
     menuItem, path, extended
-}:{ menuItem: ISideMenuItem, path:string, extended: boolean}
-) {
-    const {name, title, href, icon, submenu} = menuItem;
+}: {
+    menuItem: ISideMenuItem,
+    path: string,
+    extended: boolean
+}) {
+    const { name, title, href, icon, submenu } = menuItem;
     const [selected, setSelected] = useState(false);
     const handleClick = () => {
-        if(!!submenu) {
+        if (!!submenu) {
             setSelected(!selected);
         }
     };
-    const LinkIcon = <MaterialIcon name={icon.name} type={icon.type} props={`${icon.props} w-6`} />;
 
-    if(!!submenu) {
+    if (!!submenu) {
         return (
             <>
                 <div
@@ -28,16 +30,16 @@ export default function SideMenuItem({
                     className="flex h-[48px] items-center justify-between gap-2 rounded-md bg-gray-50 p-3 text-base text-gray-500 font-medium duration-150 hover:bg-slate-200 hover:text-slate-700 cursor-pointer"
                 >
                     <div className={clsx('flex justifiy-center gap-2', {
-                            'grow md:flex-none md:justify-start md:py-2': extended,
+                        'grow md:flex-none md:justify-start md:py-2': extended,
                     })}>
-                        {LinkIcon}
-                        <p className={clsx("hidden duration-150", { 'md:block': extended } )}>{title}</p>
+                        {icon}
+                        <p className={clsx("hidden duration-150", { 'md:block': extended })}>{title}</p>
                     </div>
-                    {extended && <MaterialIcon name={selected ? "keyboard_arrow_up" : "keyboard_arrow_down"} props="h-4 w-4" />}
+                    {extended && selected && <KeyboardArrowUp className="h-4 w-4" />}
+                    {extended && !selected && <KeyboardArrowDown className="h-4 w-4" />}
                 </div>
                 {selected && submenu.map((subItem) => {
-                    const SubItemIcon = <MaterialIcon name={subItem.icon.name} type={subItem.icon.type} props={`${subItem.icon.props} w-5`} />;
-                    const isActive = path.startsWith(subItem.name) ;
+                    const isActive = path.startsWith(subItem.name);
                     return (
                         <Link
                             key={subItem.name}
@@ -51,8 +53,8 @@ export default function SideMenuItem({
                                 }
                             )}
                         >
-                            {SubItemIcon}
-                            <p className={clsx("hidden duration-150", { 'md:block': extended } )}>{subItem.title}</p>
+                            {subItem.icon}
+                            <p className={clsx("hidden duration-150", { 'md:block': extended })}>{subItem.title}</p>
                         </Link>
                     );
                 })}
@@ -70,7 +72,7 @@ export default function SideMenuItem({
                     }
                 )}
             >
-                {LinkIcon}
+                {icon}
                 <p className={clsx("hidden duration-150",
                     { 'md:block': extended }
                 )}>{title}</p>

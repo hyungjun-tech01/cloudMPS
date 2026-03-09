@@ -2,8 +2,8 @@ import React from 'react';
 import { useSession } from "next-auth/react";
 import NavLinks from './nav-links';
 import { logout } from '@/app/libs/actions';
-import MaterialIcon from '@/app/components/materialIcon';
 import { Box, Button } from '@mui/material';
+import { PowerSettingsNewOutlined } from '@mui/icons-material';
 
 
 export default function SideNav({ extended }: { extended: boolean }) {
@@ -44,7 +44,7 @@ export default function SideNav({ extended }: { extended: boolean }) {
                                     textTransform: 'none'
                                 }}
                             >
-                                <MaterialIcon name="power_settings_new" type="outlined" props="w-6" />
+                                <PowerSettingsNewOutlined className="w-6" />
                                 <Box sx={{ display: { xs: 'none', md: extended ? 'block' : 'none' }, transition: 'all 0.15s' }}>
                                     로그아웃
                                 </Box>
