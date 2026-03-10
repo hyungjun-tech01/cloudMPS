@@ -24,30 +24,21 @@ export default function SideMenuItem({
     if (!!submenu) {
         return (
             <>
-                {!selected &&
-                    <div
-                        onClick={handleClick}
-                        className="flex items-center justify-between gap-2 rounded-md bg-gray-50 text-gray-500 duration-150 hover:bg-slate-200 hover:text-slate-700 cursor-pointer h-[48px] p-3 font-medium text-base"
-                    >
-                        <div className='flex items-center gap-2 flex-none justify-start py-2'>
-                            {icon}
-                            <p className="block duration-150">{title}</p>
-                        </div>
-                        <KeyboardArrowUp className="h-4 w-4" />
+                <div
+                    onClick={handleClick}
+                    className={clsx("flex items-center justify-between gap-2 rounded-md bg-slate-50 text-gray-500 duration-150 hover:bg-slate-200 hover:text-slate-700 cursor-pointer",
+                        {
+                            "h-[48px] p-3 font-medium text-base": !selected,
+                            "h-[40px] p-2 font-semibold text-sm": selected
+                        }
+                    )}
+                >
+                    <div className='flex items-center gap-2 flex-none justify-start py-2'>
+                        {selected ? icon_small : icon}
+                        <p className="block duration-150">{title}</p>
                     </div>
-                }
-                {selected &&
-                    <div
-                        onClick={handleClick}
-                        className="flex items-center justify-between gap-2 rounded-md bg-gray-50 text-gray-500 duration-150 hover:bg-slate-200 hover:text-slate-700 cursor-pointer h-[40px] p-2 font-semibold text-sm"
-                    >
-                        <div className='flex items-center gap-2 flex-none justify-start py-2'>
-                            {icon_small}
-                            <p className="block duration-150">{title}</p>
-                        </div>
-                        <KeyboardArrowDown className="h-4 w-4" />
-                    </div>
-                }
+                    <KeyboardArrowUp className="h-4 w-4" />
+                </div>
                 {selected && submenu.map((subItem) => {
                     const isActive = path.startsWith(subItem.name);
                     return (

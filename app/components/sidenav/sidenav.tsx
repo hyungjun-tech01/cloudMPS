@@ -4,6 +4,7 @@ import NavLinks from './nav-links';
 import { logout } from '@/app/libs/actions';
 import { Box, Button } from '@mui/material';
 import { PowerSettingsNewOutlined } from '@mui/icons-material';
+import { colorPalette } from '@/app/libs/constants';
 
 
 export default function SideNav({ extended }: { extended: boolean }) {
@@ -24,12 +25,13 @@ export default function SideNav({ extended }: { extended: boolean }) {
                         sx={{
                             display: 'flex',
                             height: 48,
-                            justifyContent: { xs: 'center', md: 'flex-start' },
+                            justifyContent: 'flex-start',
+                            alignItems: 'center',
                             gap: 1,
                             borderRadius: 1,
+                            backgroundColor: colorPalette.slate50,
                             color: 'text.secondary',
-                            p: { xs: 1.5, md: 1 },
-                            px: { md: 1.5 },
+                            p: 1,
                             '&:hover': { bgcolor: 'error.light', color: 'error.contrastText' },
                             textTransform: 'none'
                         }}
