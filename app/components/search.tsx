@@ -1,9 +1,9 @@
 'use client';
 
-import MaterialIcon from './materialIcon';
 import { useState } from 'react';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
+import { SearchOutlined } from '@mui/icons-material';
 
 
 export default function Search({
@@ -46,14 +46,14 @@ export default function Search({
         onChange={(e) => {
           setQueryText(e.target.value);
         }}
-        onKeyDown={(e)=> {
-          if(e.key === "Enter") {
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
             handleSearch(queryText);
           }
         }}
         defaultValue={searchParams.get(queryName)?.toString()}
       />
-      <MaterialIcon name='search' props='absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900' />
+      <SearchOutlined className='absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900' />
       <button
         className="block h-10 w-32 items-center rounded-lg bg-slate-600 px-4 text-base font-medium text-white transition-colors hover:bg-slate-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-500"
         onClick={() => handleSearch(queryText)}

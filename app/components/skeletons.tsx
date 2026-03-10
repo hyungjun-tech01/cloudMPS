@@ -1,4 +1,4 @@
-import MaterialIcon from "./materialIcon";
+import { NavigateBeforeOutlined, NavigateNextOutlined, AddOutlined } from "@mui/icons-material";
 
 // Loading animation
 const shimmer =
@@ -56,7 +56,7 @@ export function SearchSkeleton() {
       </div >
       <div className="flex h-10 items-center rounded-lg bg-gray-300 px-4 text-base font-medium text-white transition-colors">
         <span className="hidden w-12 md:block">{' '}</span>{' '}
-        <MaterialIcon name="add" type="outlined" props="h-5 md:ml-4" />
+        <AddOutlined className="h-5 md:ml-4" />
       </div>
     </div>
   );
@@ -185,9 +185,10 @@ export function TableSkeleton() {
         </div>
 
         <div className="flex justify-center items-center py-3">
-          <MaterialIcon name="naviage_before" type="outlined" props="w-6 text-gray-200 mr-2" />
+          <NavigateBeforeOutlined className="w-6 text-gray-200 mr-2" />
+
           <div className='h-10 w-10 rounded-md bg-gray-100'>{' '}</div>
-          <MaterialIcon name="naviage_next" type="outlined" props="w-6 text-gray-200 ml-2" />
+          <NavigateNextOutlined className="w-6 text-gray-200 ml-2" />
         </div>
       </div>
     </div>
@@ -295,8 +296,8 @@ export function GroupSkeleton() {
     <div className='w-full px-2 pt-4 flex flex-col border-t-2'>
       <div className='w-full'>
         <div
-            className={`${shimmer} h-10 w-64 mb-5 relative overflow-hidden rounded-xl bg-gray-200`}
-          />
+          className={`${shimmer} h-10 w-64 mb-5 relative overflow-hidden rounded-xl bg-gray-200`}
+        />
       </div>
       <div className='w-full flex'>
         <div className='h-96 flex-1 p-2 flex flex-col gap-2'>

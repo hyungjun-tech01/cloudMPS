@@ -1,8 +1,8 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import { Circle, Delete } from "@mui/icons-material";
 import { redirect } from "next/navigation";
 import Table from "@/app/components/table";
-import MaterialIcon from "@/app/components/materialIcon";
 import Search from "@/app/components/search";
 import { TableSkeleton } from "@/app/components/skeletons";
 import { UpdateButton } from "@/app/components/buttons";
@@ -109,22 +109,22 @@ export default async function Page(props: {
       title: trans.device.ink_toner,
       children: [
         {
-          title: <MaterialIcon name="circle" props={"text-black"}/>,
+          title: <Circle className="text-black" />,
           dataIndex: 'black_toner_percentage',
           key: 'black_toner_percentage',
         },
         {
-          title: <MaterialIcon name="circle" props={"text-blue-400"}/>,
+          title: <Circle className="text-blue-400" />,
           dataIndex: 'cyan_toner_percentage',
           key: 'cyan_toner_percentage',
         },
         {
-          title: <MaterialIcon name="circle" props={"text-pink-400"}/>,
+          title: <Circle className="text-pink-400" />,
           dataIndex: 'magenta_toner_percentage',
           key: 'magenta_toner_percentage',
         },
         {
-          title: <MaterialIcon name="circle" props={"text-yellow-400"}/>,
+          title: <Circle className="text-yellow-400" />,
           dataIndex: 'yellow_toner_percentage',
           key: 'yellow_toner_percentage',
         },
@@ -134,22 +134,22 @@ export default async function Page(props: {
       title: trans.device.drum,
       children: [
         {
-          title: <MaterialIcon name="circle" props={"text-black"}/>,
+          title: <Circle className="text-black" />,
           dataIndex: 'black_drum_percentage',
           key: 'black_drum_percentage',
         },
         {
-          title: <MaterialIcon name="circle" props={"text-blue-400"}/>,
+          title: <Circle className="text-blue-400" />,
           dataIndex: 'cyan_drum_percentage',
           key: 'cyan_drum_percentage',
         },
         {
-          title: <MaterialIcon name="circle" props={"text-pink-400"}/>,
+          title: <Circle className="text-pink-400" />,
           dataIndex: 'magenta_drum_percentage',
           key: 'magenta_drum_percentage',
         },
         {
-          title: <MaterialIcon name="circle" props={"text-yellow-400"}/>,
+          title: <Circle className="text-yellow-400" />,
           dataIndex: 'yellow_drum_percentage',
           key: 'yellow_drum_percentage',
         },
@@ -167,48 +167,48 @@ export default async function Page(props: {
   const dataSource =
     ResultCode === "0"
       ? devices.map((device: DeviceData) => {
-          return {
-            device_name: device.device_name,
-            created_date: device.created_date,
-            created_by: device.created_by,
-            modified_date: device.modified_date,
-            modified_by: device.modified_by,
-            ext_device_function: device.ext_device_function,
-            physical_device_id: device.physical_device_id,
-            location: device.location,
-            device_model: device.device_model,
-            serial_number: device.serial_number,
-            device_status: device.device_status,
-            device_type: device.device_type,
-            black_toner_percentage: device.black_toner_percentage,
-            cyan_toner_percentage: device.cyan_toner_percentage,
-            magenta_toner_percentage: device.magenta_toner_percentage,
-            yellow_toner_percentage: device.yellow_toner_percentage,
-            app_type: device.app_type,
-            black_drum_percentage: device.black_drum_percentage,
-            cyan_drum_percentage: device.cyan_drum_percentage,
-            magenta_drum_percentage: device.magenta_drum_percentage,
-            yellow_drum_percentage: device.yellow_drum_percentage,
-            client_name: device.client_name,
-            actions: (
-              <div
-                key={device.device_id}
-                className="flex justify-center items-center gap-2"
+        return {
+          device_name: device.device_name,
+          created_date: device.created_date,
+          created_by: device.created_by,
+          modified_date: device.modified_date,
+          modified_by: device.modified_by,
+          ext_device_function: device.ext_device_function,
+          physical_device_id: device.physical_device_id,
+          location: device.location,
+          device_model: device.device_model,
+          serial_number: device.serial_number,
+          device_status: device.device_status,
+          device_type: device.device_type,
+          black_toner_percentage: device.black_toner_percentage,
+          cyan_toner_percentage: device.cyan_toner_percentage,
+          magenta_toner_percentage: device.magenta_toner_percentage,
+          yellow_toner_percentage: device.yellow_toner_percentage,
+          app_type: device.app_type,
+          black_drum_percentage: device.black_drum_percentage,
+          cyan_drum_percentage: device.cyan_drum_percentage,
+          magenta_drum_percentage: device.magenta_drum_percentage,
+          yellow_drum_percentage: device.yellow_drum_percentage,
+          client_name: device.client_name,
+          actions: (
+            <div
+              key={device.device_id}
+              className="flex justify-center items-center gap-2"
+            >
+              <UpdateButton
+                link={`/device/edit?deviceId=${device.device_id}`}
+              />
+              <button
+                className="rounded-md px-1 pt-1 border hover:bg-gray-100"
+              // onClick={handleMenuOpen}
               >
-                <UpdateButton
-                  link={`/device/edit?deviceId=${device.device_id}`}
-                />
-                <button
-                  className="rounded-md px-1 pt-1 border hover:bg-gray-100"
-                  // onClick={handleMenuOpen}
-                >
-                  <span className="sr-only">{trans.common.delete}</span>
-                  <MaterialIcon name="delete" props="w-6 text-inherit" />
-                </button>
-              </div>
-            ),
-          };
-        })
+                <span className="sr-only">{trans.common.delete}</span>
+                <Delete className="w-6 text-inherit" />
+              </button>
+            </div>
+          ),
+        };
+      })
       : [];
 
   return (

@@ -5,9 +5,9 @@ const theme = createTheme({
     palette: {
         mode: 'light',
         primary: {
-            main: '#0f172a', // Slate 900 - Professional dark navy/slate
+            main: '#1e293b', // Slate 800 - Professional dark navy/slate
             light: '#334155',
-            dark: '#020617',
+            dark: '#0f172a',
         },
         secondary: {
             main: '#2563eb', // Blue 600 - Modern reliable accent

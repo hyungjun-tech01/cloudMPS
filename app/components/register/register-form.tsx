@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { z } from "zod";
-import { Steps } from "antd";
+import { Stepper, Step, StepLabel } from "@mui/material";
 
 import RegisterTermsOfService from "./register-use-of-term";
 import RegisterUserInfo from "./register-user-info";
@@ -338,7 +338,14 @@ export default function RegisterForm({
 
   return (
     <div className="flex-1 rounded-b-lg bg-gray-50 px-6 pb-4 pt-8">
-      <Steps current={registerUserStep} items={items} responsive />
+      <Stepper activeStep={registerUserStep}>
+        {items.map((item, index) => {
+          return (
+            <Step key={item.key}>
+              <StepLabel>{item.title}</StepLabel>
+            </Step>
+          );
+        })}</Stepper>
       <div className="mt-8">{registerSteps[registerUserStep].content}</div>
     </div>
   );

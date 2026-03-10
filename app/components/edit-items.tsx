@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { IEditItem } from '../libs/types';
-import MaterialIcon from './materialIcon';
+import { PaidOutlined } from '@mui/icons-material';
 
 
 export interface IButtonInfo {
@@ -95,7 +95,7 @@ export function EditItem({
                 required
               />
               {
-                <MaterialIcon name="paid" type="outlined" props="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+                <PaidOutlined className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
               }
             </div>
             <div id={`${name}-error`} aria-live="polite" aria-atomic="true">

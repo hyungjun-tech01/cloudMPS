@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { auth } from "@/auth";
 import { redirect } from 'next/navigation'; // 적절한 리다이렉트 함수 import
-import MaterialIcon from "@/app/components/materialIcon";
+import { Delete } from "@mui/icons-material";
 
 import Search from '@/app/components/search';
 import { InviteForm } from "@/app/components/user/invite-form";
@@ -112,7 +112,7 @@ export default async function Page(props: {
                     // onClick={handleMenuOpen}
                     >
                         <span className="sr-only">{trans.common.delete}</span>
-                        <MaterialIcon name='delete' props="w-6 text-inherit" />
+                        <Delete className="w-6 text-inherit" />
                     </button>
                 </div>
         }
