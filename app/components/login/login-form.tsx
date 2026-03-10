@@ -154,13 +154,13 @@ export default function LoginForm({
         <input type="hidden" name="locale" value={locale} />
         <button
           type="submit"
-          className="mt-8 w-full bg-slate-500 text-white px-3 py-0.5 rounded-sm flex justify-center items-center cursor-pointer"
+          className="mt-8 w-full bg-slate-500 text-white px-3 py-1 rounded-sm flex justify-center items-center cursor-pointer"
           aria-disabled={isPending}
         >
           {trans.login}
           <ArrowForward className="ml-auto h-5 w-5 text-white" />
         </button>
-        <div className="flex h-10 items-start space-x-1">
+        <div className="flex h-12 items-start space-x-1">
           {errorMessage && (
             <>
               <ErrorOutline className="h-5 w-5 text-red-500" />

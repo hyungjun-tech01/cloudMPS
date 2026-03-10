@@ -1,5 +1,6 @@
 import type { ISideMenuItem } from '@/app/libs/types';
 import {
+  Home,
   HomeOutlined,
   Quickreply,
   SpaceDashboardOutlined,
@@ -111,7 +112,7 @@ export const SideMenuList: {
       title: '홈',
       href: '/',
       icon: <HomeOutlined className="w-5" />,
-      icon_small: <HomeOutlined className="w-3 h-3" />,
+      icon_small: <HomeOutlined className="w-2" />,
       submenu: [
         {
           name: "home",
@@ -213,7 +214,8 @@ export const SideMenuList: {
       name: 'home',
       title: 'Home',
       href: '/',
-      icon: <SpaceDashboardOutlined className="w-5" />,
+      icon: <HomeOutlined className="w-5" />,
+      icon_small: <HomeOutlined className="w-2" />,
       submenu: [
         {
           name: "home",

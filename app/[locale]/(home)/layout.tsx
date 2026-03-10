@@ -8,11 +8,14 @@ import { Box, Drawer } from '@mui/material';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [sideNavExtended, extendSideNav] = useState(true);
+  const handleExtendSideNav = () => {
+    extendSideNav(!sideNavExtended);
+  }
 
   return (
     <Box sx={{ display: 'flex', height: '100vh', flexDirection: 'column', overflow: { md: 'hidden' } }}>
       <SessionProvider>
-        <Header extendSideNav={() => extendSideNav(!sideNavExtended)} />
+        <Header extendSideNav={handleExtendSideNav} />
       </SessionProvider>
       <Box sx={{ display: 'flex', height: '100%', flexDirection: { xs: 'column', md: 'row' }, overflow: { md: 'hidden' } }}>
         {/* Mobile Sidebar (Popup Drawer) */}
@@ -27,7 +30,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         >
           <SessionProvider>
             {/* On mobile, we always want the SideNav to look "extended" inside the popup */}
-            <SideNav extended={true} />
+            <SideNav extended={true} setExtended={handleExtendSideNav} />
           </SessionProvider>
         </Drawer>
 

@@ -6,7 +6,10 @@ import { SideMenuList, SIDE_MENUS_BY_USER_TYPE } from '@/app/libs/constants';
 import SideMenuItem from './sideMenuItem';
 
 
-export default function NavLinks() {
+export default function NavLinks({ extended, setExtended }: {
+  extended: boolean,
+  setExtended?: () => void
+}) {
   const pathname = usePathname();
   const splittedPathname = pathname.split('/');
   const locale = splittedPathname[0] === "" ? 'ko' : splittedPathname[0] as 'ko' | 'en';
@@ -22,6 +25,8 @@ export default function NavLinks() {
           key={name}
           menuItem={SideMenuList[locale][name]}
           path={category}
+          extended={extended}
+          setExtended={setExtended}
         />)}
     </>
   );
