@@ -10,12 +10,12 @@ export function InviteForm({
   userData,
   trans,
 }: {
-  userData: {userName: string, companyType:string, companyCode?: number, ipAddress: string};
+  userData: { userName: string, companyType: string, companyCode?: number, ipAddress: string };
   trans: Record<string, string>;
 }) {
   const initialState: MemberState = { message: null, errors: {} };
   const [state, formAction] = useActionState(registerMember, initialState);
-  
+
   return (
     <form action={formAction}>
       <div className="my-4 rounded-lg bg-slate-100 p-4 flex flex-col">
@@ -39,18 +39,21 @@ export function InviteForm({
           </button>
         </div>
         {!!state?.errors &&
-          Object.keys(state.errors).map(item =>
-            state.errors[item].errors.map((err) =>
+          Object.keys(state.errors).map(item => {
+            const errList = state.errors?.[item as keyof typeof state.errors];
+            if (!errList) return null;
+            return errList.map((err) =>
               <p className="ml-4 text-sm text-red-500" key={item} >
                 {(trans[item] ?? item) + ":" + (trans[err] ?? err)}
               </p>
-          ))
+            );
+          })
         }
       </div>
       <div id='input-error' aria-live="polite" aria-atomic="true">
         {!!state?.message &&
           <p className="my-2 ml-4 text-sm text-red-500" >
-            {trans[state.message]?? state.message}
+            {trans[state.message] ?? state.message}
           </p>
         }
       </div>

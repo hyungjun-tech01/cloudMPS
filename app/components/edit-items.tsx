@@ -8,14 +8,14 @@ import MaterialIcon from './materialIcon';
 export interface IButtonInfo {
   cancel: { title: string, link: string },
   go: { title: string },
-  save?: {title:string},
-  delete?: {title:string},
-  add?:{title:string}
+  save?: { title: string },
+  delete?: { title: string },
+  add?: { title: string }
 };
 
 export interface IOption {
   label: string | null;
-  value: string | number |null;
+  value: string | number | null;
   suffix?: string;
 };
 
@@ -43,7 +43,7 @@ export function EditItem({
           </label>
           <div className="relative flex">
             <label htmlFor={name} className="mb-2 block text-sm font-medium">
-              {defaultValue}
+              {defaultValue instanceof Date ? defaultValue.toISOString() : (defaultValue as string)}
             </label>
             {!!other && (other)}
           </div>
@@ -89,7 +89,7 @@ export function EditItem({
                 id={name}
                 name={name}
                 type="text"
-                defaultValue={defaultValue}
+                defaultValue={defaultValue as string}
                 placeholder={placeholder}
                 className="peer block w-full rounded-md border bg-slate-50 border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 required
@@ -155,7 +155,7 @@ export function EditItem({
               id={name}
               name={name}
               className="peer block w-full cursor-pointer rounded-md border bg-slate-50 border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              defaultValue={defaultValue}
+              defaultValue={defaultValue as string | number}
               aria-describedby={`${name}-error`}
               onChange={onChange}
             >
@@ -213,7 +213,7 @@ export function EditItem({
                 id={name}
                 name={name}
                 type="hidden"
-                defaultValue={defaultValue}
+                defaultValue={defaultValue as string | number}
                 placeholder={placeholder}
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               />
@@ -228,13 +228,13 @@ export function EditItem({
             {title}
           </label>
           <div className="relative flex flex-col">
-            { options?.map( (item, idx) => <div key={idx} className='w-full flex py-1'>
-                <div className='flex-0 w-[5rem] text-sm font-light'>{item.title}</div>
-                <div className='flex-1 rounded-full bg-white'>
-                  <div className={item.suffix} style={{width: `${item.value || 0}%`}} >{' '}</div>
-                </div>
-                <div className='flex-0 w-[5rem] text-sm font-light text-right'>{item.value || 0}%</div>
+            {options?.map((item, idx) => <div key={idx} className='w-full flex py-1'>
+              <div className='flex-0 w-[5rem] text-sm font-light'>{item.title}</div>
+              <div className='flex-1 rounded-full bg-white'>
+                <div className={item.suffix} style={{ width: `${item.value || 0}%` }} >{' '}</div>
               </div>
+              <div className='flex-0 w-[5rem] text-sm font-light text-right'>{item.value || 0}%</div>
+            </div>
             )}
           </div>
         </div>
@@ -251,13 +251,13 @@ export function EditItem({
                 id={name}
                 name={name}
                 type="date"
-                defaultValue={defaultValue?? null}
+                defaultValue={(defaultValue instanceof Date ? defaultValue.toISOString().split('T')[0] : defaultValue as string) ?? null}
                 className="peer block w-full rounded-md border bg-slate-50 border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               />
             </div>
             <div id={`${name}-error`} aria-live="polite" aria-atomic="true">
-              {!!errors &&
-                errors.errors.map((error: string) => (
+              {!!errors && Array.isArray(errors) &&
+                errors.map((error: string) => (
                   <p className="mt-2 text-sm text-red-500" key={error}>
                     {error}
                   </p>
